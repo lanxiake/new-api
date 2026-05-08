@@ -127,6 +127,8 @@ export interface TopupInfo {
   enable_waffo_pancake_topup?: boolean
   /** Minimum topup amount for Waffo Pancake */
   waffo_pancake_min_topup?: number
+  /** Whether Mtbot Alipay direct topup is enabled */
+  enable_mtbot_topup?: boolean
 }
 
 /**

@@ -215,3 +215,11 @@ export async function completeOrder(
   const res = await api.post('/api/user/topup/complete', request)
   return res.data
 }
+
+/**
+ * Get signed Mtbot Alipay topup link
+ */
+export async function getMtbotTopupLink(): Promise<ApiResponse<string>> {
+  const res = await api.get('/api/user/mtbot-topup/link')
+  return res.data
+}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Gift, ExternalLink, Loader2, Receipt, WalletCards } from 'lucide-react'
+import { Gift, ExternalLink, Loader2, Receipt, WalletCards, Zap } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { formatNumber } from '@/lib/format'
 import { cn } from '@/lib/utils'
@@ -32,6 +32,8 @@ import type {
 } from '../types'
 import { CreemProductsSection } from './creem-products-section'
 
+const MTBOT_PRESETS = [50, 100, 200]
+
 interface RechargeFormCardProps {
   topupInfo: TopupInfo | null
   presetAmounts: PresetAmount[]
@@ -60,6 +62,9 @@ interface RechargeFormCardProps {
   waffoMinTopup?: number
   onWaffoMethodSelect?: (method: WaffoPayMethod, index: number) => void
   enableWaffoPancakeTopup?: boolean
+  enableMtbotTopup?: boolean
+  onMtbotTopup?: (amount: number) => void
+  mtbotLoading?: boolean
 }
 
 export function RechargeFormCard({
@@ -90,9 +95,14 @@ export function RechargeFormCard({
   waffoMinTopup,
   onWaffoMethodSelect,
   enableWaffoPancakeTopup,
+  enableMtbotTopup,
+  onMtbotTopup,
+  mtbotLoading,
 }: RechargeFormCardProps) {
   const { t } = useTranslation()
   const [localAmount, setLocalAmount] = useState(topupAmount.toString())
+  const [mtbotAmount, setMtbotAmount] = useState<number | ''>(100)
+  const [mtbotSelectedPreset, setMtbotSelectedPreset] = useState<number | null>(100)
 
   useEffect(() => {
     setLocalAmount(topupAmount.toString())
@@ -425,6 +435,83 @@ export function RechargeFormCard({
             />
           </div>
         )}
+
+      {/* Mtbot Alipay Direct Topup Section */}
+      {enableMtbotTopup && onMtbotTopup && (
+        <div className='space-y-3 border-t pt-4 sm:pt-6'>
+          <div className='flex items-center gap-2'>
+            <Zap className='text-muted-foreground h-4 w-4' />
+            <Label className='text-muted-foreground text-xs font-medium tracking-wider uppercase'>
+              支付宝直连充值
+            </Label>
+          </div>
+          <p className='text-muted-foreground text-xs'>
+            通过支付宝直接充值人民币，实时到账
+          </p>
+          <div className='grid grid-cols-3 gap-1.5 sm:gap-2'>
+            {MTBOT_PRESETS.map((preset) => (
+              <Button
+                key={preset}
+                variant='outline'
+                className={cn(
+                  'h-10 rounded-lg text-sm font-medium',
+                  mtbotSelectedPreset === preset
+                    ? 'border-foreground bg-foreground/5'
+                    : 'border-muted'
+                )}
+                onClick={() => {
+                  setMtbotSelectedPreset(preset)
+                  setMtbotAmount(preset)
+                }}
+                disabled={!!mtbotLoading}
+              >
+                ¥{preset}
+              </Button>
+            ))}
+          </div>
+          <div className='flex gap-2'>
+            <div className='relative flex-1'>
+              <span className='text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2 text-sm select-none'>
+                ¥
+              </span>
+              <Input
+                type='number'
+                min={1}
+                max={5000}
+                placeholder='自定义金额（1~5000）'
+                value={mtbotAmount === '' ? '' : mtbotAmount}
+                onChange={(e) => {
+                  const v = e.target.value === '' ? '' : parseInt(e.target.value, 10)
+                  setMtbotAmount(v as number | '')
+                  setMtbotSelectedPreset(null)
+                }}
+                className='h-9 pl-7 text-sm'
+                disabled={!!mtbotLoading}
+              />
+            </div>
+            <Button
+              onClick={() => {
+                const amt = mtbotAmount === '' ? 0 : Number(mtbotAmount)
+                if (amt >= 1 && amt <= 5000) onMtbotTopup(amt)
+              }}
+              disabled={
+                !!mtbotLoading ||
+                mtbotAmount === '' ||
+                Number(mtbotAmount) < 1 ||
+                Number(mtbotAmount) > 5000
+              }
+              className='h-9 shrink-0 gap-1.5'
+            >
+              {mtbotLoading ? (
+                <Loader2 className='h-3.5 w-3.5 animate-spin' />
+              ) : (
+                <Zap className='h-3.5 w-3.5' />
+              )}
+              支付宝付款
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Redemption Code Section */}
       <div className='space-y-2.5 border-t pt-4 sm:space-y-3 sm:pt-6'>

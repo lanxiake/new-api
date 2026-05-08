@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { getSelf } from '@/lib/api'
 import { useStatus } from '@/hooks/use-status'
 import { useSystemConfig } from '@/hooks/use-system-config'
@@ -27,6 +28,7 @@ import {
   getMinTopupAmount,
   isWaffoPancakePayment,
 } from './lib'
+import { getMtbotTopupLink, isApiSuccess } from './api'
 import type {
   UserWalletData,
   PaymentMethod,
@@ -55,6 +57,7 @@ export function Wallet(props: WalletProps) {
   const [selectedCreemProduct, setSelectedCreemProduct] =
     useState<CreemProduct | null>(null)
   const [showSubscriptionPanel, setShowSubscriptionPanel] = useState(true)
+  const [mtbotLoading, setMtbotLoading] = useState(false)
 
   const { status } = useStatus()
   const { currency } = useSystemConfig()
@@ -227,6 +230,26 @@ export function Wallet(props: WalletProps) {
     }
   }
 
+  // Handle Mtbot Alipay direct topup
+  const handleMtbotTopup = useCallback(async (amount: number) => {
+    setMtbotLoading(true)
+    try {
+      const res = await getMtbotTopupLink()
+      if (!isApiSuccess(res) || !res.data) {
+        toast.error(res.message || '获取充值链接失败，请稍后重试')
+        return
+      }
+      // Append the selected amount to the URL so the payment page can pre-select it
+      const url = new URL(res.data)
+      url.searchParams.set('amount', String(amount))
+      window.open(url.toString(), '_blank', 'noopener,noreferrer')
+    } catch {
+      toast.error('网络错误，请稍后重试')
+    } finally {
+      setMtbotLoading(false)
+    }
+  }, [])
+
   // Get discount rate for current topup amount
   const getDiscountRate = useCallback(() => {
     return topupInfo?.discount?.[topupAmount] || DEFAULT_DISCOUNT_RATE
@@ -288,6 +311,9 @@ export function Wallet(props: WalletProps) {
                   enableWaffoPancakeTopup={
                     topupInfo?.enable_waffo_pancake_topup
                   }
+                  enableMtbotTopup={topupInfo?.enable_mtbot_topup}
+                  onMtbotTopup={handleMtbotTopup}
+                  mtbotLoading={mtbotLoading}
                 />
               </div>
 
