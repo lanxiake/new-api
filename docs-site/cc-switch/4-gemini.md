@@ -8,12 +8,18 @@
 
 2. 在分组条中将选项设置为 **「Gemini」**
 
+![选择 Gemini 分组](/images/cc-switch/gemini-step2-group.png)
+
 3. 在供应商分组中选择 **「LLM-Link」**
 
 4. 在 [LLM-Link 控制台](https://www.llm-link.top) 创建 **Gemini 分组**的令牌，点击复制按钮将 ApiKey 复制到剪贴板
 
 5. 在下拉菜单中找到「API Key」配置项，粘贴复制的密钥后点击「添加」
 
+![填写 API Key](/images/cc-switch/gemini-step5-apikey.png)
+
 6. 在主界面中点击「启用」按钮，待状态显示「使用中」即完成
+
+![启用状态](/images/cc-switch/gemini-step6-enabled.png)
 
 7. 在终端运行 `gemini`，能看到对话界面并正常交互说明配置成功

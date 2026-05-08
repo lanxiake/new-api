@@ -50,17 +50,27 @@ curl https://www.llm-link.top/v1/images/generations \
 
 3. 填写供应商名称，类型选择「New API」
 
+![Cherry Studio 添加供应商](/images/paint/gptimage-step3-provider.png)
+
 4. 填写 ApiKey 和地址 `https://www.llm-link.top`
 
 5. 管理模型，搜索并添加 `gpt-image-2`
 
+![搜索并添加 gpt-image-2](/images/paint/gptimage-step5-addmodel.png)
+
 6. 编辑模型，将端点类型设置为「图像生成（OpenAI）」
 
+![设置端点类型](/images/paint/gptimage-step6-endpoint.png)
+
 7. 返回首页，新建「绘画」应用
+
+![新建绘画应用](/images/paint/gptimage-step7-newapp.png)
 
 8. 选择配置好的供应商和模型，模式选「绘图」
 
 9. 输入提示词开始生成
+
+![生成效果示例](/images/paint/gptimage-result.png)
 
 ::: tip 使用建议
 - API 地址不要加 `/v1`

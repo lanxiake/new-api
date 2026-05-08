@@ -6,17 +6,29 @@
 
 1. 启动 CC-Switch 软件，进入初始界面
 
+![CC-Switch 启动界面](/images/cc-switch/claude-step1-launch.png)
+
 2. 在分组下拉菜单中选择 **「Claude」**
 
+![选择 Claude 分组](/images/cc-switch/claude-step2-group.png)
+
 3. 在供应商分组中选择 **「LLM-Link」**
+
+![选择 LLM-Link 供应商](/images/cc-switch/claude-step3-vendor.png)
 
 4. 在 [LLM-Link 控制台](https://www.llm-link.top) 创建 **CC 分组**的令牌，点击复制按钮将 ApiKey 复制到剪贴板
 
 5. 找到「API Key」配置项，粘贴 ApiKey，点击「添加」按钮
 
+![粘贴 API Key](/images/cc-switch/claude-step5-apikey.png)
+
 6. 点击「启用」按钮，待状态显示「使用中」即配置完成
 
+![启用状态 - 使用中](/images/cc-switch/claude-step6-enabled.png)
+
 7. 进入「设置」→「通用」，勾选「跳过 Claude Code 初次安装确认」
+
+![跳过安装确认设置](/images/cc-switch/claude-step7-settings.png)
 
 8. 在终端运行 `claude`，能正常对话说明配置成功
 

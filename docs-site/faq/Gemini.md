@@ -37,13 +37,19 @@ Gemini CLI 目前存在多种使用问题，例如可能无法正常调用模型
 
 按照 [创建 API 令牌](/guide/4-token) 中的方法，创建 **Gemini 分组**的令牌。
 
+![创建 Gemini 分组令牌示意](/images/faq/gemini-create-token.png)
+
 ### 2. 安装 Cline 插件
 
 在 VSCode 扩展市场中搜索 **Cline**，点击安装。
 
+![安装 Cline 插件](/images/faq/gemini-install-cline.png)
+
 ### 3. 打开 Cline 界面
 
 安装完成后，点击左侧活动栏的 Cline 图标，或使用命令面板（`Ctrl+Shift+P`）输入 `Cline: Open` 打开。
+
+![打开 Cline 界面](/images/faq/gemini-open-cline.png)
 
 ### 4. 首次配置
 
@@ -55,6 +61,8 @@ Gemini CLI 目前存在多种使用问题，例如可能无法正常调用模型
 | Base URL | `https://www.llm-link.top/v1` |
 | API Key | 你的 Gemini 分组令牌 |
 | Model ID | `gemini-3-pro-preview` |
+
+![Cline 配置界面](/images/faq/gemini-cline-config.png)
 
 ### 5. 完成配置
 

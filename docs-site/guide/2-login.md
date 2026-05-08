@@ -2,6 +2,8 @@
 
 访问 [llm-link.top/login](https://www.llm-link.top/login) 登录控制台。
 
+![登录页面](/images/guide/login-page.png)
+
 ## 登录方式
 
 ### Google 账号登录

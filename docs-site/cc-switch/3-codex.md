@@ -8,12 +8,18 @@
 
 2. 在分组选择菜单中选择 **「Codex」**
 
+![选择 Codex 分组](/images/cc-switch/codex-step2-group.png)
+
 3. 在供应商分组中选择 **「LLM-Link」**
 
 4. 在 [LLM-Link 控制台](https://www.llm-link.top) 创建 **Codex 分组**的令牌，点击复制按钮将 ApiKey 复制到剪贴板
 
 5. 展开弹窗，找到「API Key」输入框，粘贴 ApiKey，点击右下角「添加」按钮
 
+![填写 API Key](/images/cc-switch/codex-step5-apikey.png)
+
 6. 添加成功后，在主界面点击右侧「启用」按钮，状态显示「使用中」即完成
+
+![启用状态](/images/cc-switch/codex-step6-enabled.png)
 
 7. 打开终端运行 `codex`，能正常对话说明配置成功
