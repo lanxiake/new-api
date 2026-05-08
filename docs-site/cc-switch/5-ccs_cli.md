@@ -49,7 +49,11 @@ sudo mv ccs-cli /usr/local/bin/
 
 1. 在终端运行 `ccs-cli` 启动 TUI 界面
 
+![CC-Switch CLI TUI 界面](/images/cc-switch/cli-tui-main.png)
+
 2. 进入「Providers」部分，按 `a` 添加供应商
+
+![添加供应商](/images/cc-switch/cli-tui-providers.png)
 
 3. 从模板列表中选择 **「LLM-Link」**
 

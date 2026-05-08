@@ -14,19 +14,31 @@
 
 5. 在新建供应商窗口中，填写供应商名称，类型选择对应格式
 
+![Cherry Studio 添加供应商](/images/paint/banana-step5-provider.png)
+
 6. 填写以下信息：
    - **API Key**：粘贴你的 ApiKey
    - **API 地址**：`https://www.llm-link.top`
 
+![填写 API 信息](/images/paint/banana-step6-apiconfig.png)
+
 7. 点击「管理模型」，搜索并添加 **Banana2 Pro** 绘图模型（该模型已针对常见宽高比优化）
+
+![添加 Banana2 Pro 模型](/images/paint/banana-step7-addmodel.png)
 
 8. 确认模型添加成功
 
+![模型添加成功](/images/paint/banana-step8-confirm.png)
+
 9. 返回首页，进入「助手设置」，关闭「流式输出」
+
+![关闭流式输出](/images/paint/banana-step9-stream.png)
 
 10. 在模型设置中选择刚创建的绘图模型
 
 11. 开始创作图片
+
+![生成图片示例](/images/paint/banana-result.png)
 
 ::: tip
 Banana2 Pro 已针对多种常见宽高比进行优化，开箱即用效果良好。

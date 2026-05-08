@@ -2,11 +2,15 @@
 
 欢迎使用 LLM-Link！请在 [llm-link.top/register](https://www.llm-link.top/register) 完成账号注册。
 
+![注册页面](/images/guide/register-page.png)
+
 ## 注册方式
 
 ### 方式一（推荐）：Google 账号
 
 点击「使用 Google 继续」，在弹出窗口中授权 Google 账号，系统将自动完成注册并登录，无需设置密码。
+
+![Google 授权登录示意](/images/guide/register-google.png)
 
 ### 方式二：邮箱注册
 

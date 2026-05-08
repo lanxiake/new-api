@@ -27,9 +27,13 @@ AionUI 是一个统一的图形界面工具，可同时管理 Claude Code、Gemi
 
 2. 打开 AionUI → 设置 → LLM 配置 → 添加模型
 
+![AionUI LLM 配置入口](/images/advanced/aionui-settings.png)
+
 3. 平台选择「自定义」
 
 4. 填写 API Key 和请求地址：
+
+![AionUI 填写 API 配置](/images/advanced/aionui-apiconfig.png)
 
    | 分组 | 请求地址 |
    |------|---------|

@@ -19,6 +19,9 @@ macOS 用户直接安装即可，无需额外配置。
 
 1. 启动 Claude Desktop，进入登录界面
 2. 点击菜单，进入 **帮助 → 故障排查 → 启用开发者模式**
+
+![启用开发者模式](/images/advanced/claude-desktop-devmode.png)
+
 3. 按提示重启应用
 
 ## 配置第三方 API
@@ -31,6 +34,8 @@ macOS 用户直接安装即可，无需额外配置。
    - **网关 API Key**：填入你的 **CC 分组** API Key
 3. 开启「跳过登录模式选择」开关
 4. 点击「本地应用」完成配置
+
+![第三方推理配置界面](/images/advanced/claude-desktop-thirdparty.png)
 
 ::: tip
 完成配置后，Claude Desktop 将通过 LLM-Link 的 CC 渠道进行请求。

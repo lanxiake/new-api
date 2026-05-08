@@ -6,6 +6,8 @@ CC-Switch 是 Claude Code / Codex / Gemini CLI 全方位辅助工具，可快速
 
 根据你的操作系统选择对应的安装方式：
 
+![CC-Switch 初始界面](/images/cc-switch/main-interface.png)
+
 ::: code-group
 
 ```bash [macOS（Homebrew）]
