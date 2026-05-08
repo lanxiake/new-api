@@ -6,11 +6,11 @@
 
 ## 注册方式
 
-### 方式一（推荐）：Google 账号
+### 方式一（推荐）：github 账号
 
-点击「使用 Google 继续」，在弹出窗口中授权 Google 账号，系统将自动完成注册并登录，无需设置密码。
+点击「使用 github 继续」，在弹出窗口中授权 github 账号，系统将自动完成注册并登录，无需设置密码。
 
-![Google 授权登录示意](/images/guide/register-google.png)
+![github 授权登录示意](/images/guide/register-google.png)
 
 ### 方式二：邮箱注册
 

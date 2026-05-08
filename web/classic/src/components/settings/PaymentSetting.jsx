@@ -25,6 +25,7 @@ import SettingsPaymentGatewayStripe from '../../pages/Setting/Payment/SettingsPa
 import SettingsPaymentGatewayCreem from '../../pages/Setting/Payment/SettingsPaymentGatewayCreem';
 import SettingsPaymentGatewayWaffo from '../../pages/Setting/Payment/SettingsPaymentGatewayWaffo';
 import SettingsPaymentGatewayWaffoPancake from '../../pages/Setting/Payment/SettingsPaymentGatewayWaffoPancake';
+import SettingsPaymentGatewayMtbot from '../../pages/Setting/Payment/SettingsPaymentGatewayMtbot';
 import { API, showError, toBoolean } from '../../helpers';
 import { useTranslation } from 'react-i18next';
 
@@ -60,6 +61,10 @@ const PaymentSetting = () => {
     WaffoPancakeCurrency: 'USD',
     WaffoPancakeUnitPrice: 1.0,
     WaffoPancakeMinTopUp: 1,
+
+    MtbotEnabled: false,
+    MtbotTopupSecret: '',
+    MtbotTopupURL: 'https://www.mtbot.top/api/pay/topup',
   });
 
   let [loading, setLoading] = useState(false);
@@ -205,6 +210,13 @@ const PaymentSetting = () => {
             {/*    hideSectionTitle*/}
             {/*  />*/}
             {/*</Tabs.TabPane>*/}
+            <Tabs.TabPane tab={t('Mtbot 支付宝设置')} itemKey='mtbot'>
+              <SettingsPaymentGatewayMtbot
+                options={inputs}
+                refresh={onRefresh}
+                hideSectionTitle
+              />
+            </Tabs.TabPane>
           </Tabs>
         </Card>
       </Spin>

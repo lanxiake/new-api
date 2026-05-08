@@ -118,6 +118,9 @@ func InitOptionMap() {
 	common.OptionMap["WaffoPancakeCurrency"] = setting.WaffoPancakeCurrency
 	common.OptionMap["WaffoPancakeUnitPrice"] = strconv.FormatFloat(setting.WaffoPancakeUnitPrice, 'f', -1, 64)
 	common.OptionMap["WaffoPancakeMinTopUp"] = strconv.Itoa(setting.WaffoPancakeMinTopUp)
+	common.OptionMap["MtbotEnabled"] = strconv.FormatBool(setting.MtbotEnabled)
+	common.OptionMap["MtbotTopupSecret"] = setting.MtbotTopupSecret
+	common.OptionMap["MtbotTopupURL"] = setting.MtbotTopupURL
 	common.OptionMap["TopupGroupRatio"] = common.TopupGroupRatio2JSONString()
 	common.OptionMap["Chats"] = setting.Chats2JsonString()
 	common.OptionMap["AutoGroups"] = setting.AutoGroups2JsonString()
@@ -443,6 +446,12 @@ func updateOptionMap(key string, value string) (err error) {
 		setting.WaffoPancakeUnitPrice, _ = strconv.ParseFloat(value, 64)
 	case "WaffoPancakeMinTopUp":
 		setting.WaffoPancakeMinTopUp, _ = strconv.Atoi(value)
+	case "MtbotEnabled":
+		setting.MtbotEnabled = value == "true"
+	case "MtbotTopupSecret":
+		setting.MtbotTopupSecret = value
+	case "MtbotTopupURL":
+		setting.MtbotTopupURL = value
 	case "TopupGroupRatio":
 		err = common.UpdateTopupGroupRatioByJSONString(value)
 	case "GitHubClientId":

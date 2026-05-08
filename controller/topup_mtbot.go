@@ -7,22 +7,22 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"os"
+	"strings"
 	"time"
 
+	"github.com/QuantumNous/new-api/setting"
 	"github.com/gin-gonic/gin"
 )
 
 // GetMtbotTopupLink 生成带 HMAC-SHA256 签名的 mtbot 充值跳转链接
 // GET /api/user/mtbot-topup/link
 func GetMtbotTopupLink(c *gin.Context) {
-	secret := os.Getenv("MTBOT_TOPUP_SECRET")
-	if secret == "" {
+	if !IsMtbotTopupEnabled() {
 		c.JSON(http.StatusServiceUnavailable, gin.H{"message": "error", "data": "支付宝直连充值未配置"})
 		return
 	}
 
-	baseURL := os.Getenv("MTBOT_TOPUP_URL")
+	baseURL := strings.TrimSpace(setting.MtbotTopupURL)
 	if baseURL == "" {
 		baseURL = "https://www.mtbot.top/api/pay/topup"
 	}
@@ -36,7 +36,7 @@ func GetMtbotTopupLink(c *gin.Context) {
 	ts := fmt.Sprintf("%d", time.Now().Unix())
 	message := fmt.Sprintf("username=%s&ts=%s", username, ts)
 
-	mac := hmac.New(sha256.New, []byte(secret))
+	mac := hmac.New(sha256.New, []byte(setting.MtbotTopupSecret))
 	mac.Write([]byte(message))
 	sign := hex.EncodeToString(mac.Sum(nil))
 
@@ -52,6 +52,5 @@ func GetMtbotTopupLink(c *gin.Context) {
 
 // IsMtbotTopupEnabled 检查是否启用了 mtbot 支付宝直连充值
 func IsMtbotTopupEnabled() bool {
-	secret := os.Getenv("MTBOT_TOPUP_SECRET")
-	return secret != ""
+	return setting.MtbotEnabled && strings.TrimSpace(setting.MtbotTopupSecret) != ""
 }
