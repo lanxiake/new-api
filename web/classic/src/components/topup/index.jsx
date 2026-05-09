@@ -76,6 +76,10 @@ const TopUp = () => {
   const [enableWaffoPancakeTopUp, setEnableWaffoPancakeTopUp] = useState(false);
   const [waffoPancakeMinTopUp, setWaffoPancakeMinTopUp] = useState(1);
 
+  // Mtbot 支付宝直连相关状态
+  const [enableMtbotTopUp, setEnableMtbotTopUp] = useState(false);
+  const [mtbotLoading, setMtbotLoading] = useState(false);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
   const [payWay, setPayWay] = useState('');
@@ -504,6 +508,26 @@ const TopUp = () => {
     window.open(data.checkout_url, '_blank');
   };
 
+  // Mtbot 支付宝直连充值
+  const handleMtbotTopup = async (amount) => {
+    setMtbotLoading(true);
+    try {
+      const res = await API.get('/api/user/mtbot-topup/link');
+      const { message, data } = res.data;
+      if (message === 'success' && data) {
+        const url = new URL(data);
+        url.searchParams.set('amount', String(amount));
+        window.open(url.toString(), '_blank', 'noopener,noreferrer');
+      } else {
+        showError(data || t('获取充值链接失败，请稍后重试'));
+      }
+    } catch (e) {
+      showError(t('网络错误，请稍后重试'));
+    } finally {
+      setMtbotLoading(false);
+    }
+  };
+
   const getUserQuota = async () => {
     let res = await API.get(`/api/user/self`);
     const { success, message, data } = res.data;
@@ -654,6 +678,7 @@ const TopUp = () => {
           setWaffoMinTopUp(data.waffo_min_topup || 1);
           setEnableWaffoPancakeTopUp(enableWaffoPancakeTopUp);
           setWaffoPancakeMinTopUp(data.waffo_pancake_min_topup || 1);
+          setEnableMtbotTopUp(data.enable_mtbot_topup || false);
           setMinTopUp(minTopUpValue);
           setTopUpCount(minTopUpValue);
           setTopUpLink(data.topup_link || '');
@@ -984,6 +1009,9 @@ const TopUp = () => {
           activeSubscriptions={activeSubscriptions}
           allSubscriptions={allSubscriptions}
           reloadSubscriptionSelf={getSubscriptionSelf}
+          enableMtbotTopUp={enableMtbotTopUp}
+          onMtbotTopup={handleMtbotTopup}
+          mtbotLoading={mtbotLoading}
         />
         <InvitationCard
           t={t}

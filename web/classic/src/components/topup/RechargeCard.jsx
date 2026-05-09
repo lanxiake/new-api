@@ -44,6 +44,7 @@ import {
   TrendingUp,
   Receipt,
   Sparkles,
+  Zap,
 } from 'lucide-react';
 import { IconGift } from '@douyinfe/semi-icons';
 import { useMinimumLoadingTime } from '../../hooks/common/useMinimumLoadingTime';
@@ -51,6 +52,74 @@ import { getCurrencyConfig } from '../../helpers/render';
 import SubscriptionPlansCard from './SubscriptionPlansCard';
 
 const { Text } = Typography;
+
+const MTBOT_PRESETS = [50, 100, 200];
+
+const MtbotTopupSection = ({ t, onMtbotTopup, mtbotLoading }) => {
+  const [mtbotAmount, setMtbotAmount] = useState(100);
+  const [mtbotSelectedPreset, setMtbotSelectedPreset] = useState(100);
+
+  return (
+    <Form.Slot
+      label={
+        <div className='flex items-center gap-2'>
+          <Zap size={14} />
+          <span>{t('支付宝直连充值')}</span>
+        </div>
+      }
+    >
+      <p className='text-sm text-gray-500 mb-3'>
+        {t('通过支付宝直接充值人民币，实时到账')}
+      </p>
+      <Space wrap style={{ marginBottom: 12 }}>
+        {MTBOT_PRESETS.map((preset) => (
+          <Button
+            key={preset}
+            theme={mtbotSelectedPreset === preset ? 'solid' : 'outline'}
+            type={mtbotSelectedPreset === preset ? 'primary' : 'tertiary'}
+            onClick={() => {
+              setMtbotSelectedPreset(preset);
+              setMtbotAmount(preset);
+            }}
+            disabled={mtbotLoading}
+            className='!rounded-lg'
+          >
+            ¥{preset}
+          </Button>
+        ))}
+      </Space>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <Form.InputNumber
+          noLabel
+          field='mtbotAmount'
+          prefix='¥'
+          min={1}
+          max={5000}
+          precision={0}
+          placeholder={t('自定义金额（1~5000）')}
+          value={mtbotAmount}
+          onChange={(value) => {
+            setMtbotAmount(value);
+            setMtbotSelectedPreset(null);
+          }}
+          style={{ width: 200 }}
+        />
+        <Button
+          icon={<SiAlipay size={16} color='#1677FF' />}
+          theme='solid'
+          onClick={() => {
+            const amt = Number(mtbotAmount);
+            if (amt >= 1 && amt <= 5000) onMtbotTopup(amt);
+          }}
+          loading={mtbotLoading}
+          disabled={!mtbotAmount || Number(mtbotAmount) < 1 || Number(mtbotAmount) > 5000}
+        >
+          {t('支付宝付款')}
+        </Button>
+      </div>
+    </Form.Slot>
+  );
+};
 
 const RechargeCard = ({
   t,
@@ -96,6 +165,9 @@ const RechargeCard = ({
   activeSubscriptions = [],
   allSubscriptions = [],
   reloadSubscriptionSelf,
+  enableMtbotTopUp = false,
+  onMtbotTopup,
+  mtbotLoading = false,
 }) => {
   const onlineFormApiRef = useRef(null);
   const redeemFormApiRef = useRef(null);
@@ -231,7 +303,8 @@ const RechargeCard = ({
           enableStripeTopUp ||
           enableCreemTopUp ||
           enableWaffoTopUp ||
-          enableWaffoPancakeTopUp ? (
+          enableWaffoPancakeTopUp ||
+          enableMtbotTopUp ? (
           <Form
             getFormApi={(api) => (onlineFormApiRef.current = api)}
             initValues={{ topUpCount: topUpCount }}
@@ -550,6 +623,15 @@ const RechargeCard = ({
                     ))}
                   </div>
                 </Form.Slot>
+              )}
+
+              {/* Mtbot 支付宝直连充值区域 */}
+              {enableMtbotTopUp && onMtbotTopup && (
+                <MtbotTopupSection
+                  t={t}
+                  onMtbotTopup={onMtbotTopup}
+                  mtbotLoading={mtbotLoading}
+                />
               )}
             </div>
           </Form>
