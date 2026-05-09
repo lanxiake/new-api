@@ -442,11 +442,11 @@ export function RechargeFormCard({
           <div className='flex items-center gap-2'>
             <Zap className='text-muted-foreground h-4 w-4' />
             <Label className='text-muted-foreground text-xs font-medium tracking-wider uppercase'>
-              支付宝直连充值
+              {t('CNY Recharge')}
             </Label>
           </div>
           <p className='text-muted-foreground text-xs'>
-            通过支付宝直接充值人民币，实时到账
+            {t('Recharge in CNY at a 1:1 rate with USD billing. ¥1 = $1 of balance.')}
           </p>
           <div className='grid grid-cols-3 gap-1.5 sm:gap-2'>
             {MTBOT_PRESETS.map((preset) => (

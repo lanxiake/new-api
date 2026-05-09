@@ -31,6 +31,10 @@ import {
   removeTrailingSlash,
 } from './utils'
 import {
+  MtbotSettingsSection,
+  type MtbotSettingsValues,
+} from './mtbot-settings-section'
+import {
   WaffoPancakeSettingsSection,
   type WaffoPancakeSettingsValues,
 } from './waffo-pancake-settings-section'
@@ -111,12 +115,14 @@ type PaymentSettingsSectionProps = {
   defaultValues: PaymentFormValues
   waffoDefaultValues: WaffoSettingsValues
   waffoPancakeDefaultValues: WaffoPancakeSettingsValues
+  mtbotDefaultValues: MtbotSettingsValues
 }
 
 export function PaymentSettingsSection({
   defaultValues,
   waffoDefaultValues,
   waffoPancakeDefaultValues,
+  mtbotDefaultValues,
 }: PaymentSettingsSectionProps) {
   const { t } = useTranslation()
   const updateOption = useUpdateOption()
@@ -1291,6 +1297,10 @@ export function PaymentSettingsSection({
       <Separator />
 
       <WaffoPancakeSettingsSection defaultValues={waffoPancakeDefaultValues} />
+
+      <Separator />
+
+      <MtbotSettingsSection defaultValues={mtbotDefaultValues} />
       {/* eslint-enable react-hooks/refs */}
     </SettingsSection>
   )

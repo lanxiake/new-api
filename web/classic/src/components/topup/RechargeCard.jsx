@@ -64,12 +64,12 @@ const MtbotTopupSection = ({ t, onMtbotTopup, mtbotLoading }) => {
       label={
         <div className='flex items-center gap-2'>
           <Zap size={14} />
-          <span>{t('支付宝直连充值')}</span>
+          <span>{t('CNY Recharge')}</span>
         </div>
       }
     >
       <p className='text-sm text-gray-500 mb-3'>
-        {t('通过支付宝直接充值人民币，实时到账')}
+        {t('Recharge in CNY at a 1:1 rate with USD billing. ¥1 = $1 of balance.')}
       </p>
       <Space wrap style={{ marginBottom: 12 }}>
         {MTBOT_PRESETS.map((preset) => (
