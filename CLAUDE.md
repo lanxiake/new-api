@@ -1,4 +1,6 @@
-# CLAUDE.md — Project Conventions for new-api
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Overview
 
@@ -12,6 +14,51 @@ This is an AI API gateway/proxy built with Go. It aggregates 40+ upstream AI pro
 - **Cache**: Redis (go-redis) + in-memory cache
 - **Auth**: JWT, WebAuthn/Passkeys, OAuth (GitHub, Discord, OIDC, etc.)
 - **Frontend package manager**: Bun (preferred over npm/yarn/pnpm)
+
+## Commands
+
+### Backend
+
+```bash
+go run main.go                    # Run dev server (default port 3000)
+go build -o new-api .             # Build binary
+go test ./...                     # Run all tests
+go test ./relay/... -run TestName # Run a single test
+```
+
+### Frontend (default theme — always use bun)
+
+```bash
+cd web/default
+bun install
+bun run dev          # Dev server on :3001, proxies API to :3000
+bun run build        # Production build (output: web/default/dist)
+bun run typecheck    # TypeScript check without build
+bun run lint         # ESLint
+bun run i18n:sync    # Sync translation keys across locale files
+```
+
+### Full stack dev (recommended)
+
+```bash
+docker compose -f docker-compose.dev.yml up -d  # Start backend + Postgres + Redis
+cd web/default && bun install && bun run dev     # Frontend dev server
+# After Go changes: docker compose -f docker-compose.dev.yml up -d --build new-api
+```
+
+### Classic frontend
+
+```bash
+cd web/classic && bun install && bun run dev
+```
+
+### Makefile shortcuts
+
+```bash
+make dev-api        # Start backend services via docker compose
+make dev-web        # Start default frontend dev server
+make build-frontend # Build default frontend
+```
 
 ## Architecture
 
@@ -38,6 +85,34 @@ web/             — Frontend themes container
   web/classic/   — Classic frontend (React 18, Vite, Semi Design)
   web/default/src/i18n/ — Frontend internationalization (i18next, zh/en/fr/ru/ja/vi)
 ```
+
+### Relay / Provider Adapter System
+
+`relay/channel/adapter.go` defines two interfaces every provider must implement:
+
+- **`Adaptor`** — synchronous request/response (chat, embeddings, images, audio, rerank). Key methods: `Init`, `GetRequestURL`, `SetupRequestHeader`, `ConvertOpenAIRequest`, `DoRequest`, `DoResponse`.
+- **`TaskAdaptor`** — async task lifecycle (video generation, image generation, etc.) with a polling loop. Key methods: `ValidateRequestAndSetAction`, `EstimateBilling`, `AdjustBillingOnSubmit`, `AdjustBillingOnComplete`, `FetchTask`, `ParseTaskResult`.
+
+`relay/relay_adaptor.go` maps `constant.APIType*` integers to concrete adaptor structs via `GetAdaptor()` / `GetTaskAdaptor()`.
+
+Relay handlers (`relay/*_handler.go`) implement the per-modality orchestration logic (billing pre-charge, calling the adaptor, streaming response, settling quota).
+
+### Settings / Options System
+
+Runtime configuration is stored in the `options` table (key/value) and loaded into `common.OptionMap` at startup via `model.InitOptionMap()`, then hot-synced every `SyncFrequency` seconds via `model.SyncOptions()`.
+
+Domain-specific settings live under `setting/`:
+- `ratio_setting/` — model pricing ratios
+- `system_setting/` — system-wide toggles
+- `operation_setting/` — operational knobs
+- `performance_setting/` — perf tuning
+- `model_setting/` — per-model overrides
+
+Frontend settings UI (`web/default/src/features/system-settings/`) uses a section-registry pattern: each settings domain registers itself in `billing/section-registry.tsx` (or equivalent), and the parent page renders sections generically.
+
+### Billing Expression System
+
+`pkg/billingexpr/` implements expression-based dynamic pricing. **Read `pkg/billingexpr/expr.md` before touching any billing expression code.** The expression is the single source of truth for a model's pricing; the file documents variables, functions, token normalization (`p`/`c` exclusion), quota conversion, and versioning.
 
 ## Internationalization (i18n)
 
