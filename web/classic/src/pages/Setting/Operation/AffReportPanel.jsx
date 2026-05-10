@@ -48,7 +48,7 @@ export default function AffReportPanel() {
   const fetchReport = async () => {
     setLoading(true);
     try {
-      const res = await API.get('/api/admin/aff/report');
+      const res = await API.get('/api/user/aff/report');
       const { success, data } = res.data || {};
       if (success && data) {
         setData(data);
