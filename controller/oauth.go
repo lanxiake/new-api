@@ -269,6 +269,18 @@ func findOrCreateOAuthUser(c *gin.Context, provider oauth.Provider, oauthUser *o
 		inviterId, _ = model.GetUserIdByAffCode(affCode.(string))
 	}
 
+	// 邀请注册校验：开关开启时必须存在有效邀请码
+	if common.AffRegisterRequired {
+		affStr := ""
+		if affCode != nil {
+			affStr = affCode.(string)
+		}
+		if affStr == "" || inviterId == 0 {
+			common.ApiError(c, fmt.Errorf("当前系统仅支持邀请注册，请通过有效邀请链接访问"))
+			return
+		}
+	}
+
 	// Use transaction to ensure user creation and OAuth binding are atomic
 	if genericProvider, ok := provider.(*oauth.GenericOAuthProvider); ok {
 		// Custom provider: create user and binding in a transaction

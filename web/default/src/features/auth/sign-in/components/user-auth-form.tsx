@@ -310,7 +310,7 @@ export function UserAuthForm({
           disabled={isLoading || (requiresLegalConsent && !agreedToLegal)}
         >
           {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}
-          {t('Sign in')}
+          {t('Continue')}
         </Button>
 
         {/* Turnstile */}
@@ -360,6 +360,8 @@ export function UserAuthForm({
           disabled={isLoading || (requiresLegalConsent && !agreedToLegal)}
           onWeChatLogin={hasWeChatLogin ? handleOpenWeChatDialog : undefined}
           isWeChatLoading={isWeChatSubmitting}
+          layout='row'
+          dividerLabel={t('Or')}
         />
       </form>
 

@@ -17,6 +17,8 @@ type OAuthProvidersProps = {
   className?: string
   onWeChatLogin?: () => void
   isWeChatLoading?: boolean
+  layout?: 'column' | 'row'
+  dividerLabel?: string
 }
 
 type ProviderButton = {
@@ -33,6 +35,8 @@ export function OAuthProviders({
   className,
   onWeChatLogin,
   isWeChatLoading = false,
+  layout = 'column',
+  dividerLabel,
 }: OAuthProvidersProps) {
   const { t } = useTranslation()
   const {
@@ -117,6 +121,7 @@ export function OAuthProviders({
 
   if (providerButtons.length === 0) return null
 
+  const isRow = layout === 'row'
   return (
     <div className={cn('space-y-3', className)}>
       <div className='relative'>
@@ -125,12 +130,16 @@ export function OAuthProviders({
         </div>
         <div className='relative flex justify-center text-xs uppercase'>
           <span className='bg-background text-muted-foreground px-2'>
-            {t('Or continue with')}
+            {dividerLabel ?? t('Or continue with')}
           </span>
         </div>
       </div>
 
-      <div className='flex flex-col gap-2'>
+      <div
+        className={cn(
+          isRow ? 'flex flex-row flex-wrap justify-center gap-2' : 'flex flex-col gap-2'
+        )}
+      >
         {providerButtons.map(
           ({ key, label, onClick, icon, disabled: extraDisabled }) => (
             <Button
@@ -139,10 +148,16 @@ export function OAuthProviders({
               type='button'
               disabled={disabled || isLoading || extraDisabled}
               onClick={onClick}
-              className='h-11 w-full justify-center gap-2 rounded-lg'
+              aria-label={label}
+              title={label}
+              className={cn(
+                isRow
+                  ? 'h-11 w-11 justify-center rounded-lg p-0'
+                  : 'h-11 w-full justify-center gap-2 rounded-lg'
+              )}
             >
               {icon}
-              {label}
+              {!isRow && <span>{label}</span>}
             </Button>
           )
         )}

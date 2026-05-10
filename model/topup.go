@@ -11,6 +11,28 @@ import (
 	"gorm.io/gorm"
 )
 
+// AffRebateHook 充值成功后触发的返利回调钩子。
+// 由 service 包在启动时注入（避免 model -> service 循环导入）。
+//
+// 参数：tx 当前事务（必传，调用方需在 TopUp 状态已置 success 之后调用），
+// inviteeId 被邀请人ID，topupId 充值订单ID，topupTradeNo 订单号，topupQuota 实际到账 quota。
+//
+// 钩子返回 error 仅用于日志，不应回滚事务。
+type AffRebateHookFn func(tx *gorm.DB, inviteeId int, topupId int, topupTradeNo string, topupQuota int) error
+
+var AffRebateHook AffRebateHookFn
+
+// invokeAffRebateHook 内部辅助：安全调用钩子，失败仅记日志
+func invokeAffRebateHook(tx *gorm.DB, inviteeId int, topupId int, topupTradeNo string, topupQuota int) {
+	if AffRebateHook == nil {
+		return
+	}
+	if err := AffRebateHook(tx, inviteeId, topupId, topupTradeNo, topupQuota); err != nil {
+		common.SysLog(fmt.Sprintf("[AffRebateHook] 触发返利失败 invitee=%d topup=%d: %v",
+			inviteeId, topupId, err))
+	}
+}
+
 type TopUp struct {
 	Id              int     `json:"id"`
 	UserId          int     `json:"user_id" gorm:"index"`
@@ -145,6 +167,9 @@ func Recharge(referenceId string, customerId string, callerIp string) (err error
 		if err != nil {
 			return err
 		}
+
+		// 触发邀请返利（充值成功后）
+		invokeAffRebateHook(tx, topUp.UserId, topUp.Id, topUp.TradeNo, int(quota))
 
 		return nil
 	})
@@ -378,6 +403,10 @@ func ManualCompleteTopUp(tradeNo string, callerIp string) error {
 		userId = topUp.UserId
 		payMoney = topUp.Money
 		paymentMethod = topUp.PaymentMethod
+
+		// 触发邀请返利（管理员补单也算成功充值）
+		invokeAffRebateHook(tx, topUp.UserId, topUp.Id, topUp.TradeNo, quotaToAdd)
+
 		return nil
 	})
 
@@ -451,6 +480,9 @@ func RechargeCreem(referenceId string, customerEmail string, customerName string
 			return err
 		}
 
+		// 触发邀请返利
+		invokeAffRebateHook(tx, topUp.UserId, topUp.Id, topUp.TradeNo, int(quota))
+
 		return nil
 	})
 
@@ -511,6 +543,9 @@ func RechargeWaffo(tradeNo string, callerIp string) (err error) {
 		if err := tx.Model(&User{}).Where("id = ?", topUp.UserId).Update("quota", gorm.Expr("quota + ?", quotaToAdd)).Error; err != nil {
 			return err
 		}
+
+		// 触发邀请返利
+		invokeAffRebateHook(tx, topUp.UserId, topUp.Id, topUp.TradeNo, quotaToAdd)
 
 		return nil
 	})
@@ -575,6 +610,9 @@ func RechargeMtbot(tradeNo string, callerIp string) (err error) {
 			return err
 		}
 
+		// 触发邀请返利
+		invokeAffRebateHook(tx, topUp.UserId, topUp.Id, topUp.TradeNo, quotaToAdd)
+
 		return nil
 	})
 
@@ -635,6 +673,9 @@ func RechargeWaffoPancake(tradeNo string) (err error) {
 		if err := tx.Model(&User{}).Where("id = ?", topUp.UserId).Update("quota", gorm.Expr("quota + ?", quotaToAdd)).Error; err != nil {
 			return err
 		}
+
+		// 触发邀请返利
+		invokeAffRebateHook(tx, topUp.UserId, topUp.Id, topUp.TradeNo, quotaToAdd)
 
 		return nil
 	})

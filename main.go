@@ -119,6 +119,11 @@ func main() {
 	// Subscription quota reset task (daily/weekly/monthly/custom)
 	service.StartSubscriptionQuotaResetTask()
 
+	// Affiliate rebate scheduler — settle pending rebates after wait days (master node only)
+	if common.IsMasterNode {
+		service.StartAffRebateScheduler()
+	}
+
 	// Wire task polling adaptor factory (breaks service -> relay import cycle)
 	service.GetTaskAdaptorFunc = func(platform constant.TaskPlatform) service.TaskPollingAdaptor {
 		a := relay.GetTaskAdaptor(platform)

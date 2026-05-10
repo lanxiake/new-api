@@ -123,6 +123,13 @@ var TelegramBotName = ""
 var QuotaForNewUser = 0
 var QuotaForInviter = 0
 var QuotaForInvitee = 0
+
+// === 邀请注册 & 充值返利配置 ===
+var AffRegisterRequired = false // 邀请注册总开关：开启时新用户注册必须填写有效邀请码
+var AffRebateEnabled = false    // 充值返利开关：开启时被邀请用户每次充值都触发返利
+var AffRebateRatio = 0.10       // 充值返利比例（0~1，例如 0.10 表示 10%）
+var AffRebateWaitDays = 30      // 返利解冻等待天数
+
 var ChannelDisableThreshold = 5.0
 var AutomaticDisableChannelEnabled = false
 var AutomaticEnableChannelEnabled = false

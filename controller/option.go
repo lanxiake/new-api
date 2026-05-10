@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/QuantumNous/new-api/common"
@@ -311,6 +312,24 @@ func UpdateOption(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{
 				"success": false,
 				"message": err.Error(),
+			})
+			return
+		}
+	case "AffRebateRatio":
+		v, parseErr := strconv.ParseFloat(option.Value.(string), 64)
+		if parseErr != nil || v < 0 || v > 1 {
+			c.JSON(http.StatusOK, gin.H{
+				"success": false,
+				"message": "返利比例必须在 0 ~ 1 之间",
+			})
+			return
+		}
+	case "AffRebateWaitDays":
+		v, parseErr := strconv.Atoi(option.Value.(string))
+		if parseErr != nil || v < 0 || v > 365 {
+			c.JSON(http.StatusOK, gin.H{
+				"success": false,
+				"message": "解冻等待天数必须在 0 ~ 365 之间",
 			})
 			return
 		}

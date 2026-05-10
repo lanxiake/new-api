@@ -146,6 +146,19 @@ func GitHubOAuth(c *gin.Context) {
 			if affCode != nil {
 				inviterId, _ = model.GetUserIdByAffCode(affCode.(string))
 			}
+			if common.AffRegisterRequired {
+				affStr := ""
+				if affCode != nil {
+					affStr = affCode.(string)
+				}
+				if affStr == "" || inviterId == 0 {
+					c.JSON(http.StatusOK, gin.H{
+						"success": false,
+						"message": "当前系统仅支持邀请注册，请通过有效邀请链接访问",
+					})
+					return
+				}
+			}
 
 			if err := user.Insert(inviterId); err != nil {
 				c.JSON(http.StatusOK, gin.H{

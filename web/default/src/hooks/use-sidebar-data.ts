@@ -15,6 +15,7 @@ import {
   CreditCard,
   ListTodo,
   Settings,
+  Gift,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { WORKSPACE_IDS } from '@/components/layout/lib/workspace-registry'
@@ -92,6 +93,11 @@ export function useSidebarData(): SidebarData {
             icon: Wallet,
           },
           {
+            title: t('Invite Rewards'),
+            url: '/invite-rewards',
+            icon: Gift,
+          },
+          {
             title: t('Profile'),
             url: '/profile',
             icon: User,
@@ -126,6 +132,16 @@ export function useSidebarData(): SidebarData {
             title: t('Subscription Management'),
             url: '/subscriptions',
             icon: CreditCard,
+          },
+          {
+            title: t('Invitation Rebate Report'),
+            url: '/admin/aff-report',
+            icon: Gift,
+          },
+          {
+            title: t('Invitation & Rebate Settings'),
+            url: '/admin/aff-settings',
+            icon: Gift,
           },
           {
             title: t('System Settings'),

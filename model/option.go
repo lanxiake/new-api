@@ -138,6 +138,10 @@ func InitOptionMap() {
 	common.OptionMap["QuotaForNewUser"] = strconv.Itoa(common.QuotaForNewUser)
 	common.OptionMap["QuotaForInviter"] = strconv.Itoa(common.QuotaForInviter)
 	common.OptionMap["QuotaForInvitee"] = strconv.Itoa(common.QuotaForInvitee)
+	common.OptionMap["AffRegisterRequired"] = strconv.FormatBool(common.AffRegisterRequired)
+	common.OptionMap["AffRebateEnabled"] = strconv.FormatBool(common.AffRebateEnabled)
+	common.OptionMap["AffRebateRatio"] = strconv.FormatFloat(common.AffRebateRatio, 'f', -1, 64)
+	common.OptionMap["AffRebateWaitDays"] = strconv.Itoa(common.AffRebateWaitDays)
 	common.OptionMap["QuotaRemindThreshold"] = strconv.Itoa(common.QuotaRemindThreshold)
 	common.OptionMap["PreConsumedQuota"] = strconv.Itoa(common.PreConsumedQuota)
 	common.OptionMap["ModelRequestRateLimitCount"] = strconv.Itoa(setting.ModelRequestRateLimitCount)
@@ -490,6 +494,18 @@ func updateOptionMap(key string, value string) (err error) {
 		common.QuotaForInviter, _ = strconv.Atoi(value)
 	case "QuotaForInvitee":
 		common.QuotaForInvitee, _ = strconv.Atoi(value)
+	case "AffRegisterRequired":
+		common.AffRegisterRequired = value == "true"
+	case "AffRebateEnabled":
+		common.AffRebateEnabled = value == "true"
+	case "AffRebateRatio":
+		if v, err := strconv.ParseFloat(value, 64); err == nil && v >= 0 && v <= 1 {
+			common.AffRebateRatio = v
+		}
+	case "AffRebateWaitDays":
+		if v, err := strconv.Atoi(value); err == nil && v >= 0 && v <= 365 {
+			common.AffRebateWaitDays = v
+		}
 	case "QuotaRemindThreshold":
 		common.QuotaRemindThreshold, _ = strconv.Atoi(value)
 	case "PreConsumedQuota":

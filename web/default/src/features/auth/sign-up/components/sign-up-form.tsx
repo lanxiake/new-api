@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { z } from 'zod'
+import { CheckCircle2, XCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
@@ -29,13 +30,14 @@ import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/password-input'
 import { Turnstile } from '@/components/turnstile'
 import { register, wechatLoginByCode } from '@/features/auth/api'
+import { checkAffCode } from '@/features/invite-rewards/api'
 import { LegalConsent } from '@/features/auth/components/legal-consent'
 import { OAuthProviders } from '@/features/auth/components/oauth-providers'
 import { registerFormSchema } from '@/features/auth/constants'
 import { useAuthRedirect } from '@/features/auth/hooks/use-auth-redirect'
 import { useEmailVerification } from '@/features/auth/hooks/use-email-verification'
 import { useTurnstile } from '@/features/auth/hooks/use-turnstile'
-import { getAffiliateCode } from '@/features/auth/lib/storage'
+import { getAffiliateCode, saveAffiliateCode } from '@/features/auth/lib/storage'
 
 export function SignUpForm({
   className,
@@ -76,14 +78,55 @@ export function SignUpForm({
       email: '',
       password: '',
       confirmPassword: '',
+      affCode: '',
     },
   })
 
   const emailValue = form.watch('email')
+  const affCodeValue = form.watch('affCode') ?? ''
   const emailVerificationRequired = !!status?.email_verification
   const hasUserAgreement = Boolean(status?.user_agreement_enabled)
   const hasPrivacyPolicy = Boolean(status?.privacy_policy_enabled)
   const requiresLegalConsent = hasUserAgreement || hasPrivacyPolicy
+  const affRegisterRequired = Boolean(
+    status?.aff_register_required ?? status?.data?.aff_register_required
+  )
+
+  // Lock invite code if URL provided one (?aff=xxx) or it's stored already
+  const [affCodeLocked, setAffCodeLocked] = useState(false)
+  const [affCodeStatus, setAffCodeStatus] = useState<
+    'idle' | 'checking' | 'valid' | 'invalid'
+  >('idle')
+  const affCheckTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    const stored = getAffiliateCode()
+    if (stored) {
+      form.setValue('affCode', stored)
+      setAffCodeLocked(true)
+    }
+  }, [form])
+
+  useEffect(() => {
+    const code = (affCodeValue || '').trim()
+    if (!code) {
+      setAffCodeStatus('idle')
+      return
+    }
+    setAffCodeStatus('checking')
+    if (affCheckTimerRef.current) clearTimeout(affCheckTimerRef.current)
+    affCheckTimerRef.current = setTimeout(async () => {
+      try {
+        const valid = await checkAffCode(code)
+        setAffCodeStatus(valid ? 'valid' : 'invalid')
+      } catch {
+        setAffCodeStatus('invalid')
+      }
+    }, 400)
+    return () => {
+      if (affCheckTimerRef.current) clearTimeout(affCheckTimerRef.current)
+    }
+  }, [affCodeValue])
   const oauthRegisterEnabled =
     status?.oauth_register_enabled ??
     status?.data?.oauth_register_enabled ??
@@ -130,6 +173,22 @@ export function SignUpForm({
       }
     }
 
+    const submittedAff = (data.affCode || getAffiliateCode() || '').trim()
+    if (affRegisterRequired) {
+      if (!submittedAff) {
+        toast.error(t('Invite code is required for registration'))
+        return
+      }
+      if (affCodeStatus === 'invalid') {
+        toast.error(t('Invalid invite code'))
+        return
+      }
+    }
+
+    if (submittedAff) {
+      saveAffiliateCode(submittedAff)
+    }
+
     setIsLoading(true)
     try {
       const res = await register({
@@ -137,7 +196,7 @@ export function SignUpForm({
         password: data.password,
         email: data.email || undefined,
         verification_code: verificationCode || undefined,
-        aff: getAffiliateCode(),
+        aff: submittedAff || undefined,
         turnstile: turnstileToken,
       })
 
@@ -251,6 +310,44 @@ export function SignUpForm({
           )}
         />
 
+        {/* Invite Code Field */}
+        <FormField
+          control={form.control}
+          name='affCode'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                {affRegisterRequired
+                  ? t('Invite Code (required)')
+                  : t('Invite Code (optional)')}
+              </FormLabel>
+              <FormControl>
+                <div className='relative'>
+                  <Input
+                    placeholder={t('Enter invite code')}
+                    {...field}
+                    disabled={affCodeLocked}
+                    className={cn(
+                      affCodeStatus === 'valid' && 'pr-9 border-emerald-500',
+                      affCodeStatus === 'invalid' && 'pr-9 border-red-500'
+                    )}
+                  />
+                  {affCodeStatus === 'valid' && (
+                    <CheckCircle2 className='absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-500' />
+                  )}
+                  {affCodeStatus === 'invalid' && (
+                    <XCircle className='absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-red-500' />
+                  )}
+                </div>
+              </FormControl>
+              {affCodeStatus === 'invalid' && (
+                <p className='text-red-500 text-xs'>{t('Invalid invite code')}</p>
+              )}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         {/* Email Verification Section */}
         {emailVerificationRequired && (
           <>
@@ -323,7 +420,12 @@ export function SignUpForm({
         <Button
           type='submit'
           className='mt-2 w-full justify-center gap-2'
-          disabled={isLoading || (requiresLegalConsent && !agreedToLegal)}
+          disabled={
+            isLoading ||
+            (requiresLegalConsent && !agreedToLegal) ||
+            (affRegisterRequired &&
+              (affCodeStatus === 'invalid' || affCodeStatus === 'idle'))
+          }
         >
           {isLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : null}
           {t('Create account')}

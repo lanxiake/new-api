@@ -175,6 +175,16 @@ func Register(c *gin.Context) {
 	}
 	affCode := user.AffCode // this code is the inviter's code, not the user's own code
 	inviterId, _ := model.GetUserIdByAffCode(affCode)
+	if common.AffRegisterRequired {
+		if strings.TrimSpace(affCode) == "" {
+			common.ApiError(c, fmt.Errorf("当前系统仅支持邀请注册，请填写邀请码"))
+			return
+		}
+		if inviterId == 0 {
+			common.ApiError(c, fmt.Errorf("邀请码无效或不存在"))
+			return
+		}
+	}
 	cleanUser := model.User{
 		Username:    user.Username,
 		Password:    user.Password,
