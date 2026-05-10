@@ -36,6 +36,7 @@ export default defineConfig({
           { text: '购买额度', link: '/guide/3-quota' },
           { text: '创建 API 令牌', link: '/guide/4-token' },
           { text: '配置 CLI 工具', link: '/guide/5-cli' },
+          { text: '邀请奖励', link: '/guide/6-invite' },
         ],
       },
       {

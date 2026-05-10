@@ -25,3 +25,7 @@ LLM-Link 支持 Claude Code、Codex 和 Gemini 三种主流 CLI 工具。
 ::: warning 请务必先检查环境！！！
 在配置任何 CLI 工具之前，**请务必先完成** [环境检查](/cli-config/1-env) 步骤。
 :::
+
+## 下一步
+
+CLI 配置完成后，可以邀请好友一起使用并获得 [邀请奖励](./6-invite)。
