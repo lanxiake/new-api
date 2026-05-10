@@ -175,15 +175,9 @@ func Register(c *gin.Context) {
 	}
 	affCode := user.AffCode // this code is the inviter's code, not the user's own code
 	inviterId, _ := model.GetUserIdByAffCode(affCode)
-	if common.AffRegisterRequired {
-		if strings.TrimSpace(affCode) == "" {
-			common.ApiError(c, fmt.Errorf("当前系统仅支持邀请注册，请填写邀请码"))
-			return
-		}
-		if inviterId == 0 {
-			common.ApiError(c, fmt.Errorf("邀请码无效或不存在"))
-			return
-		}
+	if msg, ok := requireAffCodeIfEnforced(affCode, inviterId); !ok {
+		common.ApiError(c, fmt.Errorf("%s", msg))
+		return
 	}
 	cleanUser := model.User{
 		Username:    user.Username,
@@ -364,14 +358,16 @@ func GetAffCode(c *gin.Context) {
 		return
 	}
 	if user.AffCode == "" {
-		user.AffCode = common.GetRandomString(4)
-		if err := user.Update(false); err != nil {
+		// 使用幂等的条件 UPDATE，防并发覆盖
+		code, e := model.EnsureUserAffCode(user.Id)
+		if e != nil {
 			c.JSON(http.StatusOK, gin.H{
 				"success": false,
-				"message": err.Error(),
+				"message": e.Error(),
 			})
 			return
 		}
+		user.AffCode = code
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,

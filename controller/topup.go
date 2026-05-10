@@ -397,9 +397,11 @@ func EpayNotify(c *gin.Context) {
 				return
 			}
 			logger.LogInfo(c.Request.Context(), fmt.Sprintf("易支付 充值成功 trade_no=%s user_id=%d client_ip=%s quota_to_add=%d money=%.2f topup=%q", topUp.TradeNo, topUp.UserId, c.ClientIP(), quotaToAdd, topUp.Money, common.GetJsonString(topUp)))
-			// 触发邀请返利（Epay 路径不在事务中，传 nil 使用 model.DB）
-			if err := service.CreateAffRebate(nil, topUp.UserId, topUp.Id, topUp.TradeNo, quotaToAdd); err != nil {
-				logger.LogError(c.Request.Context(), fmt.Sprintf("易支付 邀请返利创建失败 trade_no=%s user_id=%d error=%v", topUp.TradeNo, topUp.UserId, err))
+			// 触发邀请返利（统一通过 model 钩子；钩子内部使用非事务 DB 并依赖 topup_id 唯一约束做幂等）
+			if model.AffRebateHook != nil {
+				if err := model.AffRebateHook(topUp.UserId, topUp.Id, topUp.TradeNo, quotaToAdd); err != nil {
+					logger.LogError(c.Request.Context(), fmt.Sprintf("易支付 邀请返利创建失败 trade_no=%s user_id=%d error=%v", topUp.TradeNo, topUp.UserId, err))
+				}
 			}
 			model.RecordTopupLog(topUp.UserId, fmt.Sprintf("使用在线充值成功，充值金额: %v，支付金额：%f", logger.LogQuota(quotaToAdd), topUp.Money), c.ClientIP(), topUp.PaymentMethod, "epay")
 		}

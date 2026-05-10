@@ -32,10 +32,11 @@ func GetAffStats(c *gin.Context) {
 		common.ApiError(c, err)
 		return
 	}
-	// 自动生成邀请码（与 GetAffCode 保持一致）
+	// 自动生成邀请码：使用幂等的条件 UPDATE，防并发覆盖
 	if user.AffCode == "" {
-		user.AffCode = common.GetRandomString(4)
-		_ = user.Update(false)
+		if code, e := model.EnsureUserAffCode(user.Id); e == nil && code != "" {
+			user.AffCode = code
+		}
 	}
 	common.ApiSuccess(c, gin.H{
 		"aff_code":          user.AffCode,
@@ -72,12 +73,12 @@ func GetAffInvitees(c *gin.Context) {
 		return
 	}
 
-	// 总数（DISTINCT invitee_id）
+	// 总数：显式 COUNT(DISTINCT invitee_id)，跨 SQLite/MySQL/PostgreSQL 行为一致
 	var total int64
 	model.DB.Table("aff_rebate_records").
 		Where("inviter_id = ? AND status IN ?", userId,
 			[]string{model.AffRebateStatusPending, model.AffRebateStatusSettled}).
-		Distinct("invitee_id").Count(&total)
+		Select("COUNT(DISTINCT invitee_id)").Scan(&total)
 
 	// 取脱敏用户名
 	items := make([]gin.H, 0, len(rows))
@@ -156,17 +157,24 @@ func GetAffReport(c *gin.Context) {
 	}
 	var stats Stats
 
-	// 聚合主统计
+	// 聚合主统计 + 计数：合并为单条 SQL，避免 3 次表扫描；
+	// 同时使用显式 COUNT(DISTINCT) 保障跨 SQLite/MySQL/PostgreSQL 行为一致
 	row := struct {
-		TotalRebate   int `gorm:"column:total_rebate"`
-		PendingRebate int `gorm:"column:pending_rebate"`
-		SettledRebate int `gorm:"column:settled_rebate"`
+		TotalRebate   int   `gorm:"column:total_rebate"`
+		PendingRebate int   `gorm:"column:pending_rebate"`
+		SettledRebate int   `gorm:"column:settled_rebate"`
+		TotalInviters int64 `gorm:"column:total_inviters"`
+		TotalInvitees int64 `gorm:"column:total_invitees"`
+		TotalRecords  int64 `gorm:"column:total_records"`
 	}{}
 	if err := model.DB.Table("aff_rebate_records").
 		Select(
 			"COALESCE(SUM(rebate_quota), 0) AS total_rebate, "+
 				"COALESCE(SUM(CASE WHEN status = ? THEN rebate_quota ELSE 0 END), 0) AS pending_rebate, "+
-				"COALESCE(SUM(CASE WHEN status = ? THEN rebate_quota ELSE 0 END), 0) AS settled_rebate",
+				"COALESCE(SUM(CASE WHEN status = ? THEN rebate_quota ELSE 0 END), 0) AS settled_rebate, "+
+				"COUNT(DISTINCT inviter_id) AS total_inviters, "+
+				"COUNT(DISTINCT invitee_id) AS total_invitees, "+
+				"COUNT(*) AS total_records",
 			model.AffRebateStatusPending, model.AffRebateStatusSettled).
 		Scan(&row).Error; err != nil {
 		common.ApiError(c, err)
@@ -175,10 +183,9 @@ func GetAffReport(c *gin.Context) {
 	stats.TotalRebate = row.TotalRebate
 	stats.PendingRebate = row.PendingRebate
 	stats.SettledRebate = row.SettledRebate
-
-	model.DB.Table("aff_rebate_records").Distinct("inviter_id").Count(&stats.TotalInviters)
-	model.DB.Table("aff_rebate_records").Distinct("invitee_id").Count(&stats.TotalInvitees)
-	model.DB.Table("aff_rebate_records").Count(&stats.TotalRecords)
+	stats.TotalInviters = row.TotalInviters
+	stats.TotalInvitees = row.TotalInvitees
+	stats.TotalRecords = row.TotalRecords
 
 	// TOP 10 邀请人
 	type TopRow struct {
@@ -239,4 +246,24 @@ func maskUsername(name string) string {
 	default:
 		return string(r[:2]) + "**" + string(r[len(r)-2:])
 	}
+}
+
+// requireAffCodeIfEnforced 邀请码强制注册校验。
+//
+// 当 common.AffRegisterRequired 开启时，要求 affCode 非空且 inviterId > 0。
+// 用于普通注册及各 OAuth 注册分支统一调用，避免在多处重复硬编码同一段判断。
+//
+// 返回 (msg, ok)：ok=false 时 msg 为面向最终用户的错误提示；ok=true 时 msg 为空。
+// 当开关未启用时直接返回 ok=true。
+func requireAffCodeIfEnforced(affCode string, inviterId int) (string, bool) {
+	if !common.AffRegisterRequired {
+		return "", true
+	}
+	if strings.TrimSpace(affCode) == "" {
+		return "当前系统仅支持邀请注册，请通过有效邀请链接访问", false
+	}
+	if inviterId == 0 {
+		return "邀请码无效或不存在", false
+	}
+	return "", true
 }

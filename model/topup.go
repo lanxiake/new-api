@@ -14,20 +14,33 @@ import (
 // AffRebateHook 充值成功后触发的返利回调钩子。
 // 由 service 包在启动时注入（避免 model -> service 循环导入）。
 //
-// 参数：tx 当前事务（必传，调用方需在 TopUp 状态已置 success 之后调用），
-// inviteeId 被邀请人ID，topupId 充值订单ID，topupTradeNo 订单号，topupQuota 实际到账 quota。
+// 调用约定（重要）：
+//   - 必须在充值事务【提交成功之后】异步触发，不能在事务内调用，否则会延长 users
+//     表的行锁持续时间，并使得"返利创建"与"用户余额变更"绑定在同一事务中，
+//     一旦返利失败将整体回滚，反过来吞掉用户已成功的充值。
+//   - 钩子内部应使用独立的非事务 DB 句柄（model.DB），并依靠 topup_id 唯一约束
+//     保证幂等（重复调用不会产生重复返利记录）。
+//   - 钩子返回 error 仅用于日志，调用方不应据此回滚或失败。
 //
-// 钩子返回 error 仅用于日志，不应回滚事务。
-type AffRebateHookFn func(tx *gorm.DB, inviteeId int, topupId int, topupTradeNo string, topupQuota int) error
+// 参数：inviteeId 被邀请人ID，topupId 充值订单ID（用于幂等键），
+// topupTradeNo 订单号（冗余字段，便于排查），topupQuota 实际到账 quota。
+type AffRebateHookFn func(inviteeId int, topupId int, topupTradeNo string, topupQuota int) error
 
 var AffRebateHook AffRebateHookFn
 
-// invokeAffRebateHook 内部辅助：安全调用钩子，失败仅记日志
-func invokeAffRebateHook(tx *gorm.DB, inviteeId int, topupId int, topupTradeNo string, topupQuota int) {
+// invokeAffRebateHook 内部辅助：安全调用钩子，失败仅记日志。
+// 必须在外层事务 Commit 成功之后再调用。
+func invokeAffRebateHook(inviteeId int, topupId int, topupTradeNo string, topupQuota int) {
 	if AffRebateHook == nil {
 		return
 	}
-	if err := AffRebateHook(tx, inviteeId, topupId, topupTradeNo, topupQuota); err != nil {
+	defer func() {
+		if r := recover(); r != nil {
+			common.SysLog(fmt.Sprintf("[AffRebateHook] panic recovered invitee=%d topup=%d: %v",
+				inviteeId, topupId, r))
+		}
+	}()
+	if err := AffRebateHook(inviteeId, topupId, topupTradeNo, topupQuota); err != nil {
 		common.SysLog(fmt.Sprintf("[AffRebateHook] 触发返利失败 invitee=%d topup=%d: %v",
 			inviteeId, topupId, err))
 	}
@@ -168,9 +181,6 @@ func Recharge(referenceId string, customerId string, callerIp string) (err error
 			return err
 		}
 
-		// 触发邀请返利（充值成功后）
-		invokeAffRebateHook(tx, topUp.UserId, topUp.Id, topUp.TradeNo, int(quota))
-
 		return nil
 	})
 
@@ -178,6 +188,9 @@ func Recharge(referenceId string, customerId string, callerIp string) (err error
 		common.SysError("topup failed: " + err.Error())
 		return errors.New("充值失败，请稍后重试")
 	}
+
+	// 触发邀请返利（事务提交成功之后）
+	invokeAffRebateHook(topUp.UserId, topUp.Id, topUp.TradeNo, int(quota))
 
 	RecordTopupLog(topUp.UserId, fmt.Sprintf("使用在线充值成功，充值金额: %v，支付金额：%d", logger.FormatQuota(int(quota)), topUp.Amount), callerIp, topUp.PaymentMethod, PaymentMethodStripe)
 
@@ -353,6 +366,7 @@ func ManualCompleteTopUp(tradeNo string, callerIp string) error {
 	}
 
 	var userId int
+	var topUpId int
 	var quotaToAdd int
 	var payMoney float64
 	var paymentMethod string
@@ -401,11 +415,9 @@ func ManualCompleteTopUp(tradeNo string, callerIp string) error {
 		}
 
 		userId = topUp.UserId
+		topUpId = topUp.Id
 		payMoney = topUp.Money
 		paymentMethod = topUp.PaymentMethod
-
-		// 触发邀请返利（管理员补单也算成功充值）
-		invokeAffRebateHook(tx, topUp.UserId, topUp.Id, topUp.TradeNo, quotaToAdd)
 
 		return nil
 	})
@@ -413,6 +425,9 @@ func ManualCompleteTopUp(tradeNo string, callerIp string) error {
 	if err != nil {
 		return err
 	}
+
+	// 触发邀请返利（事务提交成功之后；管理员补单也算成功充值）
+	invokeAffRebateHook(userId, topUpId, tradeNo, quotaToAdd)
 
 	// 事务外记录日志，避免阻塞
 	RecordTopupLog(userId, fmt.Sprintf("管理员补单成功，充值金额: %v，支付金额：%f", logger.FormatQuota(quotaToAdd), payMoney), callerIp, paymentMethod, "admin")
@@ -480,9 +495,6 @@ func RechargeCreem(referenceId string, customerEmail string, customerName string
 			return err
 		}
 
-		// 触发邀请返利
-		invokeAffRebateHook(tx, topUp.UserId, topUp.Id, topUp.TradeNo, int(quota))
-
 		return nil
 	})
 
@@ -490,6 +502,9 @@ func RechargeCreem(referenceId string, customerEmail string, customerName string
 		common.SysError("creem topup failed: " + err.Error())
 		return errors.New("充值失败，请稍后重试")
 	}
+
+	// 触发邀请返利（事务提交成功之后）
+	invokeAffRebateHook(topUp.UserId, topUp.Id, topUp.TradeNo, int(quota))
 
 	RecordTopupLog(topUp.UserId, fmt.Sprintf("使用Creem充值成功，充值额度: %v，支付金额：%.2f", quota, topUp.Money), callerIp, topUp.PaymentMethod, PaymentMethodCreem)
 
@@ -544,9 +559,6 @@ func RechargeWaffo(tradeNo string, callerIp string) (err error) {
 			return err
 		}
 
-		// 触发邀请返利
-		invokeAffRebateHook(tx, topUp.UserId, topUp.Id, topUp.TradeNo, quotaToAdd)
-
 		return nil
 	})
 
@@ -556,6 +568,8 @@ func RechargeWaffo(tradeNo string, callerIp string) (err error) {
 	}
 
 	if quotaToAdd > 0 {
+		// 触发邀请返利（事务提交成功之后）
+		invokeAffRebateHook(topUp.UserId, topUp.Id, topUp.TradeNo, quotaToAdd)
 		RecordTopupLog(topUp.UserId, fmt.Sprintf("Waffo充值成功，充值额度: %v，支付金额: %.2f", logger.FormatQuota(quotaToAdd), topUp.Money), callerIp, topUp.PaymentMethod, PaymentMethodWaffo)
 	}
 
@@ -610,9 +624,6 @@ func RechargeMtbot(tradeNo string, callerIp string) (err error) {
 			return err
 		}
 
-		// 触发邀请返利
-		invokeAffRebateHook(tx, topUp.UserId, topUp.Id, topUp.TradeNo, quotaToAdd)
-
 		return nil
 	})
 
@@ -622,6 +633,8 @@ func RechargeMtbot(tradeNo string, callerIp string) (err error) {
 	}
 
 	if quotaToAdd > 0 {
+		// 触发邀请返利（事务提交成功之后）
+		invokeAffRebateHook(topUp.UserId, topUp.Id, topUp.TradeNo, quotaToAdd)
 		RecordTopupLog(topUp.UserId, fmt.Sprintf("Mtbot充值成功，充值额度: %v，支付金额: %.2f", logger.FormatQuota(quotaToAdd), topUp.Money), callerIp, topUp.PaymentMethod, PaymentMethodMtbot)
 	}
 
@@ -674,9 +687,6 @@ func RechargeWaffoPancake(tradeNo string) (err error) {
 			return err
 		}
 
-		// 触发邀请返利
-		invokeAffRebateHook(tx, topUp.UserId, topUp.Id, topUp.TradeNo, quotaToAdd)
-
 		return nil
 	})
 
@@ -686,6 +696,8 @@ func RechargeWaffoPancake(tradeNo string) (err error) {
 	}
 
 	if quotaToAdd > 0 {
+		// 触发邀请返利（事务提交成功之后）
+		invokeAffRebateHook(topUp.UserId, topUp.Id, topUp.TradeNo, quotaToAdd)
 		RecordLog(topUp.UserId, LogTypeTopup, fmt.Sprintf("Waffo Pancake充值成功，充值额度: %v，支付金额: %.2f", logger.FormatQuota(quotaToAdd), topUp.Money))
 	}
 

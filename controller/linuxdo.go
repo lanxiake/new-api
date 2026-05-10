@@ -229,21 +229,17 @@ func LinuxdoOAuth(c *gin.Context) {
 
 				affCode := session.Get("aff")
 				inviterId := 0
+				affStr := ""
 				if affCode != nil {
-					inviterId, _ = model.GetUserIdByAffCode(affCode.(string))
+					affStr, _ = affCode.(string)
+					inviterId, _ = model.GetUserIdByAffCode(affStr)
 				}
-				if common.AffRegisterRequired {
-					affStr := ""
-					if affCode != nil {
-						affStr = affCode.(string)
-					}
-					if affStr == "" || inviterId == 0 {
-						c.JSON(http.StatusOK, gin.H{
-							"success": false,
-							"message": "当前系统仅支持邀请注册，请通过有效邀请链接访问",
-						})
-						return
-					}
+				if msg, ok := requireAffCodeIfEnforced(affStr, inviterId); !ok {
+					c.JSON(http.StatusOK, gin.H{
+						"success": false,
+						"message": msg,
+					})
+					return
 				}
 
 				if err := user.Insert(inviterId); err != nil {

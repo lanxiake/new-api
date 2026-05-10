@@ -265,20 +265,16 @@ func findOrCreateOAuthUser(c *gin.Context, provider oauth.Provider, oauthUser *o
 	// Handle affiliate code
 	affCode := session.Get("aff")
 	inviterId := 0
+	affStr := ""
 	if affCode != nil {
-		inviterId, _ = model.GetUserIdByAffCode(affCode.(string))
+		affStr, _ = affCode.(string)
+		inviterId, _ = model.GetUserIdByAffCode(affStr)
 	}
 
 	// 邀请注册校验：开关开启时必须存在有效邀请码
-	if common.AffRegisterRequired {
-		affStr := ""
-		if affCode != nil {
-			affStr = affCode.(string)
-		}
-		if affStr == "" || inviterId == 0 {
-			common.ApiError(c, fmt.Errorf("当前系统仅支持邀请注册，请通过有效邀请链接访问"))
-			return
-		}
+	if msg, ok := requireAffCodeIfEnforced(affStr, inviterId); !ok {
+		common.ApiError(c, fmt.Errorf("%s", msg))
+		return
 	}
 
 	// Use transaction to ensure user creation and OAuth binding are atomic

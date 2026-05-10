@@ -342,6 +342,58 @@ func inviteUser(inviterId int) (err error) {
 	return DB.Save(user).Error
 }
 
+// EnsureUserAffCode 确保指定用户拥有 aff_code，必要时原子地生成一个。
+//
+// 实现要点：
+//   - 使用条件 UPDATE（仅当 aff_code 为空时写入）防并发覆盖：两个并发请求即便
+//     都看到 aff_code 为空，也只会有其中一个 UPDATE 成功（rowsAffected=1），
+//     另一个 rowsAffected=0 后回读最新值即可，避免同一用户被分配不同邀请码。
+//   - 唯一约束冲突时按指数退避方式重试，最多 maxRetry 次。
+//   - 邀请码长度统一为 8 位（约 218 万亿 组合，碰撞概率可忽略）。
+//
+// 返回最终的 aff_code（已存在则原值）。
+func EnsureUserAffCode(userId int) (string, error) {
+	const codeLen = 8
+	const maxRetry = 5
+
+	// 先读一次，已有则直接返回
+	var existing string
+	if err := DB.Model(&User{}).Where("id = ?", userId).Select("aff_code").Scan(&existing).Error; err != nil {
+		return "", err
+	}
+	if existing != "" {
+		return existing, nil
+	}
+
+	for i := 0; i < maxRetry; i++ {
+		candidate := common.GetRandomString(codeLen)
+		// 条件 UPDATE：仅当目标用户的 aff_code 仍为空时才写入
+		res := DB.Model(&User{}).
+			Where("id = ? AND (aff_code IS NULL OR aff_code = '')", userId).
+			Update("aff_code", candidate)
+		if res.Error != nil {
+			// 唯一冲突 → 换一个候选码再试
+			msg := strings.ToLower(res.Error.Error())
+			if strings.Contains(msg, "unique") || strings.Contains(msg, "duplicate") {
+				continue
+			}
+			return "", res.Error
+		}
+		if res.RowsAffected == 1 {
+			return candidate, nil
+		}
+		// 0 行影响：另一并发请求已抢先写入，回读即可
+		if err := DB.Model(&User{}).Where("id = ?", userId).Select("aff_code").Scan(&existing).Error; err != nil {
+			return "", err
+		}
+		if existing != "" {
+			return existing, nil
+		}
+		// 极端竞态（理论上不会进入），下一轮重试
+	}
+	return "", errors.New("生成邀请码失败：多次尝试后仍未成功")
+}
+
 func (user *User) TransferAffQuotaToQuota(quota int) error {
 	// 检查quota是否小于最小额度
 	if float64(quota) < common.QuotaPerUnit {
