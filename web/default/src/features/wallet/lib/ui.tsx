@@ -109,6 +109,13 @@ export function getPaymentIcon(
           style={{ color: PAYMENT_ICON_COLORS[PAYMENT_TYPES.WAFFO_PANCAKE] }}
         />
       )
+    case PAYMENT_TYPES.MTBOT:
+      return (
+        <SiAlipay
+          className={className}
+          style={{ color: PAYMENT_ICON_COLORS[PAYMENT_TYPES.MTBOT] }}
+        />
+      )
     default:
       return <CreditCard className={className} />
   }

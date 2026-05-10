@@ -169,6 +169,12 @@ const BILLING_SECTIONS = [
           WaffoPancakeUnitPrice: settings.WaffoPancakeUnitPrice ?? 1,
           WaffoPancakeMinTopUp: settings.WaffoPancakeMinTopUp ?? 1,
         }}
+        mtbotDefaultValues={{
+          MtbotEnabled: settings.MtbotEnabled ?? false,
+          MtbotTopupSecret: settings.MtbotTopupSecret ?? '',
+          MtbotTopupURL:
+            settings.MtbotTopupURL ?? 'https://www.mtbot.top/api/pay/topup',
+        }}
       />
     ),
   },

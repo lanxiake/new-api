@@ -1,0 +1,12 @@
+FROM docker.m.daocloud.io/library/golang:alpine AS builder2
+ENV GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH=amd64
+ENV GOEXPERIMENT=greenteagc
+ENV GOPROXY=https://goproxy.cn,direct
+
+WORKDIR /build
+
+ADD go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+RUN go build -ldflags "-s -w -X 'github.com/QuantumNous/new-api/common.Version=$(cat VERSION)'" -o new-api
