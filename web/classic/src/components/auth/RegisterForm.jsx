@@ -90,6 +90,7 @@ const RegisterForm = () => {
   const [affCodeLocked, setAffCodeLocked] = useState(false);
   const [affCheckState, setAffCheckState] = useState('idle'); // idle | checking | valid | invalid
   const affCheckTimerRef = useRef(null);
+  const emailFormApiRef = useRef(null);
   const [userState, userDispatch] = useContext(UserContext);
   const [statusState] = useContext(StatusContext);
   const [turnstileEnabled, setTurnstileEnabled] = useState(false);
@@ -161,6 +162,19 @@ const RegisterForm = () => {
       setInputs((prev) => ({ ...prev, aff_code: code }));
       setAffCodeLocked(Boolean(fromUrl));
       validateAffCode(code);
+      // Semi UI Form 受控，需通过 formApi.setValue 同步显示
+      const tryFill = (retry = 0) => {
+        if (emailFormApiRef.current) {
+          try {
+            emailFormApiRef.current.setValue('aff_code', code);
+          } catch (e) {
+            // ignore
+          }
+        } else if (retry < 20) {
+          setTimeout(() => tryFill(retry + 1), 50);
+        }
+      };
+      tryFill();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -635,7 +649,10 @@ const RegisterForm = () => {
               </Title>
             </div>
             <div className='px-2 py-8'>
-              <Form className='space-y-3'>
+              <Form
+                className='space-y-3'
+                getFormApi={(api) => (emailFormApiRef.current = api)}
+              >
                 <Form.Input
                   field='username'
                   label={t('用户名')}
