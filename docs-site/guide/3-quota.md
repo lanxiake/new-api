@@ -9,8 +9,8 @@
 ## 充值步骤
 
 1. 登录 [LLM-Link 控制台](https://www.llm-link.top)
-2. 点击左侧菜单「钱包管理」
-3. 选择充值金额，完成支付
+2. 点击左侧菜单「钱包管理」，或直接访问 [llm-link.top/console/topup](https://www.llm-link.top/console/topup)
+3. 输入兑换码或选择充值金额，完成支付
 
 ![钱包管理页面](/images/guide/wallet-page.png)
 
