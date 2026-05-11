@@ -25,6 +25,7 @@ tiktoken_cache
 # plans
 .claude
 .cursor
+e2e-prod-verify
 
 electron/node_modules
 electron/dist
