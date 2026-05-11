@@ -459,6 +459,7 @@ func (user *User) Insert(inviterId int) error {
 		}
 	}
 	user.Quota = common.QuotaForNewUser
+	user.InviterId = inviterId
 	//user.SetAccessToken(common.GetUUID())
 	affCode, err := generateUniqueAffCode(8)
 	if err != nil {
@@ -522,6 +523,7 @@ func (user *User) InsertWithTx(tx *gorm.DB, inviterId int) error {
 		}
 	}
 	user.Quota = common.QuotaForNewUser
+	user.InviterId = inviterId
 	affCode, err := generateUniqueAffCode(8)
 	if err != nil {
 		return err
