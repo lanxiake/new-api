@@ -342,6 +342,25 @@ func inviteUser(inviterId int) (err error) {
 	return DB.Save(user).Error
 }
 
+// AffCodeLen 邀请码长度：6 位字母+数字混合，约 568 亿组合。
+const AffCodeLen = 6
+
+// generateUniqueAffCode 生成一个数据库中不存在的随机邀请码。
+// 通过查询 users.aff_code 唯一索引检查碰撞，最多重试 maxRetry 次。
+func generateUniqueAffCode(maxRetry int) (string, error) {
+	for i := 0; i < maxRetry; i++ {
+		candidate := common.GetRandomString(AffCodeLen)
+		var count int64
+		if err := DB.Model(&User{}).Where("aff_code = ?", candidate).Count(&count).Error; err != nil {
+			return "", err
+		}
+		if count == 0 {
+			return candidate, nil
+		}
+	}
+	return "", errors.New("生成唯一邀请码失败：重试次数已用尽")
+}
+
 // EnsureUserAffCode 确保指定用户拥有 aff_code，必要时原子地生成一个。
 //
 // 实现要点：
@@ -349,12 +368,12 @@ func inviteUser(inviterId int) (err error) {
 //     都看到 aff_code 为空，也只会有其中一个 UPDATE 成功（rowsAffected=1），
 //     另一个 rowsAffected=0 后回读最新值即可，避免同一用户被分配不同邀请码。
 //   - 唯一约束冲突时按指数退避方式重试，最多 maxRetry 次。
-//   - 邀请码长度统一为 8 位（约 218 万亿 组合，碰撞概率可忽略）。
+//   - 邀请码长度统一为 AffCodeLen 位。
 //
 // 返回最终的 aff_code（已存在则原值）。
 func EnsureUserAffCode(userId int) (string, error) {
-	const codeLen = 8
-	const maxRetry = 5
+	const codeLen = AffCodeLen
+	const maxRetry = 8
 
 	// 先读一次，已有则直接返回
 	var existing string
@@ -441,7 +460,11 @@ func (user *User) Insert(inviterId int) error {
 	}
 	user.Quota = common.QuotaForNewUser
 	//user.SetAccessToken(common.GetUUID())
-	user.AffCode = common.GetRandomString(4)
+	affCode, err := generateUniqueAffCode(8)
+	if err != nil {
+		return err
+	}
+	user.AffCode = affCode
 
 	// 初始化用户设置，包括默认的边栏配置
 	if user.Setting == "" {
@@ -499,7 +522,11 @@ func (user *User) InsertWithTx(tx *gorm.DB, inviterId int) error {
 		}
 	}
 	user.Quota = common.QuotaForNewUser
-	user.AffCode = common.GetRandomString(4)
+	affCode, err := generateUniqueAffCode(8)
+	if err != nil {
+		return err
+	}
+	user.AffCode = affCode
 
 	// 初始化用户设置
 	if user.Setting == "" {

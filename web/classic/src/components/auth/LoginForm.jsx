@@ -832,19 +832,97 @@ const LoginForm = () => {
               {hasOAuthLoginOptions && (
                 <>
                   <Divider margin='12px' align='center'>
-                    {t('或')}
+                    {t('或使用以下方式登录')}
                   </Divider>
 
-                  <div className='mt-4 text-center'>
-                    <Button
-                      theme='outline'
-                      type='tertiary'
-                      className='w-full !rounded-full'
-                      onClick={handleOtherLoginOptionsClick}
-                      loading={otherLoginOptionsLoading}
-                    >
-                      {t('其他登录选项')}
-                    </Button>
+                  <div className='flex flex-wrap justify-center items-center gap-3 mt-2'>
+                    {status.github_oauth && (
+                      <Button
+                        theme='outline'
+                        type='tertiary'
+                        className='!w-12 !h-12 !p-0 flex items-center justify-center !rounded-full border border-gray-200 hover:bg-gray-50'
+                        icon={<IconGithubLogo size='large' />}
+                        onClick={handleGitHubClick}
+                        loading={githubLoading}
+                        disabled={githubButtonDisabled}
+                        title={t('使用 GitHub 继续')}
+                      />
+                    )}
+                    {status.discord_oauth && (
+                      <Button
+                        theme='outline'
+                        type='tertiary'
+                        className='!w-12 !h-12 !p-0 flex items-center justify-center !rounded-full border border-gray-200 hover:bg-gray-50'
+                        icon={
+                          <SiDiscord
+                            style={{ color: '#5865F2', width: '20px', height: '20px' }}
+                          />
+                        }
+                        onClick={handleDiscordClick}
+                        loading={discordLoading}
+                        title={t('使用 Discord 继续')}
+                      />
+                    )}
+                    {status.oidc_enabled && (
+                      <Button
+                        theme='outline'
+                        type='tertiary'
+                        className='!w-12 !h-12 !p-0 flex items-center justify-center !rounded-full border border-gray-200 hover:bg-gray-50'
+                        icon={<OIDCIcon style={{ color: '#1877F2' }} />}
+                        onClick={handleOIDCClick}
+                        loading={oidcLoading}
+                        title={t('使用 OIDC 继续')}
+                      />
+                    )}
+                    {status.wechat_login && (
+                      <Button
+                        theme='outline'
+                        type='tertiary'
+                        className='!w-12 !h-12 !p-0 flex items-center justify-center !rounded-full border border-gray-200 hover:bg-gray-50'
+                        icon={<Icon svg={<WeChatIcon />} style={{ color: '#07C160' }} />}
+                        onClick={onWeChatLoginClicked}
+                        loading={wechatLoading}
+                        title={t('使用 微信 继续')}
+                      />
+                    )}
+                    {status.linuxdo_oauth && (
+                      <Button
+                        theme='outline'
+                        type='tertiary'
+                        className='!w-12 !h-12 !p-0 flex items-center justify-center !rounded-full border border-gray-200 hover:bg-gray-50'
+                        icon={
+                          <LinuxDoIcon
+                            style={{ color: '#E95420', width: '20px', height: '20px' }}
+                          />
+                        }
+                        onClick={handleLinuxDOClick}
+                        loading={linuxdoLoading}
+                        title={t('使用 LinuxDO 继续')}
+                      />
+                    )}
+                    {status.custom_oauth_providers &&
+                      status.custom_oauth_providers.map((provider) => (
+                        <Button
+                          key={provider.slug}
+                          theme='outline'
+                          type='tertiary'
+                          className='!w-12 !h-12 !p-0 flex items-center justify-center !rounded-full border border-gray-200 hover:bg-gray-50'
+                          icon={getOAuthProviderIcon(provider.icon || '', 20)}
+                          onClick={() => handleCustomOAuthClick(provider)}
+                          loading={customOAuthLoading[provider.slug]}
+                          title={t('使用 {{name}} 继续', { name: provider.name })}
+                        />
+                      ))}
+                    {status.telegram_oauth && (
+                      <div className='flex items-center'>
+                        <TelegramLoginButton
+                          dataOnauth={onTelegramLoginClicked}
+                          botName={status.telegram_bot_name}
+                          cornerRadius={20}
+                          buttonSize='medium'
+                        />
+                      </div>
+                    )}
                   </div>
                 </>
               )}
