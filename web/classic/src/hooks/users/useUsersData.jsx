@@ -154,6 +154,26 @@ export const useUsersData = () => {
     setLoading(false);
   };
 
+  // Hard delete user (for already soft-deleted users)
+  const hardDeleteUser = async (userId) => {
+    setLoading(true);
+    try {
+      const res = await API.delete(`/api/user/${userId}`);
+      const { success, message } = res.data;
+      if (success) {
+        showSuccess(t('用户已彻底删除'));
+        // Remove from local state
+        setUsers(users.filter((u) => u.id !== userId));
+        setUserCount((prev) => prev - 1);
+      } else {
+        showError(message);
+      }
+    } catch (error) {
+      showError(t('操作失败，请重试'));
+    }
+    setLoading(false);
+  };
+
   const resetUserPasskey = async (user) => {
     if (!user) {
       return;
@@ -305,6 +325,7 @@ export const useUsersData = () => {
     loadUsers,
     searchUsers,
     manageUser,
+    hardDeleteUser,
     resetUserPasskey,
     resetUserTwoFA,
     handlePageChange,

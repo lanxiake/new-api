@@ -47,6 +47,7 @@ const UsersTable = (usersData) => {
     setEditingUser,
     setShowEditUser,
     manageUser,
+    hardDeleteUser,
     refresh,
     resetUserPasskey,
     resetUserTwoFA,
@@ -234,6 +235,8 @@ const UsersTable = (usersData) => {
         activePage={activePage}
         refresh={refresh}
         manageUser={manageUser}
+        hardDeleteUser={hardDeleteUser}
+        isHardDelete={modalUser?.DeletedAt !== null}
         t={t}
       />
 

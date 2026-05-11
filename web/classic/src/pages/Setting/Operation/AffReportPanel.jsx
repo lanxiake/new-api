@@ -10,7 +10,7 @@ For commercial licensing, please contact support@quantumnous.com
 */
 
 import React, { useEffect, useState } from 'react';
-import { Avatar, Card, Empty, Spin, Table, Typography } from '@douyinfe/semi-ui';
+import { Avatar, Button, Card, Empty, Space, Spin, Table, Typography } from '@douyinfe/semi-ui';
 import {
   BarChart3,
   CheckCircle2,
@@ -44,6 +44,7 @@ export default function AffReportPanel() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
+  const [sortBy, setSortBy] = useState('invite_count'); // 'invite_count' or 'total'
 
   const fetchReport = async () => {
     setLoading(true);
@@ -65,7 +66,16 @@ export default function AffReportPanel() {
   }, []);
 
   const stats = data?.stats || {};
-  const top = data?.top_inviters || [];
+  const topInviters = data?.top_inviters || [];
+
+  // 根据排序方式排序
+  const sortedTop = [...topInviters].sort((a, b) => {
+    if (sortBy === 'invite_count') {
+      return (b.invite_count || 0) - (a.invite_count || 0);
+    } else {
+      return (b.total || 0) - (a.total || 0);
+    }
+  });
 
   const columns = [
     {
@@ -78,6 +88,15 @@ export default function AffReportPanel() {
       title: t('用户名'),
       dataIndex: 'username',
       render: (v, row) => v || `#${row.inviter_id}`,
+    },
+    {
+      title: t('邀请人数'),
+      dataIndex: 'invite_count',
+      render: (v) => (
+        <span className='font-medium text-blue-600'>
+          {v || 0}
+        </span>
+      ),
     },
     {
       title: t('累计返利'),
@@ -127,11 +146,31 @@ export default function AffReportPanel() {
 
       <Card
         className='!rounded-2xl border-0 shadow-sm'
-        title={<Text strong>{t('Top 10 邀请人')}</Text>}
+        title={
+          <div className='flex items-center justify-between'>
+            <Text strong>{t('Top 10 邀请人')}</Text>
+            <Space>
+              <Button
+                size='small'
+                type={sortBy === 'invite_count' ? 'primary' : 'tertiary'}
+                onClick={() => setSortBy('invite_count')}
+              >
+                {t('按人数')}
+              </Button>
+              <Button
+                size='small'
+                type={sortBy === 'total' ? 'primary' : 'tertiary'}
+                onClick={() => setSortBy('total')}
+              >
+                {t('按返利')}
+              </Button>
+            </Space>
+          </div>
+        }
       >
         <Table
           columns={columns}
-          dataSource={top}
+          dataSource={sortedTop}
           rowKey='inviter_id'
           pagination={false}
           empty={<Empty description={t('暂无数据')} />}

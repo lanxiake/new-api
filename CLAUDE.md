@@ -26,12 +26,24 @@ go test ./...                     # Run all tests
 go test ./relay/... -run TestName # Run a single test
 ```
 
-### Frontend (default theme — always use bun)
+### Frontend
+
+> **⚠️ 重要：项目实际使用的主题是 `web/classic`（classic/classy 主题），不是 `web/default`。**
+> 所有前端功能开发、Bug 修复均应修改 `web/classic/`，除非明确说明要改 `web/default`。
+
+```bash
+cd web/classic
+bun install
+bun run dev          # Dev server on :3001, proxies API to :3000
+bun run build        # Production build
+```
+
+### web/default（备用主题，一般不改）
 
 ```bash
 cd web/default
 bun install
-bun run dev          # Dev server on :3001, proxies API to :3000
+bun run dev
 bun run build        # Production build (output: web/default/dist)
 bun run typecheck    # TypeScript check without build
 bun run lint         # ESLint
@@ -42,14 +54,8 @@ bun run i18n:sync    # Sync translation keys across locale files
 
 ```bash
 docker compose -f docker-compose.dev.yml up -d  # Start backend + Postgres + Redis
-cd web/default && bun install && bun run dev     # Frontend dev server
+cd web/classic && bun install && bun run dev     # Frontend dev server
 # After Go changes: docker compose -f docker-compose.dev.yml up -d --build new-api
-```
-
-### Classic frontend
-
-```bash
-cd web/classic && bun install && bun run dev
 ```
 
 ### Makefile shortcuts

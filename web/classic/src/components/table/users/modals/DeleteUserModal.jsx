@@ -29,28 +29,44 @@ const DeleteUserModal = ({
   activePage,
   refresh,
   manageUser,
+  hardDeleteUser,
+  isHardDelete,
   t,
 }) => {
   const handleConfirm = async () => {
-    await manageUser(user.id, 'delete', user);
-    await refresh();
-    setTimeout(() => {
-      if (users.length === 0 && activePage > 1) {
-        refresh(activePage - 1);
-      }
-    }, 100);
+    if (isHardDelete) {
+      // 彻底删除（已注销用户）
+      await hardDeleteUser(user.id);
+      await refresh();
+      setTimeout(() => {
+        if (users.length === 0 && activePage > 1) {
+          refresh(activePage - 1);
+        }
+      }, 100);
+    } else {
+      // 软删除（注销用户）
+      await manageUser(user.id, 'delete', user);
+      await refresh();
+      setTimeout(() => {
+        if (users.length === 0 && activePage > 1) {
+          refresh(activePage - 1);
+        }
+      }, 100);
+    }
     onCancel(); // Close modal after success
   };
 
   return (
     <Modal
-      title={t('确定是否要注销此用户？')}
+      title={isHardDelete ? t('确定彻底删除此用户？') : t('确定是否要注销此用户？')}
       visible={visible}
       onCancel={onCancel}
       onOk={handleConfirm}
       type='danger'
     >
-      {t('相当于删除用户，此修改将不可逆')}
+      {isHardDelete
+        ? t('此操作将永久删除用户数据，无法恢复！')
+        : t('相当于删除用户，此修改将不可逆')}
     </Modal>
   );
 };
