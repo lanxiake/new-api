@@ -50,6 +50,9 @@ import {
   IconUser,
   IconLock,
   IconKey,
+  IconGift,
+  IconTickCircle,
+  IconAlertTriangle,
 } from '@douyinfe/semi-icons';
 import {
   onGitHubOAuthClicked,
@@ -80,15 +83,21 @@ const RegisterForm = () => {
     email: '',
     verification_code: '',
     wechat_verification_code: '',
+    aff_code: '',
   });
   const { username, password, password2 } = inputs;
+  // 邀请码相关 state
+  const [affCodeLocked, setAffCodeLocked] = useState(false);
+  const [affCheckState, setAffCheckState] = useState('idle'); // idle | checking | valid | invalid
+  const affCheckTimerRef = useRef(null);
+  const emailFormApiRef = useRef(null);
   const [userState, userDispatch] = useContext(UserContext);
   const [statusState] = useContext(StatusContext);
   const [turnstileEnabled, setTurnstileEnabled] = useState(false);
   const [turnstileSiteKey, setTurnstileSiteKey] = useState('');
   const [turnstileToken, setTurnstileToken] = useState('');
   const [showWeChatLoginModal, setShowWeChatLoginModal] = useState(false);
-  const [showEmailRegister, setShowEmailRegister] = useState(false);
+  const [showEmailRegister, setShowEmailRegister] = useState(true);
   const [wechatLoading, setWechatLoading] = useState(false);
   const [githubLoading, setGithubLoading] = useState(false);
   const [discordLoading, setDiscordLoading] = useState(false);
@@ -118,6 +127,63 @@ const RegisterForm = () => {
   if (affCode) {
     localStorage.setItem('aff', affCode);
   }
+
+  // 邀请码防抖校验（声明提前，供 useEffect 调用）
+  const validateAffCode = (code) => {
+    if (!code) {
+      setAffCheckState('idle');
+      return;
+    }
+    setAffCheckState('checking');
+    if (affCheckTimerRef.current) clearTimeout(affCheckTimerRef.current);
+    affCheckTimerRef.current = setTimeout(async () => {
+      try {
+        const res = await API.get(
+          `/api/user/aff/check?code=${encodeURIComponent(code)}`,
+        );
+        const { success, data } = res.data || {};
+        if (success && data?.valid === true) {
+          setAffCheckState('valid');
+        } else {
+          setAffCheckState('invalid');
+        }
+      } catch (e) {
+        setAffCheckState('invalid');
+      }
+    }, 400);
+  };
+
+  // 进入页面时回填邀请码（URL 优先，其次 localStorage）
+  useEffect(() => {
+    const fromUrl = new URLSearchParams(window.location.search).get('aff');
+    const fromStorage = localStorage.getItem('aff');
+    const code = fromUrl || fromStorage || '';
+    if (code) {
+      setInputs((prev) => ({ ...prev, aff_code: code }));
+      setAffCodeLocked(Boolean(fromUrl));
+      validateAffCode(code);
+      // Semi UI Form 受控，需通过 formApi.setValue 同步显示
+      const tryFill = (retry = 0) => {
+        if (emailFormApiRef.current) {
+          try {
+            emailFormApiRef.current.setValue('aff_code', code);
+          } catch (e) {
+            // ignore
+          }
+        } else if (retry < 20) {
+          setTimeout(() => tryFill(retry + 1), 50);
+        }
+      };
+      tryFill();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (affCheckTimerRef.current) clearTimeout(affCheckTimerRef.current);
+    };
+  }, []);
 
   const status = useMemo(() => {
     if (statusState?.status) return statusState.status;
@@ -224,6 +290,17 @@ const RegisterForm = () => {
       showInfo('两次输入的密码不一致');
       return;
     }
+    // 邀请码强制校验
+    if (status?.aff_register_required) {
+      if (!inputs.aff_code) {
+        showError(t('当前系统仅支持邀请注册，请填写邀请码'));
+        return;
+      }
+      if (affCheckState !== 'valid') {
+        showError(t('邀请码无效，请检查后再试'));
+        return;
+      }
+    }
     if (username && password) {
       if (turnstileEnabled && turnstileToken === '') {
         showInfo('请稍后几秒重试，Turnstile 正在检查用户环境！');
@@ -231,13 +308,13 @@ const RegisterForm = () => {
       }
       setRegisterLoading(true);
       try {
-        if (!affCode) {
-          affCode = localStorage.getItem('aff');
-        }
-        inputs.aff_code = affCode;
+        // 提交时优先使用用户输入；否则回退到 URL/localStorage
+        const submittedAff =
+          inputs.aff_code || affCode || localStorage.getItem('aff') || '';
+        const payload = { ...inputs, aff_code: submittedAff };
         const res = await API.post(
           `/api/user/register?turnstile=${turnstileToken}`,
-          inputs,
+          payload,
         );
         const { success, message } = res.data;
         if (success) {
@@ -572,7 +649,10 @@ const RegisterForm = () => {
               </Title>
             </div>
             <div className='px-2 py-8'>
-              <Form className='space-y-3'>
+              <Form
+                className='space-y-3'
+                getFormApi={(api) => (emailFormApiRef.current = api)}
+              >
                 <Form.Input
                   field='username'
                   label={t('用户名')}
@@ -601,6 +681,36 @@ const RegisterForm = () => {
                   onChange={(value) => handleChange('password2', value)}
                   prefix={<IconLock />}
                 />
+
+                <Form.Input
+                  field='aff_code'
+                  label={
+                    status?.aff_register_required
+                      ? t('邀请码（必填）')
+                      : t('邀请码（选填）')
+                  }
+                  placeholder={t('请输入邀请码')}
+                  name='aff_code'
+                  initValue={inputs.aff_code}
+                  disabled={affCodeLocked}
+                  onChange={(value) => {
+                    handleChange('aff_code', value);
+                    validateAffCode(value);
+                  }}
+                  prefix={<IconGift />}
+                  suffix={
+                    affCheckState === 'valid' ? (
+                      <IconTickCircle style={{ color: '#16a34a' }} />
+                    ) : affCheckState === 'invalid' ? (
+                      <IconAlertTriangle style={{ color: '#dc2626' }} />
+                    ) : null
+                  }
+                />
+                {affCodeLocked && (
+                  <Text size='small' type='tertiary'>
+                    {t('邀请码已通过链接锁定')}
+                  </Text>
+                )}
 
                 {showEmailVerification && (
                   <>
@@ -684,7 +794,10 @@ const RegisterForm = () => {
                     onClick={handleSubmit}
                     loading={registerLoading}
                     disabled={
-                      (hasUserAgreement || hasPrivacyPolicy) && !agreedToTerms
+                      ((hasUserAgreement || hasPrivacyPolicy) &&
+                        !agreedToTerms) ||
+                      (status?.aff_register_required &&
+                        affCheckState !== 'valid')
                     }
                   >
                     {t('注册')}
@@ -695,19 +808,97 @@ const RegisterForm = () => {
               {hasOAuthRegisterOptions && (
                 <>
                   <Divider margin='12px' align='center'>
-                    {t('或')}
+                    {t('或使用以下方式注册')}
                   </Divider>
 
-                  <div className='mt-4 text-center'>
-                    <Button
-                      theme='outline'
-                      type='tertiary'
-                      className='w-full !rounded-full'
-                      onClick={handleOtherRegisterOptionsClick}
-                      loading={otherRegisterOptionsLoading}
-                    >
-                      {t('其他注册选项')}
-                    </Button>
+                  <div className='flex flex-wrap justify-center items-center gap-3 mt-2'>
+                    {status.github_oauth && (
+                      <Button
+                        theme='outline'
+                        type='tertiary'
+                        className='!w-12 !h-12 !p-0 flex items-center justify-center !rounded-full border border-gray-200 hover:bg-gray-50'
+                        icon={<IconGithubLogo size='large' />}
+                        onClick={handleGitHubClick}
+                        loading={githubLoading}
+                        disabled={githubButtonDisabled}
+                        title={t('使用 GitHub 继续')}
+                      />
+                    )}
+                    {status.discord_oauth && (
+                      <Button
+                        theme='outline'
+                        type='tertiary'
+                        className='!w-12 !h-12 !p-0 flex items-center justify-center !rounded-full border border-gray-200 hover:bg-gray-50'
+                        icon={
+                          <SiDiscord
+                            style={{ color: '#5865F2', width: '20px', height: '20px' }}
+                          />
+                        }
+                        onClick={handleDiscordClick}
+                        loading={discordLoading}
+                        title={t('使用 Discord 继续')}
+                      />
+                    )}
+                    {status.oidc_enabled && (
+                      <Button
+                        theme='outline'
+                        type='tertiary'
+                        className='!w-12 !h-12 !p-0 flex items-center justify-center !rounded-full border border-gray-200 hover:bg-gray-50'
+                        icon={<OIDCIcon style={{ color: '#1877F2' }} />}
+                        onClick={handleOIDCClick}
+                        loading={oidcLoading}
+                        title={t('使用 OIDC 继续')}
+                      />
+                    )}
+                    {status.wechat_login && (
+                      <Button
+                        theme='outline'
+                        type='tertiary'
+                        className='!w-12 !h-12 !p-0 flex items-center justify-center !rounded-full border border-gray-200 hover:bg-gray-50'
+                        icon={<Icon svg={<WeChatIcon />} style={{ color: '#07C160' }} />}
+                        onClick={onWeChatLoginClicked}
+                        loading={wechatLoading}
+                        title={t('使用 微信 继续')}
+                      />
+                    )}
+                    {status.linuxdo_oauth && (
+                      <Button
+                        theme='outline'
+                        type='tertiary'
+                        className='!w-12 !h-12 !p-0 flex items-center justify-center !rounded-full border border-gray-200 hover:bg-gray-50'
+                        icon={
+                          <LinuxDoIcon
+                            style={{ color: '#E95420', width: '20px', height: '20px' }}
+                          />
+                        }
+                        onClick={handleLinuxDOClick}
+                        loading={linuxdoLoading}
+                        title={t('使用 LinuxDO 继续')}
+                      />
+                    )}
+                    {status.custom_oauth_providers &&
+                      status.custom_oauth_providers.map((provider) => (
+                        <Button
+                          key={provider.slug}
+                          theme='outline'
+                          type='tertiary'
+                          className='!w-12 !h-12 !p-0 flex items-center justify-center !rounded-full border border-gray-200 hover:bg-gray-50'
+                          icon={getOAuthProviderIcon(provider.icon || '', 20)}
+                          onClick={() => handleCustomOAuthClick(provider)}
+                          loading={customOAuthLoading[provider.slug]}
+                          title={t('使用 {{name}} 继续', { name: provider.name })}
+                        />
+                      ))}
+                    {status.telegram_oauth && (
+                      <div className='flex items-center'>
+                        <TelegramLoginButton
+                          dataOnauth={onTelegramLoginClicked}
+                          botName={status.telegram_bot_name}
+                          cornerRadius={20}
+                          buttonSize='medium'
+                        />
+                      </div>
+                    )}
                   </div>
                 </>
               )}

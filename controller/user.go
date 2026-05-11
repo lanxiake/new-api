@@ -767,7 +767,9 @@ func DeleteUser(c *gin.Context) {
 		common.ApiError(c, err)
 		return
 	}
-	originUser, err := model.GetUserById(id, false)
+	// 使用 Unscoped 查询，支持已软删除用户的彻底删除
+	var originUser model.User
+	err = model.DB.Unscoped().Where("id = ?", id).First(&originUser).Error
 	if err != nil {
 		common.ApiError(c, err)
 		return
@@ -779,12 +781,13 @@ func DeleteUser(c *gin.Context) {
 	}
 	err = model.HardDeleteUserById(id)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"success": true,
-			"message": "",
-		})
+		common.ApiError(c, err)
 		return
 	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "",
+	})
 }
 
 func DeleteSelf(c *gin.Context) {

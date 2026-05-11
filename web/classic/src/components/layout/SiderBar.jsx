@@ -49,6 +49,7 @@ const routerMap = {
   deployment: '/console/deployment',
   playground: '/console/playground',
   personal: '/console/personal',
+  'invite-rewards': '/console/invite-rewards',
 };
 
 const SiderBar = ({ onNavigate = () => {} }) => {
@@ -130,6 +131,11 @@ const SiderBar = ({ onNavigate = () => {} }) => {
         to: '/topup',
       },
       {
+        text: t('邀请奖励'),
+        itemKey: 'invite-rewards',
+        to: '/invite-rewards',
+      },
+      {
         text: t('个人设置'),
         itemKey: 'personal',
         to: '/personal',
@@ -138,6 +144,8 @@ const SiderBar = ({ onNavigate = () => {} }) => {
 
     // 根据配置过滤项目
     const filteredItems = items.filter((item) => {
+      // invite-rewards 暂未参与 SidebarModulesUser 配置，强制可见
+      if (item.itemKey === 'invite-rewards') return true;
       const configVisible = isModuleVisible('personal', item.itemKey);
       return configVisible;
     });

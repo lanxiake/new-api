@@ -219,8 +219,17 @@ const renderOperations = (
     t,
   },
 ) => {
+  // 已注销用户只显示"彻底删除"按钮
   if (record.DeletedAt !== null) {
-    return <></>;
+    return (
+      <Button
+        type='danger'
+        size='small'
+        onClick={() => showDeleteModal(record)}
+      >
+        {t('彻底删除')}
+      </Button>
+    );
   }
 
   const moreMenu = [

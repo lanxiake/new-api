@@ -36,6 +36,7 @@ export default defineConfig({
           { text: '购买额度', link: '/guide/3-quota' },
           { text: '创建 API 令牌', link: '/guide/4-token' },
           { text: '配置 CLI 工具', link: '/guide/5-cli' },
+          { text: '邀请奖励', link: '/guide/6-invite' },
         ],
       },
       {
@@ -54,7 +55,6 @@ export default defineConfig({
           { text: 'Claude Code 配置', link: '/cc-switch/2-claude' },
           { text: 'Codex 配置', link: '/cc-switch/3-codex' },
           { text: 'Gemini 配置', link: '/cc-switch/4-gemini' },
-          { text: 'CC-Switch-CLI 使用', link: '/cc-switch/5-ccs_cli' },
         ],
       },
       {
@@ -65,14 +65,6 @@ export default defineConfig({
           { text: 'Claude Code 配置', link: '/cli-config/2-claude' },
           { text: 'Codex 配置', link: '/cli-config/3-codex' },
           { text: 'Gemini 配置', link: '/cli-config/4-gemini' },
-        ],
-      },
-      {
-        text: '绘图模型教程',
-        collapsed: false,
-        items: [
-          { text: 'Banana2 Pro', link: '/paint/Banana' },
-          { text: 'GPT-Image-2', link: '/paint/GPTImage' },
         ],
       },
       {

@@ -157,14 +157,11 @@ func GetAffReport(c *gin.Context) {
 	}
 	var stats Stats
 
-	// 聚合主统计 + 计数：合并为单条 SQL，避免 3 次表扫描；
-	// 同时使用显式 COUNT(DISTINCT) 保障跨 SQLite/MySQL/PostgreSQL 行为一致
-	row := struct {
+	// 聚合返利记录统计
+	rebateRow := struct {
 		TotalRebate   int   `gorm:"column:total_rebate"`
 		PendingRebate int   `gorm:"column:pending_rebate"`
 		SettledRebate int   `gorm:"column:settled_rebate"`
-		TotalInviters int64 `gorm:"column:total_inviters"`
-		TotalInvitees int64 `gorm:"column:total_invitees"`
 		TotalRecords  int64 `gorm:"column:total_records"`
 	}{}
 	if err := model.DB.Table("aff_rebate_records").
@@ -172,58 +169,89 @@ func GetAffReport(c *gin.Context) {
 			"COALESCE(SUM(rebate_quota), 0) AS total_rebate, "+
 				"COALESCE(SUM(CASE WHEN status = ? THEN rebate_quota ELSE 0 END), 0) AS pending_rebate, "+
 				"COALESCE(SUM(CASE WHEN status = ? THEN rebate_quota ELSE 0 END), 0) AS settled_rebate, "+
-				"COUNT(DISTINCT inviter_id) AS total_inviters, "+
-				"COUNT(DISTINCT invitee_id) AS total_invitees, "+
 				"COUNT(*) AS total_records",
 			model.AffRebateStatusPending, model.AffRebateStatusSettled).
-		Scan(&row).Error; err != nil {
+		Scan(&rebateRow).Error; err != nil {
 		common.ApiError(c, err)
 		return
 	}
-	stats.TotalRebate = row.TotalRebate
-	stats.PendingRebate = row.PendingRebate
-	stats.SettledRebate = row.SettledRebate
-	stats.TotalInviters = row.TotalInviters
-	stats.TotalInvitees = row.TotalInvitees
-	stats.TotalRecords = row.TotalRecords
+	stats.TotalRebate = rebateRow.TotalRebate
+	stats.PendingRebate = rebateRow.PendingRebate
+	stats.SettledRebate = rebateRow.SettledRebate
+	stats.TotalRecords = rebateRow.TotalRecords
 
-	// TOP 10 邀请人
+	// 基于 users 表 inviter_id 统计邀请关系（不依赖充值记录，更准确反映实际邀请数量）
+	var totalInviters, totalInvitees int64
+	_ = model.DB.Model(&model.User{}).Where("inviter_id > 0").Count(&totalInvitees).Error
+	_ = model.DB.Model(&model.User{}).
+		Select("COUNT(DISTINCT inviter_id)").
+		Where("inviter_id > 0").
+		Scan(&totalInviters).Error
+	stats.TotalInviters = totalInviters
+	stats.TotalInvitees = totalInvitees
+
+	// TOP 10 邀请人（按邀请人数排序）
 	type TopRow struct {
-		InviterId int    `json:"inviter_id"`
-		Username  string `json:"username"`
-		Total     int    `json:"total"`
+		InviterId  int    `json:"inviter_id"`
+		Username   string `json:"username"`
+		Total      int    `json:"total"`       // 返利总额
+		InviteCount int64 `json:"invite_count"` // 邀请人数
 	}
 	var topRows []TopRow
-	rawRows, err := model.DB.Table("aff_rebate_records").
-		Select("inviter_id, COALESCE(SUM(rebate_quota), 0) AS total").
+
+	// 先查 TOP 10 邀请人（按邀请人数）
+	type topInviterRow struct {
+		InviterId   int   `gorm:"column:inviter_id"`
+		InviteCount int64 `gorm:"column:invite_count"`
+	}
+	var topInviters []topInviterRow
+	_ = model.DB.Model(&model.User{}).
+		Select("inviter_id, COUNT(*) AS invite_count").
+		Where("inviter_id > 0").
 		Group("inviter_id").
-		Order("total DESC").
-		Limit(10).Rows()
-	if err == nil {
-		defer rawRows.Close()
-		ids := make([]int, 0, 10)
-		idTotal := make(map[int]int, 10)
-		for rawRows.Next() {
-			var id int
-			var t int
-			_ = rawRows.Scan(&id, &t)
-			ids = append(ids, id)
-			idTotal[id] = t
+		Order("invite_count DESC").
+		Limit(10).
+		Scan(&topInviters).Error
+
+	if len(topInviters) > 0 {
+		ids := make([]int, 0, len(topInviters))
+		idInviteCount := make(map[int]int64, len(topInviters))
+		for _, r := range topInviters {
+			ids = append(ids, r.InviterId)
+			idInviteCount[r.InviterId] = r.InviteCount
 		}
-		if len(ids) > 0 {
-			var users []model.User
-			_ = model.DB.Select("id, username").Where("id IN ?", ids).Find(&users).Error
-			nameMap := make(map[int]string, len(users))
-			for _, u := range users {
-				nameMap[u.Id] = u.Username
-			}
-			for _, id := range ids {
-				topRows = append(topRows, TopRow{
-					InviterId: id,
-					Username:  nameMap[id],
-					Total:     idTotal[id],
-				})
-			}
+
+		// 查返利总额
+		type rebateSumRow struct {
+			InviterId int `gorm:"column:inviter_id"`
+			Total     int `gorm:"column:total"`
+		}
+		var rebateSums []rebateSumRow
+		_ = model.DB.Table("aff_rebate_records").
+			Select("inviter_id, COALESCE(SUM(rebate_quota), 0) AS total").
+			Where("inviter_id IN ?", ids).
+			Group("inviter_id").
+			Scan(&rebateSums).Error
+		idTotal := make(map[int]int, len(rebateSums))
+		for _, r := range rebateSums {
+			idTotal[r.InviterId] = r.Total
+		}
+
+		// 查用户名（含已注销用户）
+		var users []model.User
+		_ = model.DB.Unscoped().Select("id, username").Where("id IN ?", ids).Find(&users).Error
+		nameMap := make(map[int]string, len(users))
+		for _, u := range users {
+			nameMap[u.Id] = u.Username
+		}
+
+		for _, r := range topInviters {
+			topRows = append(topRows, TopRow{
+				InviterId:   r.InviterId,
+				Username:    nameMap[r.InviterId],
+				Total:       idTotal[r.InviterId],
+				InviteCount: r.InviteCount,
+			})
 		}
 	}
 

@@ -274,7 +274,7 @@ func findOrCreateOAuthUser(c *gin.Context, provider oauth.Provider, oauthUser *o
 	// 邀请注册校验：开关开启时必须存在有效邀请码
 	if msg, ok := requireAffCodeIfEnforced(affStr, inviterId); !ok {
 		common.ApiError(c, fmt.Errorf("%s", msg))
-		return
+		return nil, fmt.Errorf("%s", msg)
 	}
 
 	// Use transaction to ensure user creation and OAuth binding are atomic
