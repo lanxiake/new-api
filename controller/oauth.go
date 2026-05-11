@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/QuantumNous/new-api/common"
 	"github.com/QuantumNous/new-api/i18n"
@@ -22,12 +23,17 @@ func providerParams(name string) map[string]any {
 // GenerateOAuthCode generates a state code for OAuth CSRF protection
 func GenerateOAuthCode(c *gin.Context) {
 	session := sessions.Default(c)
-	state := common.GetRandomString(12)
+	nonce := common.GetRandomString(12)
 	affCode := c.Query("aff")
+
+	// Encode aff into state so it survives cross-site redirects even if session cookie is lost
+	// Format: "nonce" or "nonce.affCode"
+	state := nonce
 	if affCode != "" {
 		session.Set("aff", affCode)
+		state = nonce + "." + affCode
 	}
-	session.Set("oauth_state", state)
+	session.Set("oauth_state", nonce)
 	err := session.Save()
 	if err != nil {
 		common.ApiError(c, err)
@@ -55,13 +61,26 @@ func HandleOAuth(c *gin.Context) {
 	session := sessions.Default(c)
 
 	// 1. Validate state (CSRF protection)
+	// State format: "nonce" or "nonce.affCode"
 	state := c.Query("state")
-	if state == "" || session.Get("oauth_state") == nil || state != session.Get("oauth_state").(string) {
+	nonce := state
+	affCodeFromState := ""
+	if idx := strings.Index(state, "."); idx != -1 {
+		nonce = state[:idx]
+		affCodeFromState = state[idx+1:]
+	}
+	sessionNonce := session.Get("oauth_state")
+	if nonce == "" || sessionNonce == nil || nonce != sessionNonce.(string) {
 		c.JSON(http.StatusForbidden, gin.H{
 			"success": false,
 			"message": i18n.T(c, i18n.MsgOAuthStateInvalid),
 		})
 		return
+	}
+
+	// Restore aff from state if session cookie was lost during cross-site redirect
+	if affCodeFromState != "" && session.Get("aff") == nil {
+		session.Set("aff", affCodeFromState)
 	}
 
 	// 2. Check if user is already logged in (bind flow)
