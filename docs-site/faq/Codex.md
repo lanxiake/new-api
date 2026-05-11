@@ -46,6 +46,30 @@ envVar = "OPENAI_API_KEY"
 
 **编码问题（Windows）：** 在 Windows 系统语言设置中开启 UTF-8 支持。
 
+按 `Win+R` 打开命令窗口：
+
+![Win+R 打开命令窗口](/images/faq/Codex-command.webp)
+
+进入区域设置，点击「更改系统区域设置」：
+
+![更改系统区域设置](/images/faq/Codex-001.webp)
+
+勾选「Beta：使用 UTF-8 提供全球语言支持」并重启系统：
+
+![启用 UTF-8 支持](/images/faq/Codex-002.webp)
+
+**VSCode Codex 插件模型版本更新：** 找到对应版本的扩展目录：
+
+![Windows VSCode 扩展目录](/images/faq/Codex-003.webp)
+
+进入 `webview/assets` 目录修改 JS 文件：
+
+![webview/assets 目录](/images/faq/Codex-004.webp)
+
+macOS 用户通过 Finder 进入扩展目录：
+
+![macOS 扩展目录路径](/images/faq/Codex-009.webp)
+
 **401 错误：** API Key 缺失或错误，检查 `auth.json` 中的 `OPENAI_API_KEY` 是否正确。
 
 **403 错误：** 账号额度问题，检查 [LLM-Link 控制台](https://www.llm-link.top) 余额后重试。
@@ -54,4 +78,6 @@ envVar = "OPENAI_API_KEY"
 
 ## 开启网络搜索
 
-在 `config.toml` 中添加搜索工具配置即可启用联网能力（需对应分组支持）。
+在 `config.toml` 中添加搜索工具配置即可启用联网能力（需对应分组支持）：
+
+![Codex 网络搜索效果](/images/faq/Codex-010.webp)

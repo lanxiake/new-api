@@ -4,6 +4,22 @@
 
 1. 找到 `.claude` 配置目录（Windows：`%userprofile%\.claude`；macOS：`~/.claude`）
 
+**Windows：** 按 `Win+R` 输入路径打开：
+
+![Windows 打开 .claude 目录](/images/cli-config/Cli-013.webp)
+
+目录内容如下：
+
+![Windows .claude 目录内容](/images/cli-config/Cli-014.webp)
+
+**macOS：** 在访达中按 `Command+Shift+G` 输入路径：
+
+![macOS 跳转 ~/.claude](/images/cli-config/Cli-017.webp)
+
+目录内容如下：
+
+![macOS .claude 目录内容](/images/cli-config/Cli-018.webp)
+
 2. 打开 `config.json`，添加以下内容：
 
 ```json
@@ -23,6 +39,18 @@
 | `claude --verbose` | 详细日志输出 |
 
 ## Claude Code 无法连接到 Anthropic 服务
+
+启动 `claude` 时常见的连接错误：
+
+![无法连接到 Anthropic 服务](/images/faq/CC-001.webp)
+
+macOS 用户可通过自带终端执行修复脚本：
+
+![macOS 终端位置](/images/faq/CC-002.webp)
+
+初次配置时可能再次出现连接错误，按下方脚本处理即可：
+
+![首次配置连接错误](/images/faq/CC-003.webp)
 
 如果运行 `claude` 时提示连接失败，执行以下脚本以跳过初始化验证：
 

@@ -2,6 +2,10 @@
 
 本教程介绍如何将 DeepSeek 模型接入 Claude Code。
 
+::: warning 关于截图中的品牌名称
+以下流程截图来自第三方工具，可能显示其他品牌的供应商名称作为示例。**实际配置请按本页文字步骤操作**：供应商名称填 `LLM-Link`，API 地址填 `https://www.llm-link.top`。
+:::
+
 ## 前置要求
 
 已完成 Claude Code 的安装与基础配置，参考 [Claude Code 配置](/cli-config/2-claude)。
@@ -9,6 +13,8 @@
 ## 第一步：创建令牌
 
 在 [LLM-Link 控制台](https://www.llm-link.top) 创建新的 API 令牌，选择 `deepseek-officially` 分组，保存生成的 API Key。
+
+![创建 deepseek-officially 分组令牌](/images/advanced/DeepSeekClaudeCode-01.webp)
 
 ## 第二步：配置方法（二选一）
 
@@ -20,6 +26,8 @@
 - **请求地址**：`https://www.llm-link.top`
 - **API 格式**：`Anthropic Messages（原生）`
 - **默认模型**：`deepseek-v4-pro` 或 `deepseek-v4-flash`
+
+![CC-Switch 供应商配置表单](/images/advanced/DeepSeekClaudeCode-02.png)
 
 ### 方法二：手动编辑 settings.json
 
@@ -56,6 +64,8 @@
 ## 验证步骤
 
 重启终端，运行 `claude`，确认左侧显示正确的 DeepSeek 模型名称，发送测试消息验证功能。
+
+![Claude Code 中显示 deepseek-v4-pro](/images/advanced/DeepSeekClaudeCode-03.webp)
 
 ::: tip 模型名称说明
 模型名称默认无需 `[1m]` 后缀；仅在需要启用 1M 上下文时才添加该后缀。

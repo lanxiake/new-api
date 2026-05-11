@@ -31,7 +31,13 @@ Codex 需要配置三个文件：
 
 1. 按 `Win+R`，输入 `%userprofile%\.codex`，回车打开配置目录
 
-2. 创建 `config.toml`，填入以下内容：
+![Win+R 打开 .codex 目录](/images/cli-config/Cli-006.webp)
+
+2. 检查目录内的配置文件，若不存在则手动创建
+
+![.codex 目录文件](/images/cli-config/Cli-007.webp)
+
+3. 创建 `config.toml`，填入以下内容：
 
 ```toml
 model = "gpt-5.2"
@@ -43,20 +49,32 @@ baseURL = "https://www.llm-link.top/v1"
 envVar = "OPENAI_API_KEY"
 ```
 
-3. 创建 `auth.json`，填入以下内容：
+4. 创建 `auth.json`，填入以下内容：
 
 ```json
 {"OPENAI_API_KEY": "sk-xxxxxxxxxxxxxxxx"}
 ```
 
-4. 在 [LLM-Link 控制台](https://www.llm-link.top/console/token) 创建 **codex 分组**的令牌，将 `sk-xxxxxxxxxxxxxxxx` 替换为你的 ApiKey
+![auth.json 配置](/images/cli-config/Cli-008.webp)
 
-5. 在终端运行 `codex`，能正常对话表示配置成功
+5. 在 [LLM-Link 控制台](https://www.llm-link.top/console/token) 创建 **codex 分组**的令牌，将 `sk-xxxxxxxxxxxxxxxx` 替换为你的 ApiKey
+
+![从控制台复制 codex 令牌](/images/cli-config/Cli-009.webp)
+
+6. 在终端运行 `codex`，能正常对话表示配置成功
+
+![终端测试 codex](/images/cli-config/Cli-010.webp)
 
 ## macOS / Linux 配置步骤
 
 1. 在访达中按 `Command+Shift+G`，输入 `~/.codex` 打开配置目录（Linux 直接打开 `~/.codex`）
 
-2. 按照 Windows 步骤 2-4 相同方式创建配置文件
+![访达跳转 ~/.codex](/images/cli-config/Cli-011.webp)
 
-3. 在终端运行 `codex`，能正常对话表示配置成功
+2. 检查并按需创建配置文件
+
+![macOS .codex 目录](/images/cli-config/Cli-012.webp)
+
+3. 按照 Windows 步骤 3-5 相同方式创建配置文件
+
+4. 在终端运行 `codex`，能正常对话表示配置成功

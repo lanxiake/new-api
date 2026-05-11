@@ -17,7 +17,11 @@ LLM-Link 提供两个 Claude Code 专属分组，根据需求选择：
 
 1. 按 `Win+R`，输入 `%userprofile%\.claude`，回车打开配置目录
 
+![Win+R 输入路径](/images/cli-config/Cli-013.webp)
+
 2. 检查目录内是否存在 `settings.json`，若不存在则手动创建
+
+![.claude 目录内容](/images/cli-config/Cli-014.webp)
 
 3. 写入以下配置内容：
 
@@ -33,15 +37,24 @@ LLM-Link 提供两个 Claude Code 专属分组，根据需求选择：
 }
 ```
 
+
 4. 将 `sk-xxxxxxxxxxxxxxxx` 替换为你在控制台创建的 **cc** 或 **cc-sale** 分组令牌
 
+![从控制台复制令牌](/images/cli-config/Cli-025.webp)
+
 5. 在终端运行 `claude`，能正常收到回复表示配置成功
+
+![终端测试 claude](/images/cli-config/Cli-016.webp)
 
 ## macOS / Linux 配置步骤
 
 1. 在访达中按 `Command+Shift+G`，输入 `~/.claude` 打开配置目录（Linux 直接打开 `~/.claude`）
 
+![访达跳转 ~/.claude](/images/cli-config/Cli-017.webp)
+
 2. 检查目录内是否存在 `settings.json`，若不存在则手动创建
+
+![macOS .claude 目录](/images/cli-config/Cli-018.webp)
 
 3. 写入与 Windows 步骤 3 相同的配置内容，并将令牌替换为你的 cc / cc-sale 分组令牌
 

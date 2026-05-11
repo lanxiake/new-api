@@ -15,7 +15,11 @@ Gemini CLI 接入功能正在筹备中，上线后会在此更新配置说明。
 
 1. 按 `Win+R`，输入 `%userprofile%\.gemini`，回车打开配置目录
 
+![Win+R 打开 .gemini 目录](/images/cli-config/Cli-019.webp)
+
 2. 检查目录内是否存在 `.env` 文件，若不存在则手动创建
+
+![创建 .env 文件](/images/cli-config/Cli-020.webp)
 
 3. 写入以下内容（上线后替换为实际 base URL 和分组令牌）：
 
@@ -25,14 +29,23 @@ GEMINI_API_KEY=sk-xxxxxxxxxxxxxxxx
 GEMINI_MODEL=gemini-2.5-pro
 ```
 
+
 4. 在 [LLM-Link 控制台](https://www.llm-link.top/console/token) 创建对应分组的令牌，将 `sk-xxxxxxxxxxxxxxxx` 替换为你的 ApiKey
 
+![从控制台复制 gemini 令牌](/images/cli-config/Cli-026.webp)
+
 5. 在终端运行 `gemini`，能看到对话界面并正常交互表示配置成功
+
+![终端测试 gemini](/images/cli-config/Cli-022.webp)
 
 ## macOS / Linux 配置步骤
 
 1. 在访达中按 `Command+Shift+G`，输入 `~/.gemini` 打开配置目录（Linux 直接打开 `~/.gemini`）
 
+![访达跳转 ~/.gemini](/images/cli-config/Cli-023.webp)
+
 2. 按照 Windows 步骤 2-4 相同方式创建 `.env` 文件并填写配置
+
+![macOS .gemini 目录](/images/cli-config/Cli-024.webp)
 
 3. 在终端运行 `gemini`，能看到对话界面并正常交互表示配置成功

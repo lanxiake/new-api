@@ -127,6 +127,67 @@ Frontend settings UI (`web/default/src/features/system-settings/`) uses a sectio
 - Usage: `useTranslation()` hook, call `t('English key')` in components
 - CLI tools: `bun run i18n:sync` (from `web/default/`)
 
+## Production Deployment
+
+生产环境：`130.94.43.100`，SSH 用户 `root`，密钥 `~/.ssh/id_rsa`。
+
+new-api 以 Docker 容器运行（容器名 `new-api`，镜像 `calciumion/new-api:latest`）。  
+**服务器资源不足，禁止在服务器上构建**，必须本地构建后上传二进制替换。
+
+### 后端部署（Go 二进制）
+
+```bash
+# 1. 本地 Docker 构建（Dockerfile.build 使用 Docker Hub 官方镜像）
+"/c/Program Files/Docker/Docker/resources/bin/docker.exe" build -f Dockerfile.build -t new-api:local-build .
+
+# 2. 提取二进制
+TMP="tmp-extract-$$"
+"/c/Program Files/Docker/Docker/resources/bin/docker.exe" create --name "$TMP" new-api:local-build
+"/c/Program Files/Docker/Docker/resources/bin/docker.exe" cp "$TMP:/new-api" ./new-api-binary
+"/c/Program Files/Docker/Docker/resources/bin/docker.exe" rm "$TMP"
+
+# 3. 上传到服务器
+scp -i ~/.ssh/id_rsa ./new-api-binary root@130.94.43.100:/tmp/new-api
+
+# 4. 替换容器内二进制并重启
+ssh -i ~/.ssh/id_rsa root@130.94.43.100 \
+  "chmod +x /tmp/new-api && docker cp /tmp/new-api new-api:/new-api && docker restart new-api && rm -f /tmp/new-api"
+
+# 5. 清理本地临时文件
+rm -f ./new-api-binary
+```
+
+> 本地 docker.exe 完整路径：`/c/Program Files/Docker/Docker/resources/bin/docker.exe`（不在 PATH 中）。
+
+### 前端部署（docs-site）
+
+docs-site 是独立的 VitePress 站点（`docs.llm-link.top`），由 Nginx 静态托管，**不依赖 Docker 二进制**。
+
+```bash
+# 1. 本地构建
+cd docs-site && bun run build   # 或 npm run build
+
+# 2. 打包并上传
+tar -czf docs-dist.tar.gz -C docs-site/.vitepress/dist .
+scp -i ~/.ssh/id_rsa docs-dist.tar.gz root@130.94.43.100:/tmp/
+
+# 3. 在服务器上解压部署
+ssh -i ~/.ssh/id_rsa root@130.94.43.100 \
+  "rm -rf /opt/new-api/docs-site/.vitepress/dist/* && \
+   tar -xzf /tmp/docs-dist.tar.gz -C /opt/new-api/docs-site/.vitepress/dist && \
+   nginx -s reload && rm -f /tmp/docs-dist.tar.gz"
+
+# 4. 清理本地
+rm -f docs-dist.tar.gz
+```
+
+### 验证
+
+```bash
+# 用 Playwright 验证生产功能（脚本在 e2e-prod-verify/）
+node e2e-prod-verify/verify.mjs
+```
+
 ## Rules
 
 ### Rule 1: JSON Package — Use `common/json.go`

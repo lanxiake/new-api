@@ -10,6 +10,8 @@
 npm list -g --depth-0
 ```
 
+![打开终端](/images/cli-config/Cli-001.webp)
+
 若提示命令未找到，请先安装 Node.js：前往 [nodejs.org](https://nodejs.org) 下载并安装 LTS 版本。
 
 ## 第二步：安装 CLI 工具
@@ -17,6 +19,8 @@ npm list -g --depth-0
 ```bash
 npm install -g @anthropic-ai/claude-code@latest @openai/codex@latest @google/gemini-cli@latest
 ```
+
+![npm 全局安装 CLI](/images/cli-config/Cli-002.webp)
 
 ## 第三步：测试安装（非常重要）
 
@@ -31,6 +35,12 @@ claude   # 测试 Claude Code
 codex    # 测试 Codex
 gemini   # 测试 Gemini
 ```
+
+![Claude Code 安装成功](/images/cli-config/Cli-003.webp)
+
+![Codex 安装成功](/images/cli-config/Cli-004.webp)
+
+![Gemini 安装成功](/images/cli-config/Cli-005.webp)
 
 每个工具首次运行时会显示初始化界面或提示，属于正常现象。
 

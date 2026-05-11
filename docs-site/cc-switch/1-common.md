@@ -6,8 +6,6 @@ CC-Switch 是 Claude Code / Codex / Gemini CLI 全方位辅助工具，可快速
 
 根据你的操作系统选择对应的安装方式：
 
-![CC-Switch 初始界面](/images/cc-switch/main-interface.png)
-
 ::: code-group
 
 ```bash [macOS（Homebrew）]
@@ -27,6 +25,14 @@ sudo dpkg -i cc-switch_*.deb
 ```
 
 :::
+
+Windows 用户可直接前往 GitHub Releases 下载最新版 MSI 安装包：
+
+![GitHub Releases 下载页](/images/cc-switch/CC-Switch-001.webp)
+
+安装完成后启动程序，进入主界面：
+
+![CC-Switch 主界面](/images/cc-switch/CC-Switch-002.png)
 
 ## 重要前置步骤
 
