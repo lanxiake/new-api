@@ -59,12 +59,12 @@
 
 | 分组 | 倍率 | 主要用途 |
 |------|------|---------|
-| `cc` | 2.5x | Claude Code 原生（Anthropic 模型） |
-| `cc-sale` | 0.9x | Claude 折扣池 |
-| `codex` | 1x | Codex CLI / OpenAI 模型 |
-| `codex-sale` | 0.8x | OpenAI 折扣池 |
-| `default` | 1x | 通用模型（DeepSeek、Mistral、Moonshot、智谱等） |
-| `doubao-seed` | 1x | 豆包视频生成（按次计费） |
+| `default` | 1x | 默认分组，通用模型（DeepSeek、Mistral、Moonshot、智谱等），含部分免费模型 |
+| `cc` | 2.0x | Claude Code 高质量专用（Anthropic 模型，智商在线，高效稳定） |
+| `codex` | 0.6x | Codex CLI 专用分组（OpenAI 模型） |
+| `codex-sale` | 低至 0.4x | GPT 特价分组，支持 Codex、CC 和工具调用 |
+| `cc-sale` | 低至 0.8x | Claude CC 特价分组，性价比首选 |
+| `doubao-seed` | 1x | 豆包视频生成（高清无水印，按次计费） |
 | `vip` | 1x | 预留 |
 
 详细分组说明见 [令牌分组介绍](./2-group)。

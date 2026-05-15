@@ -37,3 +37,5 @@ data/
 token_estimator_test.go
 skills-lock.json
 new-api-binary
+docs/marketing/accounts.md
+docs/marketing/scripts/browser-profiles/
