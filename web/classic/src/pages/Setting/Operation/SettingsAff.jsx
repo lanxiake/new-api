@@ -37,7 +37,10 @@ export default function SettingsAff(props) {
 
   function handleFieldChange(fieldName) {
     return (value) => {
-      setInputs((s) => ({ ...s, [fieldName]: value }));
+      // Semi InputNumber 清空时回调 null，用默认值兜底避免发送无效值
+      const safeValue =
+        value === null || value === undefined ? KEYS[fieldName] : value;
+      setInputs((s) => ({ ...s, [fieldName]: safeValue }));
     };
   }
 
@@ -45,12 +48,9 @@ export default function SettingsAff(props) {
     const updateArray = compareObjects(inputs, inputsRow);
     if (!updateArray.length) return showWarning(t('你似乎并没有修改什么'));
     const requests = updateArray.map((item) => {
-      let value = '';
-      if (typeof inputs[item.key] === 'boolean') {
-        value = String(inputs[item.key]);
-      } else {
-        value = String(inputs[item.key]);
-      }
+      const val = inputs[item.key];
+      const value =
+        typeof val === 'boolean' ? String(val) : val == null ? '' : String(val);
       return API.put('/api/option/', { key: item.key, value });
     });
     setLoading(true);
