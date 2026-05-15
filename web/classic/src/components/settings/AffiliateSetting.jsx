@@ -17,6 +17,7 @@ import AffReportPanel from '../../pages/Setting/Operation/AffReportPanel';
 
 const SCHEMA = {
   AffRegisterRequired: false,
+  AffRegisterLimit: 0,
   AffRebateEnabled: true,
   AffRebateRatio: '0.10',
   AffRebateWaitDays: 30,
@@ -35,6 +36,11 @@ const AffiliateSetting = () => {
         if (Object.keys(SCHEMA).includes(item.key)) {
           if (typeof SCHEMA[item.key] === 'boolean') {
             newInputs[item.key] = toBoolean(item.value);
+          } else if (typeof SCHEMA[item.key] === 'number') {
+            const num = Number(item.value);
+            newInputs[item.key] = Number.isFinite(num)
+              ? num
+              : SCHEMA[item.key];
           } else {
             newInputs[item.key] = item.value;
           }

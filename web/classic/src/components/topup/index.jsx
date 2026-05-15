@@ -209,6 +209,11 @@ const TopUp = () => {
         showError(t('管理员未开启 Waffo 充值！'));
         return;
       }
+    } else if (payment === 'mtbot') {
+      if (!enableMtbotTopUp) {
+        showError(t('管理员未开启支付宝充值！'));
+        return;
+      }
     } else {
       if (!enableOnlineTopUp) {
         showError(t('管理员未开启在线充值！'));
@@ -251,6 +256,17 @@ const TopUp = () => {
       setConfirmLoading(true);
       try {
         await waffoTopUp(Number.isFinite(payMethodIndex) ? payMethodIndex : 0);
+      } finally {
+        setOpen(false);
+        setConfirmLoading(false);
+      }
+      return;
+    }
+
+    if (payWay === 'mtbot') {
+      setConfirmLoading(true);
+      try {
+        await handleMtbotTopup(parseInt(topUpCount));
       } finally {
         setOpen(false);
         setConfirmLoading(false);
@@ -654,13 +670,31 @@ const TopUp = () => {
           // 如果启用了 Stripe 支付，添加到支付方法列表
           // 这个逻辑现在由后端处理，如果 Stripe 启用，后端会在 pay_methods 中包含它
 
-          setPayMethods(payMethods);
           const enableStripeTopUp = data.enable_stripe_topup || false;
           const enableOnlineTopUp = data.enable_online_topup || false;
           const enableCreemTopUp = data.enable_creem_topup || false;
           const enableWaffoTopUp = data.enable_waffo_topup || false;
           const enableWaffoPancakeTopUp =
             data.enable_waffo_pancake_topup || false;
+          const enableMtbotTopUp = data.enable_mtbot_topup || false;
+
+          // 将 Mtbot 支付宝作为虚拟支付方式注入 payMethods，走统一确认弹窗
+          if (
+            enableMtbotTopUp &&
+            !payMethods.some((m) => m.type === 'mtbot')
+          ) {
+            payMethods = [
+              ...payMethods,
+              {
+                type: 'mtbot',
+                name: '支付宝',
+                min_topup: 1,
+                color: '#1677FF',
+              },
+            ];
+          }
+
+          setPayMethods(payMethods);
           const minTopUpValue = enableOnlineTopUp
             ? data.min_topup
             : enableStripeTopUp
@@ -669,7 +703,9 @@ const TopUp = () => {
                 ? data.waffo_min_topup
                 : enableWaffoPancakeTopUp
                   ? data.waffo_pancake_min_topup
-                : 1;
+                  : enableMtbotTopUp
+                    ? 1
+                    : 1;
           setEnableOnlineTopUp(enableOnlineTopUp);
           setEnableStripeTopUp(enableStripeTopUp);
           setEnableCreemTopUp(enableCreemTopUp);
@@ -678,7 +714,7 @@ const TopUp = () => {
           setWaffoMinTopUp(data.waffo_min_topup || 1);
           setEnableWaffoPancakeTopUp(enableWaffoPancakeTopUp);
           setWaffoPancakeMinTopUp(data.waffo_pancake_min_topup || 1);
-          setEnableMtbotTopUp(data.enable_mtbot_topup || false);
+          setEnableMtbotTopUp(enableMtbotTopUp);
           setMinTopUp(minTopUpValue);
           setTopUpCount(minTopUpValue);
           setTopUpLink(data.topup_link || '');
