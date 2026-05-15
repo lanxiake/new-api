@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 
 const KEYS = {
   AffRegisterRequired: false,
+  AffRegisterLimit: 0,
   AffRebateEnabled: true,
   AffRebateRatio: '0.10',
   AffRebateWaitDays: 30,
@@ -113,6 +114,17 @@ export default function SettingsAff(props) {
                 checkedText='｜'
                 uncheckedText='〇'
                 onChange={handleFieldChange('AffRegisterRequired')}
+              />
+            </Col>
+            <Col xs={24} sm={12} md={8} lg={8} xl={8}>
+              <Form.InputNumber
+                field='AffRegisterLimit'
+                label={t('每个邀请码注册上限（0 为不限）')}
+                placeholder='0'
+                onChange={handleFieldChange('AffRegisterLimit')}
+                min={0}
+                step={1}
+                precision={0}
               />
             </Col>
             <Col xs={24} sm={12} md={8} lg={8} xl={8}>

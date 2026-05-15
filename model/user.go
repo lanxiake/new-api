@@ -315,6 +315,12 @@ func GetUserIdByAffCode(affCode string) (int, error) {
 	return user.Id, err
 }
 
+func CountInvitedUsers(inviterId int) (int64, error) {
+	var count int64
+	err := DB.Model(&User{}).Where("inviter_id = ?", inviterId).Count(&count).Error
+	return count, err
+}
+
 func DeleteUserById(id int) (err error) {
 	if id == 0 {
 		return errors.New("id 为空！")

@@ -139,6 +139,7 @@ func InitOptionMap() {
 	common.OptionMap["QuotaForInviter"] = strconv.Itoa(common.QuotaForInviter)
 	common.OptionMap["QuotaForInvitee"] = strconv.Itoa(common.QuotaForInvitee)
 	common.OptionMap["AffRegisterRequired"] = strconv.FormatBool(common.AffRegisterRequired)
+	common.OptionMap["AffRegisterLimit"] = strconv.Itoa(common.AffRegisterLimit)
 	common.OptionMap["AffRebateEnabled"] = strconv.FormatBool(common.AffRebateEnabled)
 	common.OptionMap["AffRebateRatio"] = strconv.FormatFloat(common.AffRebateRatio, 'f', -1, 64)
 	common.OptionMap["AffRebateWaitDays"] = strconv.Itoa(common.AffRebateWaitDays)
@@ -496,6 +497,10 @@ func updateOptionMap(key string, value string) (err error) {
 		common.QuotaForInvitee, _ = strconv.Atoi(value)
 	case "AffRegisterRequired":
 		common.AffRegisterRequired = value == "true"
+	case "AffRegisterLimit":
+		if v, err := strconv.Atoi(value); err == nil && v >= 0 {
+			common.AffRegisterLimit = v
+		}
 	case "AffRebateEnabled":
 		common.AffRebateEnabled = value == "true"
 	case "AffRebateRatio":

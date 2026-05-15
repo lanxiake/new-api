@@ -276,22 +276,31 @@ func maskUsername(name string) string {
 	}
 }
 
-// requireAffCodeIfEnforced 邀请码强制注册校验。
+// requireAffCodeIfEnforced 邀请码强制注册校验 + 每码注册上限检查。
 //
 // 当 common.AffRegisterRequired 开启时，要求 affCode 非空且 inviterId > 0。
+// 当 common.AffRegisterLimit > 0 且 inviterId > 0 时，检查该邀请码已注册账号数是否达到上限。
 // 用于普通注册及各 OAuth 注册分支统一调用，避免在多处重复硬编码同一段判断。
 //
 // 返回 (msg, ok)：ok=false 时 msg 为面向最终用户的错误提示；ok=true 时 msg 为空。
-// 当开关未启用时直接返回 ok=true。
 func requireAffCodeIfEnforced(affCode string, inviterId int) (string, bool) {
-	if !common.AffRegisterRequired {
-		return "", true
+	if common.AffRegisterRequired {
+		if strings.TrimSpace(affCode) == "" {
+			return "当前系统仅支持邀请注册，请通过有效邀请链接访问", false
+		}
+		if inviterId == 0 {
+			return "邀请码无效或不存在", false
+		}
 	}
-	if strings.TrimSpace(affCode) == "" {
-		return "当前系统仅支持邀请注册，请通过有效邀请链接访问", false
-	}
-	if inviterId == 0 {
-		return "邀请码无效或不存在", false
+	if common.AffRegisterLimit > 0 && inviterId > 0 {
+		count, err := model.CountInvitedUsers(inviterId)
+		if err != nil {
+			common.SysError("CountInvitedUsers failed: " + err.Error())
+			return "系统错误，请稍后重试", false
+		}
+		if count >= int64(common.AffRegisterLimit) {
+			return "该邀请码已达到注册上限", false
+		}
 	}
 	return "", true
 }
