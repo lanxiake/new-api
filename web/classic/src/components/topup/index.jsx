@@ -838,6 +838,18 @@ const TopUp = () => {
     if (value === undefined) {
       value = topUpCount;
     }
+    // Mtbot-only 场景：¥1=$1，前端直接按数量×折扣计算
+    const mtbotOnly =
+      enableMtbotTopUp &&
+      !enableOnlineTopUp &&
+      !enableStripeTopUp &&
+      !enableWaffoTopUp &&
+      !enableWaffoPancakeTopUp;
+    if (mtbotOnly) {
+      const discount = topupInfo?.discount?.[value] || 1.0;
+      setAmount(parseFloat(value) * discount);
+      return;
+    }
     setAmountLoading(true);
     try {
       const res = await API.post('/api/user/amount', {
@@ -915,7 +927,15 @@ const TopUp = () => {
 
     // 计算实际支付金额，考虑折扣
     const discount = preset.discount || topupInfo.discount[preset.value] || 1.0;
-    const discountedAmount = preset.value * priceRatio * discount;
+    // Mtbot-only 场景：¥1=$1，不乘 priceRatio
+    const mtbotOnly =
+      enableMtbotTopUp &&
+      !enableOnlineTopUp &&
+      !enableStripeTopUp &&
+      !enableWaffoTopUp &&
+      !enableWaffoPancakeTopUp;
+    const effectiveRatio = mtbotOnly ? 1 : priceRatio;
+    const discountedAmount = preset.value * effectiveRatio * discount;
     setAmount(discountedAmount);
   };
 

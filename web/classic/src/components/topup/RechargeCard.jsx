@@ -107,7 +107,16 @@ const RechargeCard = ({
   const [activeTab, setActiveTab] = useState('topup');
   const shouldShowSubscription =
     !subscriptionLoading && subscriptionPlans.length > 0;
-  const regularPayMethods = payMethods || [];
+  // 仅显示当前用户实际可用的支付方式
+  const regularPayMethods = (payMethods || []).filter((method) => {
+    const type = method?.type;
+    if (typeof type !== 'string') return false;
+    if (type === 'stripe') return !!enableStripeTopUp;
+    if (type === 'waffo_pancake') return !!enableWaffoPancakeTopUp;
+    if (type.startsWith('waffo:')) return !!enableWaffoTopUp;
+    if (type === 'mtbot') return !!enableMtbotTopUp;
+    return !!enableOnlineTopUp;
+  });
 
   useEffect(() => {
     if (initialTabSetRef.current) return;
@@ -423,6 +432,13 @@ const RechargeCard = ({
                     <div className='flex items-center gap-2'>
                       <span>{t('选择充值额度')}</span>
                       {(() => {
+                        const mtbotOnly =
+                          enableMtbotTopUp &&
+                          !enableOnlineTopUp &&
+                          !enableStripeTopUp &&
+                          !enableWaffoTopUp &&
+                          !enableWaffoPancakeTopUp;
+                        if (mtbotOnly) return null;
                         const { symbol, rate, type } = getCurrencyConfig();
                         if (type === 'USD') return null;
                         return (
@@ -448,35 +464,61 @@ const RechargeCard = ({
                         preset.discount ||
                         topupInfo?.discount?.[preset.value] ||
                         1.0;
-                      const originalPrice = preset.value * priceRatio;
-                      const discountedPrice = originalPrice * discount;
                       const hasDiscount = discount < 1.0;
-                      const actualPay = discountedPrice;
-                      const save = originalPrice - discountedPrice;
 
-                      const { symbol, rate, type } = getCurrencyConfig();
-                      const statusStr = localStorage.getItem('status');
-                      let usdRate = 7;
-                      try {
-                        if (statusStr) {
-                          const s = JSON.parse(statusStr);
-                          usdRate = s?.usd_exchange_rate || 7;
+                      // Mtbot-only 场景：¥1=$1，单位为 ¥，不乘 priceRatio 不做 USD/CNY 换算
+                      const mtbotOnly =
+                        enableMtbotTopUp &&
+                        !enableOnlineTopUp &&
+                        !enableStripeTopUp &&
+                        !enableWaffoTopUp &&
+                        !enableWaffoPancakeTopUp;
+
+                      let displayValue;
+                      let displayActualPay;
+                      let displaySave;
+                      let symbol;
+
+                      if (mtbotOnly) {
+                        displayValue = preset.value;
+                        const originalPrice = preset.value;
+                        const discountedPrice = originalPrice * discount;
+                        displayActualPay = discountedPrice;
+                        displaySave = originalPrice - discountedPrice;
+                        symbol = '¥';
+                      } else {
+                        const originalPrice = preset.value * priceRatio;
+                        const discountedPrice = originalPrice * discount;
+                        const actualPay = discountedPrice;
+                        const save = originalPrice - discountedPrice;
+
+                        const cfg = getCurrencyConfig();
+                        symbol = cfg.symbol;
+                        const rate = cfg.rate;
+                        const type = cfg.type;
+                        const statusStr = localStorage.getItem('status');
+                        let usdRate = 7;
+                        try {
+                          if (statusStr) {
+                            const s = JSON.parse(statusStr);
+                            usdRate = s?.usd_exchange_rate || 7;
+                          }
+                        } catch (e) {}
+
+                        displayValue = preset.value;
+                        displayActualPay = actualPay;
+                        displaySave = save;
+
+                        if (type === 'USD') {
+                          displayActualPay = actualPay / usdRate;
+                          displaySave = save / usdRate;
+                        } else if (type === 'CNY') {
+                          displayValue = preset.value * usdRate;
+                        } else if (type === 'CUSTOM') {
+                          displayValue = preset.value * rate;
+                          displayActualPay = (actualPay / usdRate) * rate;
+                          displaySave = (save / usdRate) * rate;
                         }
-                      } catch (e) {}
-
-                      let displayValue = preset.value;
-                      let displayActualPay = actualPay;
-                      let displaySave = save;
-
-                      if (type === 'USD') {
-                        displayActualPay = actualPay / usdRate;
-                        displaySave = save / usdRate;
-                      } else if (type === 'CNY') {
-                        displayValue = preset.value * usdRate;
-                      } else if (type === 'CUSTOM') {
-                        displayValue = preset.value * rate;
-                        displayActualPay = (actualPay / usdRate) * rate;
-                        displaySave = (save / usdRate) * rate;
                       }
 
                       const isSelected = selectedPreset === preset.value;
@@ -484,15 +526,15 @@ const RechargeCard = ({
                       return (
                         <Col
                           xs={12}
-                          sm={8}
-                          md={6}
+                          sm={12}
+                          md={8}
                           lg={6}
-                          xl={4}
+                          xl={6}
                           key={index}
-                          style={{ marginBottom: 12 }}
+                          style={{ marginBottom: 16 }}
                         >
                           <Card
-                            className='!rounded-lg transition-all'
+                            className='!rounded-lg transition-all hover:shadow-md'
                             style={{
                               cursor: 'pointer',
                               borderColor: isSelected
@@ -504,8 +546,9 @@ const RechargeCard = ({
                                 ? '0 0 0 2px rgba(var(--semi-color-primary), 0.15)'
                                 : 'none',
                               height: '100%',
+                              minHeight: 110,
                             }}
-                            bodyStyle={{ padding: '12px' }}
+                            bodyStyle={{ padding: '16px' }}
                             onClick={() => {
                               selectPresetAmount(preset);
                               onlineFormApiRef.current?.setValue(
