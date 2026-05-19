@@ -66,4 +66,13 @@ const (
 	// ContextKeyLanguage stores the user's language preference for i18n
 	ContextKeyLanguage ContextKey = "language"
 	ContextKeyIsStream ContextKey = "is_stream"
+
+	// ContextKeyAffinityBypass 标记本次请求绕过 affinity，直接进入随机选择
+	ContextKeyAffinityBypass ContextKey = "affinity_bypass"
+	// ContextKeyExcludedChannelIds 当前请求已失败、不能再选的 channel id 列表 ([]int)
+	ContextKeyExcludedChannelIds ContextKey = "excluded_channel_ids"
+	// ContextKeyIsProbe 标记本次请求是探活请求（不计入失败计数）
+	ContextKeyIsProbe ContextKey = "is_probe"
+	// ContextKeyAffinityRetryCount 当前请求亲和命中后已重试同渠道的次数
+	ContextKeyAffinityRetryCount ContextKey = "affinity_retry_count"
 )
