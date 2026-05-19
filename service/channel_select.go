@@ -81,6 +81,54 @@ func (p *RetryParam) ResetRetryNextTry() {
 //	Retry=3: GroupB, priority1 (startRetryIndex=2, priorityRetry=1)
 //	         分组B, 优先级1
 func CacheGetRandomSatisfiedChannel(param *RetryParam) (*model.Channel, string, error) {
+	// 在外层包一层过滤，跳过 cooldown 中或本请求已失败的 channel
+	// 最多尝试 3 次（避免极端情况下无限循环）；都被过滤则返回最后一次结果（兜底）
+	excluded := getExcludedChannelIdsFromCtx(param.Ctx)
+	var lastChannel *model.Channel
+	var lastGroup string
+	var lastErr error
+	for attempt := 0; attempt < 3; attempt++ {
+		ch, grp, err := cacheGetRandomSatisfiedChannelOnce(param)
+		lastChannel, lastGroup, lastErr = ch, grp, err
+		if err != nil || ch == nil {
+			return ch, grp, err
+		}
+		if containsInt(excluded, ch.Id) || IsInCooldown(ch.Id) {
+			excluded = append(excluded, ch.Id)
+			continue
+		}
+		return ch, grp, err
+	}
+	return lastChannel, lastGroup, lastErr
+}
+
+func getExcludedChannelIdsFromCtx(c *gin.Context) []int {
+	if c == nil {
+		return nil
+	}
+	v, exists := common.GetContextKey(c, constant.ContextKeyExcludedChannelIds)
+	if !exists {
+		return nil
+	}
+	if ids, ok := v.([]int); ok {
+		// 复制一份，避免修改 context 内的原始切片
+		out := make([]int, len(ids))
+		copy(out, ids)
+		return out
+	}
+	return nil
+}
+
+func containsInt(s []int, v int) bool {
+	for _, x := range s {
+		if x == v {
+			return true
+		}
+	}
+	return false
+}
+
+func cacheGetRandomSatisfiedChannelOnce(param *RetryParam) (*model.Channel, string, error) {
 	var channel *model.Channel
 	var err error
 	selectGroup := param.TokenGroup
