@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -221,6 +222,7 @@ func Relay(c *gin.Context, relayFormat types.RelayFormat) {
 		}
 
 		if newAPIError == nil {
+			service.RecordSuccess(channel.Id)
 			relayInfo.LastError = nil
 			return
 		}
@@ -303,6 +305,17 @@ func getChannel(c *gin.Context, info *relaycommon.RelayInfo, retryParam *service
 			AutoBan: &autoBanInt,
 		}, nil
 	}
+	// 把已经用过的 channel id 写入 context，作为下游选择器的排除集
+	// 既避免重试时再次命中同 tier 内刚失败的渠道，也供 cooldown 过滤兜底
+	used := c.GetStringSlice("use_channel")
+	excluded := make([]int, 0, len(used))
+	for _, s := range used {
+		if id, convErr := strconv.Atoi(s); convErr == nil {
+			excluded = append(excluded, id)
+		}
+	}
+	common.SetContextKey(c, constant.ContextKeyExcludedChannelIds, excluded)
+
 	channel, selectGroup, err := service.CacheGetRandomSatisfiedChannel(retryParam)
 
 	info.PriceData.GroupRatioInfo = helper.HandleGroupRatio(c, info)
@@ -326,7 +339,19 @@ func shouldRetry(c *gin.Context, openaiErr *types.NewAPIError, retryTimes int) b
 		return false
 	}
 	if service.ShouldSkipRetryAfterChannelAffinityFailure(c) {
-		return false
+		// 亲和性命中后失败：累计本请求重试次数
+		// 在 InSingleRequestRetries 次内继续重试原渠道；超过后标记 bypass 让 getChannel 选备用渠道
+		cs := operation_setting.GetChannelCooldownSetting()
+		if !cs.Enabled {
+			return false
+		}
+		retries := c.GetInt(string(constant.ContextKeyAffinityRetryCount))
+		retries++
+		c.Set(string(constant.ContextKeyAffinityRetryCount), retries)
+		if retries >= cs.InSingleRequestRetries {
+			common.SetContextKey(c, constant.ContextKeyAffinityBypass, true)
+		}
+		return retryTimes > 0
 	}
 	if types.IsChannelError(openaiErr) {
 		return true
@@ -361,6 +386,11 @@ func processChannelError(c *gin.Context, channelError types.ChannelError, err *t
 		gopool.Go(func() {
 			service.DisableChannel(channelError, err.ErrorWithStatusCode())
 		})
+	}
+
+	// 上报失败到 cooldown 模块（探活请求除外）
+	if !c.GetBool(string(constant.ContextKeyIsProbe)) {
+		service.RecordFailure(channelError.ChannelId, err.StatusCode)
 	}
 
 	if constant.ErrorLogEnabled && types.IsRecordErrorLog(err) {
