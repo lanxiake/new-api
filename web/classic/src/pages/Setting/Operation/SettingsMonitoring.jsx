@@ -44,6 +44,7 @@ export default function SettingsMonitoring(props) {
       '100-199,300-399,401-407,409-499,500-503,505-523,525-599',
     'monitor_setting.auto_test_channel_enabled': false,
     'monitor_setting.auto_test_channel_minutes': 10,
+    'monitor_setting.channel_alert_email': '',
   });
   const refForm = useRef();
   const [inputsRow, setInputsRow] = useState(inputs);
@@ -273,6 +274,24 @@ export default function SettingsMonitoring(props) {
                   autosize={{ minRows: 6, maxRows: 12 }}
                   onChange={(value) =>
                     setInputs({ ...inputs, AutomaticDisableKeywords: value })
+                  }
+                />
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col xs={24} sm={16}>
+                <Form.Input
+                  field={'monitor_setting.channel_alert_email'}
+                  label={t('渠道异常告警邮箱')}
+                  placeholder={t('留空则禁用；多个邮箱用英文逗号分隔')}
+                  extraText={t(
+                    '渠道被自动禁用或恢复时，会向此邮箱发送告警/恢复邮件',
+                  )}
+                  onChange={(value) =>
+                    setInputs({
+                      ...inputs,
+                      'monitor_setting.channel_alert_email': value,
+                    })
                   }
                 />
               </Col>

@@ -30,6 +30,7 @@ func DisableChannel(channelError types.ChannelError, reason string) {
 		subject := fmt.Sprintf("通道「%s」（#%d）已被禁用", channelError.ChannelName, channelError.ChannelId)
 		content := fmt.Sprintf("通道「%s」（#%d）已被禁用，原因：%s", channelError.ChannelName, channelError.ChannelId, reason)
 		NotifyRootUser(formatNotifyType(channelError.ChannelId, common.ChannelStatusAutoDisabled), subject, content)
+		sendChannelAlertEmail(subject, content)
 	}
 }
 
@@ -39,6 +40,25 @@ func EnableChannel(channelId int, usingKey string, channelName string) {
 		subject := fmt.Sprintf("通道「%s」（#%d）已被启用", channelName, channelId)
 		content := fmt.Sprintf("通道「%s」（#%d）已被启用", channelName, channelId)
 		NotifyRootUser(formatNotifyType(channelId, common.ChannelStatusEnabled), subject, content)
+		sendChannelAlertEmail(subject, content)
+	}
+}
+
+// sendChannelAlertEmail 向运营设置中配置的告警邮箱发送渠道异常/恢复通知
+// 该通道独立于 root 用户的个人通知设置，便于运维统一收件
+func sendChannelAlertEmail(subject string, content string) {
+	addrs := strings.TrimSpace(operation_setting.GetMonitorSetting().ChannelAlertEmail)
+	if addrs == "" {
+		return
+	}
+	for _, addr := range strings.Split(addrs, ",") {
+		addr = strings.TrimSpace(addr)
+		if addr == "" {
+			continue
+		}
+		if err := common.SendEmail(subject, addr, content); err != nil {
+			common.SysLog(fmt.Sprintf("[channel-alert] 发送告警邮件失败 addr=%s err=%s", addr, err.Error()))
+		}
 	}
 }
 
