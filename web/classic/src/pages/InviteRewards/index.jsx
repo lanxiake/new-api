@@ -55,8 +55,11 @@ const { Text, Title } = Typography;
 
 const PAGE_SIZE = 10;
 
-const StatBlock = ({ icon, label, value, accent }) => (
-  <Card className='!rounded-2xl border-0 shadow-sm'>
+const StatBlock = ({ icon, label, value, accent, onClick }) => (
+  <Card
+    className={`!rounded-2xl border-0 shadow-sm ${onClick ? 'cursor-pointer hover:shadow-md transition-shadow' : ''}`}
+    onClick={onClick}
+  >
     <div className='flex items-center justify-between'>
       <div>
         <Text type='tertiary' className='text-xs'>
@@ -110,6 +113,13 @@ const InviteRewardsPage = () => {
   const [openTransfer, setOpenTransfer] = useState(false);
   const [transferAmount, setTransferAmount] = useState(0);
   const [transferring, setTransferring] = useState(false);
+
+  // 我邀请的用户列表（基于 users.inviter_id，含未充值用户）
+  const [openInvitedUsers, setOpenInvitedUsers] = useState(false);
+  const [invitedUsers, setInvitedUsers] = useState([]);
+  const [invitedUsersPage, setInvitedUsersPage] = useState(1);
+  const [invitedUsersTotal, setInvitedUsersTotal] = useState(0);
+  const [invitedUsersLoading, setInvitedUsersLoading] = useState(false);
 
   const fetchStats = async () => {
     setLoadingStats(true);
@@ -192,6 +202,35 @@ const InviteRewardsPage = () => {
   useEffect(() => {
     if (tab === 'rebates') fetchRebates(rebatesPage);
   }, [tab, rebatesPage]);
+
+  const fetchInvitedUsers = async (page) => {
+    setInvitedUsersLoading(true);
+    try {
+      const res = await API.get(
+        `/api/user/aff/users?p=${page}&page_size=${PAGE_SIZE}`,
+      );
+      const { success, data } = res.data || {};
+      if (success && data) {
+        setInvitedUsers(data.items || []);
+        setInvitedUsersTotal(data.total || 0);
+      }
+    } catch (e) {
+      // ignore
+    } finally {
+      setInvitedUsersLoading(false);
+    }
+  };
+
+  const openInvitedUsersDialog = () => {
+    setInvitedUsersPage(1);
+    setOpenInvitedUsers(true);
+    fetchInvitedUsers(1);
+  };
+
+  useEffect(() => {
+    if (openInvitedUsers) fetchInvitedUsers(invitedUsersPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [invitedUsersPage]);
 
   const aff = stats || {
     aff_quota: userState?.user?.aff_quota || 0,
@@ -356,6 +395,9 @@ const InviteRewardsPage = () => {
                   icon={<Users size={16} className='text-violet-600' />}
                   label={t('邀请人数')}
                   value={aff.aff_count || 0}
+                  onClick={
+                    (aff.aff_count || 0) > 0 ? openInvitedUsersDialog : undefined
+                  }
                 />
               </div>
             </div>
@@ -515,6 +557,65 @@ const InviteRewardsPage = () => {
             />
           </div>
         </div>
+      </Modal>
+
+      {/* 我邀请的用户列表 */}
+      <Modal
+        title={
+          <div className='flex items-center'>
+            <Users className='mr-2' size={18} />
+            {t('我邀请的用户')}
+          </div>
+        }
+        visible={openInvitedUsers}
+        onCancel={() => setOpenInvitedUsers(false)}
+        footer={null}
+        width={640}
+        maskClosable
+        centered
+      >
+        <Table
+          columns={[
+            {
+              title: t('用户 ID'),
+              dataIndex: 'id',
+              width: 90,
+            },
+            {
+              title: t('用户名'),
+              dataIndex: 'username',
+              render: (v, row) => v || `#${row.id}`,
+            },
+            {
+              title: t('状态'),
+              dataIndex: 'status',
+              width: 90,
+              render: (v) =>
+                v === 1 ? (
+                  <Tag color='green'>{t('已启用')}</Tag>
+                ) : v === 2 ? (
+                  <Tag color='red'>{t('已禁用')}</Tag>
+                ) : (
+                  <Tag>{v}</Tag>
+                ),
+            },
+            {
+              title: t('注册时间'),
+              dataIndex: 'created_at',
+              render: (v) => (v ? timestamp2string(v) : '-'),
+            },
+          ]}
+          dataSource={invitedUsers}
+          loading={invitedUsersLoading}
+          rowKey='id'
+          pagination={{
+            currentPage: invitedUsersPage,
+            pageSize: PAGE_SIZE,
+            total: invitedUsersTotal,
+            onPageChange: (p) => setInvitedUsersPage(p),
+          }}
+          empty={<Empty description={t('暂无邀请用户')} />}
+        />
       </Modal>
     </div>
   );

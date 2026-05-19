@@ -266,7 +266,11 @@ const TopUp = () => {
     if (payWay === 'mtbot') {
       setConfirmLoading(true);
       try {
-        await handleMtbotTopup(parseInt(topUpCount));
+        const credit = parseInt(topUpCount);
+        const discount = topupInfo?.discount?.[credit] || 1.0;
+        // pay = 实付（折扣后），credit = 到账数量（折扣前，元）
+        const pay = Math.max(1, Math.round(credit * discount));
+        await handleMtbotTopup(pay, credit);
       } finally {
         setOpen(false);
         setConfirmLoading(false);
@@ -525,15 +529,17 @@ const TopUp = () => {
   };
 
   // Mtbot 支付宝直连充值
-  const handleMtbotTopup = async (amount) => {
+  //   pay    = 实付金额（折扣后，元）
+  //   credit = 到账数量（折扣前，元）
+  const handleMtbotTopup = async (pay, credit) => {
     setMtbotLoading(true);
     try {
-      const res = await API.get('/api/user/mtbot-topup/link');
+      const res = await API.get(
+        `/api/user/mtbot-topup/link?pay=${encodeURIComponent(pay)}&credit=${encodeURIComponent(credit)}`,
+      );
       const { message, data } = res.data;
       if (message === 'success' && data) {
-        const url = new URL(data);
-        url.searchParams.set('amount', String(amount));
-        window.open(url.toString(), '_blank', 'noopener,noreferrer');
+        window.open(data, '_blank', 'noopener,noreferrer');
       } else {
         showError(data || t('获取充值链接失败，请稍后重试'));
       }

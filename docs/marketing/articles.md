@@ -179,7 +179,7 @@ Claude Code 强依赖流式传输，这家中转层对 streaming 的处理有问
 
 **分组设计（这点是加分项）：**
 
-- `cc`（2.0x）：Claude Code 高质量专线，稳定优先
+- `cc`（1.6x）：Claude Code 高质量专线，稳定优先
 - `cc-sale`（低至 0.8x）：同等模型，性价比版，适合日常开发
 - `codex`（0.6x）：Codex CLI 专用 OpenAI 模型
 - `codex-sale`（低至 0.4x）：极致低价，批量调用首选

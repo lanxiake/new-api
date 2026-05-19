@@ -311,7 +311,12 @@ const renderQuotaUsage = (text, record, t) => {
     return (
       <Popover content={popoverContent} position='top'>
         <Tag color='white' shape='circle'>
-          {t('无限额度')}
+          <div className='flex flex-col items-end'>
+            <span className='text-xs leading-none'>{t('无限额度')}</span>
+            <span className='text-xs leading-none text-gray-500'>
+              {t('已用')} {renderQuota(used)}
+            </span>
+          </div>
         </Tag>
       </Popover>
     );

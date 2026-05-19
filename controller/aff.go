@@ -50,6 +50,51 @@ func GetAffStats(c *gin.Context) {
 	})
 }
 
+// GetAffInvitedUsers 我邀请的全部用户（基于 users.inviter_id，含未充值用户）
+// GET /api/user/aff/users?p=1&page_size=10
+func GetAffInvitedUsers(c *gin.Context) {
+	userId := c.GetInt("id")
+	page := common.GetPageQuery(c)
+
+	q := model.DB.Model(&model.User{}).Where("inviter_id = ?", userId)
+
+	var total int64
+	if err := q.Count(&total).Error; err != nil {
+		common.ApiError(c, err)
+		return
+	}
+
+	type Row struct {
+		Id        int    `json:"id"`
+		Username  string `json:"username"`
+		Status    int    `json:"status"`
+		CreatedAt int64  `json:"created_at"`
+	}
+	var rows []Row
+	if err := q.Select("id, username, status, created_at").
+		Order("created_at DESC").
+		Limit(page.PageSize).Offset(page.GetStartIdx()).
+		Scan(&rows).Error; err != nil {
+		common.ApiError(c, err)
+		return
+	}
+
+	// 用户名脱敏，避免泄露完整账号
+	items := make([]gin.H, 0, len(rows))
+	for _, r := range rows {
+		items = append(items, gin.H{
+			"id":         r.Id,
+			"username":   maskUsername(r.Username),
+			"status":     r.Status,
+			"created_at": r.CreatedAt,
+		})
+	}
+
+	page.SetTotal(int(total))
+	page.SetItems(items)
+	common.ApiSuccess(c, page)
+}
+
 // GetAffInvitees 邀请记录（被邀请人列表 + 累计贡献返佣）
 // GET /api/user/aff/invitees?p=1&page_size=20
 func GetAffInvitees(c *gin.Context) {

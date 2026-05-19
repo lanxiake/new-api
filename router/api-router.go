@@ -94,6 +94,7 @@ func SetApiRouter(router *gin.Engine) {
 				selfRoute.GET("/aff", controller.GetAffCode)
 				selfRoute.GET("/aff/stats", controller.GetAffStats)
 				selfRoute.GET("/aff/invitees", controller.GetAffInvitees)
+				selfRoute.GET("/aff/users", controller.GetAffInvitedUsers)
 				selfRoute.GET("/aff/rebates", controller.GetAffRebates)
 				selfRoute.GET("/topup/info", controller.GetTopUpInfo)
 				selfRoute.GET("/topup/self", controller.GetUserTopUps)
