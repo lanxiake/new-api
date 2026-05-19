@@ -113,6 +113,10 @@ func main() {
 
 	go controller.AutomaticallyTestChannels()
 
+	// 渠道冷却（断路器）后台探活循环：原渠道恢复后立即清除冷却
+	service.RegisterProbeChannelImpl(controller.ProbeChannelLightweight)
+	service.StartChannelProbeLoop()
+
 	// Codex credential auto-refresh check every 10 minutes, refresh when expires within 1 day
 	service.StartCodexCredentialAutoRefreshTask()
 

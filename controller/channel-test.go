@@ -77,6 +77,9 @@ func testChannel(channel *model.Channel, testModel string, endpointType string, 
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 
+	// 标记为探活/测试请求：cooldown 模块据此跳过失败计数，避免自循环把渠道按死
+	c.Set(string(constant.ContextKeyIsProbe), true)
+
 	testModel = strings.TrimSpace(testModel)
 	if testModel == "" {
 		if channel.TestModel != nil && *channel.TestModel != "" {
@@ -981,4 +984,40 @@ func AutomaticallyTestChannels() {
 			}
 		}
 	})
+}
+
+// ProbeChannelLightweight 给 cooldown 模块复用的轻量探活函数
+// - channel 已被管理员手动禁用：返回 true（让 cooldown 直接清除，不再无效探测）
+// - testChannel 成功：返回 true
+// - 否则：返回 false + error
+func ProbeChannelLightweight(channelId int) (bool, error) {
+	ch, err := model.GetChannelById(channelId, true)
+	if err != nil || ch == nil {
+		return false, fmt.Errorf("[ProbeChannelLightweight] 渠道 %d 未找到: %v", channelId, err)
+	}
+	if ch.Status != common.ChannelStatusEnabled {
+		// 已被禁用 / 自动禁用：让 cooldown 清除该标记，不再无效探测
+		return true, nil
+	}
+	testModel := ""
+	if ch.TestModel != nil {
+		testModel = strings.TrimSpace(*ch.TestModel)
+	}
+	if testModel == "" {
+		models := ch.GetModels()
+		if len(models) > 0 {
+			testModel = strings.TrimSpace(models[0])
+		}
+	}
+	if testModel == "" {
+		return false, fmt.Errorf("[ProbeChannelLightweight] 渠道 %d 无可用 test model", channelId)
+	}
+	result := testChannel(ch, testModel, "", false)
+	if result.newAPIError == nil && result.localErr == nil {
+		return true, nil
+	}
+	if result.newAPIError != nil {
+		return false, fmt.Errorf("%s", result.newAPIError.Error())
+	}
+	return false, result.localErr
 }
