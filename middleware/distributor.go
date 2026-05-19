@@ -107,6 +107,10 @@ func Distribute() func(c *gin.Context) {
 								abortWithOpenAiMessage(c, http.StatusForbidden, i18n.T(c, i18n.MsgDistributorAffinityChannelDisabled))
 								return
 							}
+						} else if service.IsInCooldown(preferred.Id) {
+							// 渠道处于冷却态：跳过亲和性绑定，回退到随机选择，并标记 bypass
+							common.SetContextKey(c, constant.ContextKeyAffinityBypass, true)
+							common.SysLog(fmt.Sprintf("[Distribute] 亲和命中渠道 %d 但已冷却，回退到随机选择", preferred.Id))
 						} else if usingGroup == "auto" {
 							userGroup := common.GetContextKeyString(c, constant.ContextKeyUserGroup)
 							autoGroups := service.GetUserAutoGroup(userGroup)
