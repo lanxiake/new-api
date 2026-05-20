@@ -81,25 +81,26 @@ func (p *RetryParam) ResetRetryNextTry() {
 //	Retry=3: GroupB, priority1 (startRetryIndex=2, priorityRetry=1)
 //	         分组B, 优先级1
 func CacheGetRandomSatisfiedChannel(param *RetryParam) (*model.Channel, string, error) {
-	// 在外层包一层过滤，跳过 cooldown 中或本请求已失败的 channel
-	// 最多尝试 3 次（避免极端情况下无限循环）；都被过滤则返回最后一次结果（兜底）
+	// 构建排除列表：已失败的渠道 + cooldown 中的渠道
 	excluded := getExcludedChannelIdsFromCtx(param.Ctx)
-	var lastChannel *model.Channel
-	var lastGroup string
-	var lastErr error
-	for attempt := 0; attempt < 3; attempt++ {
-		ch, grp, err := cacheGetRandomSatisfiedChannelOnce(param)
-		lastChannel, lastGroup, lastErr = ch, grp, err
-		if err != nil || ch == nil {
-			return ch, grp, err
-		}
-		if containsInt(excluded, ch.Id) || IsInCooldown(ch.Id) {
-			excluded = append(excluded, ch.Id)
-			continue
-		}
-		return ch, grp, err
+	cooldownIds := GetAllCooldownChannelIds()
+	excluded = append(excluded, cooldownIds...)
+
+	// 去重
+	excludedSet := make(map[int]bool)
+	for _, id := range excluded {
+		excludedSet[id] = true
 	}
-	return lastChannel, lastGroup, lastErr
+	var uniqueExcluded []int
+	for id := range excludedSet {
+		uniqueExcluded = append(uniqueExcluded, id)
+	}
+
+	if len(uniqueExcluded) > 0 {
+		logger.LogDebug(param.Ctx, "[CacheGetRandomSatisfiedChannel] 排除渠道列表: %v", uniqueExcluded)
+	}
+
+	return cacheGetRandomSatisfiedChannelOnce(param, uniqueExcluded)
 }
 
 func getExcludedChannelIdsFromCtx(c *gin.Context) []int {
@@ -128,7 +129,7 @@ func containsInt(s []int, v int) bool {
 	return false
 }
 
-func cacheGetRandomSatisfiedChannelOnce(param *RetryParam) (*model.Channel, string, error) {
+func cacheGetRandomSatisfiedChannelOnce(param *RetryParam, excludedIds []int) (*model.Channel, string, error) {
 	var channel *model.Channel
 	var err error
 	selectGroup := param.TokenGroup
@@ -163,7 +164,7 @@ func cacheGetRandomSatisfiedChannelOnce(param *RetryParam) (*model.Channel, stri
 			}
 			logger.LogDebug(param.Ctx, "Auto selecting group: %s, priorityRetry: %d", autoGroup, priorityRetry)
 
-			channel, _ = model.GetRandomSatisfiedChannel(autoGroup, param.ModelName, priorityRetry)
+			channel, _ = model.GetRandomSatisfiedChannel(autoGroup, param.ModelName, priorityRetry, excludedIds...)
 			if channel == nil {
 				// Current group has no available channel for this model, try next group
 				// 当前分组没有该模型的可用渠道，尝试下一个分组
@@ -201,7 +202,7 @@ func cacheGetRandomSatisfiedChannelOnce(param *RetryParam) (*model.Channel, stri
 			break
 		}
 	} else {
-		channel, err = model.GetRandomSatisfiedChannel(param.TokenGroup, param.ModelName, param.GetRetry())
+		channel, err = model.GetRandomSatisfiedChannel(param.TokenGroup, param.ModelName, param.GetRetry(), excludedIds...)
 		if err != nil {
 			return nil, param.TokenGroup, err
 		}

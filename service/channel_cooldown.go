@@ -93,6 +93,23 @@ func IsInCooldown(channelId int) bool {
 	return v.(bool)
 }
 
+// GetAllCooldownChannelIds 返回当前所有处于冷却态的渠道 ID 列表
+func GetAllCooldownChannelIds() []int {
+	if !operation_setting.GetChannelCooldownSetting().Enabled {
+		return nil
+	}
+	var ids []int
+	cooldownLocalSet.Range(func(key, value interface{}) bool {
+		if channelId, ok := key.(int); ok {
+			if inCooldown, ok := value.(bool); ok && inCooldown {
+				ids = append(ids, channelId)
+			}
+		}
+		return true
+	})
+	return ids
+}
+
 // ClearCooldown 立刻清除一个渠道的冷却态（探活成功 / 管理员手动恢复时调用）
 func ClearCooldown(channelId int) {
 	cooldownLocalSet.Delete(channelId)
