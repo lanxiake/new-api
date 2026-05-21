@@ -264,6 +264,53 @@ func UpdateAbilityStatus(channelId int, status bool) error {
 	return DB.Model(&Ability{}).Where("channel_id = ?", channelId).Select("enabled").Update("enabled", status).Error
 }
 
+// GetLowerPriorityChannelIdsByChannel 返回所有与指定渠道存在 (group, model) 交集、
+// 但 priority 严格低于该渠道的其他可用渠道 ID 集合（去重）。
+// 用于高优先级渠道恢复后，把绑定在低优渠道上的亲和性 key 清掉，让用户回切到高优渠道。
+//
+// 仅扫描 enabled=true 的 ability 行；如果给定 channelId 本身不存在任何 ability，返回空切片。
+func GetLowerPriorityChannelIdsByChannel(channelId int) ([]int, error) {
+	type abilityRow struct {
+		Group    string
+		Model    string
+		Priority *int64
+	}
+	var selfRows []abilityRow
+	if err := DB.Table("abilities").
+		Select(commonGroupCol+" as `group`, model, priority").
+		Where("channel_id = ? and enabled = ?", channelId, true).
+		Scan(&selfRows).Error; err != nil {
+		return nil, err
+	}
+	if len(selfRows) == 0 {
+		return nil, nil
+	}
+
+	idSet := make(map[int]struct{})
+	for _, row := range selfRows {
+		selfPriority := int64(0)
+		if row.Priority != nil {
+			selfPriority = *row.Priority
+		}
+		var lowerChannelIds []int
+		if err := DB.Model(&Ability{}).
+			Where(commonGroupCol+" = ? and model = ? and enabled = ? and channel_id != ? and priority < ?",
+				row.Group, row.Model, true, channelId, selfPriority).
+			Distinct("channel_id").
+			Pluck("channel_id", &lowerChannelIds).Error; err != nil {
+			return nil, err
+		}
+		for _, id := range lowerChannelIds {
+			idSet[id] = struct{}{}
+		}
+	}
+	result := make([]int, 0, len(idSet))
+	for id := range idSet {
+		result = append(result, id)
+	}
+	return result, nil
+}
+
 func UpdateAbilityStatusByTag(tag string, status bool) error {
 	return DB.Model(&Ability{}).Where("tag = ?", tag).Select("enabled").Update("enabled", status).Error
 }

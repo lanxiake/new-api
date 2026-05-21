@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/QuantumNous/new-api/common"
+	"github.com/QuantumNous/new-api/model"
 	"github.com/QuantumNous/new-api/setting/operation_setting"
 )
 
@@ -222,6 +223,10 @@ func probeChannelSafely(channelId int) {
 	ok, err := probeChannelImpl(channelId)
 	if ok {
 		ClearCooldown(channelId)
+		// 若渠道当前状态为"自动禁用"，探活成功表示上游已恢复，
+		// 需要重新启用，否则 ability 表里仍是 enabled=false，选择路径永远不会再选到它。
+		// 仅对 AutoDisabled 自动恢复；手动禁用保持运维意图不变。
+		reenableAutoDisabledChannel(channelId)
 		common.SysLog(fmt.Sprintf("[ChannelProbe] 渠道 %d 探活成功，已清除冷却", channelId))
 		return
 	}
@@ -230,6 +235,14 @@ func probeChannelSafely(channelId int) {
 		errMsg = err.Error()
 	}
 	common.SysLog(fmt.Sprintf("[ChannelProbe] 渠道 %d 探活失败，保持冷却: %s", channelId, errMsg))
+}
+
+// reenableAutoDisabledChannel 由 service/channel.go 在 init 时注入实现，避免循环引用。
+var reenableAutoDisabledChannel = func(channelId int) {}
+
+// RegisterReenableAutoDisabledChannel 同包注入接口（供 channel.go 调用）。
+func RegisterReenableAutoDisabledChannel(fn func(channelId int)) {
+	reenableAutoDisabledChannel = fn
 }
 
 // StartChannelProbeLoop 启动后台探活循环（main.go 调用一次）
@@ -264,7 +277,27 @@ func StartChannelProbeLoop() {
 
 			SyncCooldownFromRedis()
 			ids := listCooldownChannelIds()
+			probed := make(map[int]bool, len(ids))
 			for _, id := range ids {
+				probed[id] = true
+				if !acquireProbeLock(id) {
+					continue
+				}
+				go probeChannelSafely(id)
+			}
+
+			// 同时扫描所有 status=AutoDisabled 的渠道。
+			// 这些渠道未必经过 cooldown 路径（比如启动时全量测试直接禁用、
+			// monitor 直接禁用等），如果不主动探活会永远停在禁用态。
+			autoDisabledIds, err := model.GetAutoDisabledChannelIds()
+			if err != nil {
+				common.SysError(fmt.Sprintf("[StartChannelProbeLoop] 查询自动禁用渠道失败: %s", err.Error()))
+				continue
+			}
+			for _, id := range autoDisabledIds {
+				if probed[id] {
+					continue
+				}
 				if !acquireProbeLock(id) {
 					continue
 				}

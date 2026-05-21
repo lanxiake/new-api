@@ -37,6 +37,7 @@ data/
 token_estimator_test.go
 skills-lock.json
 new-api-binary
+new-api-old
 # docs/marketing/accounts.md
 docs/marketing/scripts/browser-profiles/
 .git-rewrite/

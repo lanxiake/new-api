@@ -34,6 +34,13 @@ func getSMTPAuth() smtp.Auth {
 }
 
 func SendEmail(subject string, receiver string, content string) error {
+	// 防御性 trim：管理员在设置页粘贴时容易带入首尾空格，
+	// 这些空格会让 net.Dial 报 "lookup  smtp.qq.com: no such host"，难以察觉。
+	SMTPServer = strings.TrimSpace(SMTPServer)
+	SMTPAccount = strings.TrimSpace(SMTPAccount)
+	SMTPFrom = strings.TrimSpace(SMTPFrom)
+	SMTPToken = strings.TrimSpace(SMTPToken)
+	receiver = strings.TrimSpace(receiver)
 	if SMTPFrom == "" { // for compatibility
 		SMTPFrom = SMTPAccount
 	}

@@ -390,6 +390,18 @@ func SearchChannels(keyword string, group string, model string, idSort bool, sor
 	return channels, nil
 }
 
+// GetAutoDisabledChannelIds 返回所有 status = AutoDisabled 的渠道 ID。
+// 用于后台探活循环周期性扫描，让恢复可用的自动禁用渠道有机会被重新启用。
+func GetAutoDisabledChannelIds() ([]int, error) {
+	var ids []int
+	if err := DB.Model(&Channel{}).
+		Where("status = ?", common.ChannelStatusAutoDisabled).
+		Pluck("id", &ids).Error; err != nil {
+		return nil, err
+	}
+	return ids, nil
+}
+
 func GetChannelById(id int, selectAll bool) (*Channel, error) {
 	channel := &Channel{Id: id}
 	var err error = nil

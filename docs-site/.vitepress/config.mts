@@ -8,7 +8,7 @@ export default defineConfig({
   cleanUrls: true,
 
   head: [
-    ['link', { rel: 'icon', href: '/logo.png' }],
+    ['link', { rel: 'icon', href: '/favicon.png' }],
     ['meta', { name: 'theme-color', content: '#6366f1' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:locale', content: 'zh_CN' }],
@@ -17,7 +17,7 @@ export default defineConfig({
   ],
 
   themeConfig: {
-    logo: '/logo.png',
+    logo: '/favicon.png',
     siteTitle: 'LLM-Link',
 
     nav: [
