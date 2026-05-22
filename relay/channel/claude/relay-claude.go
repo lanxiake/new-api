@@ -372,12 +372,15 @@ func RequestOpenAI2ClaudeMessage(c *gin.Context, textRequest dto.GeneralOpenAIRe
 				for _, mediaMessage := range message.ParseContent() {
 					switch mediaMessage.Type {
 					case "text":
-						if mediaMessage.Text != "" {
-							claudeMediaMessages = append(claudeMediaMessages, dto.ClaudeMediaMessage{
-								Type: "text",
-								Text: common.GetPointer[string](mediaMessage.Text),
-							})
+						// 保留空文本块但替换为占位符，避免 Claude API 报错 "text content block must be non-empty"
+						text := mediaMessage.Text
+						if text == "" {
+							text = "..."
 						}
+						claudeMediaMessages = append(claudeMediaMessages, dto.ClaudeMediaMessage{
+							Type: "text",
+							Text: common.GetPointer[string](text),
+						})
 					default:
 						source := mediaMessage.ToFileSource()
 						if source == nil {
