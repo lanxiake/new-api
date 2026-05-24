@@ -14,7 +14,7 @@ import (
 type Redemption struct {
 	Id           int            `json:"id"`
 	UserId       int            `json:"user_id"`
-	Key          string         `json:"key" gorm:"type:char(32);uniqueIndex"`
+	Key          string         `json:"key" gorm:"type:char(64);uniqueIndex"` // 增加长度以支持前缀
 	Status       int            `json:"status" gorm:"default:1"`
 	Name         string         `json:"name" gorm:"index"`
 	Quota        int            `json:"quota" gorm:"default:100"`
@@ -24,6 +24,17 @@ type Redemption struct {
 	UsedUserId   int            `json:"used_user_id"`
 	DeletedAt    gorm.DeletedAt `gorm:"index"`
 	ExpiredTime  int64          `json:"expired_time" gorm:"bigint"` // 过期时间，0 表示不过期
+	Prefix       string         `json:"prefix" gorm:"type:varchar(20);index"` // 兑换码前缀，用于分组管理
+	OnePerUser   bool           `json:"one_per_user" gorm:"default:false"`    // 是否限制每个用户只能使用一次该前缀的兑换码
+}
+
+// RedemptionUsage 记录用户使用兑换码的历史
+type RedemptionUsage struct {
+	Id            int    `json:"id" gorm:"primaryKey"`
+	UserId        int    `json:"user_id" gorm:"index:idx_user_prefix"`
+	RedemptionId  int    `json:"redemption_id" gorm:"index"`
+	Prefix        string `json:"prefix" gorm:"type:varchar(20);index:idx_user_prefix"` // 冗余存储前缀，用于快速查询
+	RedeemedTime  int64  `json:"redeemed_time" gorm:"bigint"`
 }
 
 func GetAllRedemptions(startIdx int, num int) (redemptions []*Redemption, total int64, err error) {
@@ -137,6 +148,21 @@ func Redeem(key string, userId int) (quota int, err error) {
 		if redemption.ExpiredTime != 0 && redemption.ExpiredTime < common.GetTimestamp() {
 			return errors.New("该兑换码已过期")
 		}
+
+		// 检查每用户限制
+		if redemption.OnePerUser && redemption.Prefix != "" {
+			var count int64
+			err := tx.Model(&RedemptionUsage{}).
+				Where("user_id = ? AND prefix = ?", userId, redemption.Prefix).
+				Count(&count).Error
+			if err != nil {
+				return err
+			}
+			if count > 0 {
+				return errors.New("您已使用过该系列的兑换码")
+			}
+		}
+
 		err = tx.Model(&User{}).Where("id = ?", userId).Update("quota", gorm.Expr("quota + ?", redemption.Quota)).Error
 		if err != nil {
 			return err
@@ -145,7 +171,25 @@ func Redeem(key string, userId int) (quota int, err error) {
 		redemption.Status = common.RedemptionCodeStatusUsed
 		redemption.UsedUserId = userId
 		err = tx.Save(redemption).Error
-		return err
+		if err != nil {
+			return err
+		}
+
+		// 记录使用历史（如果有前缀）
+		if redemption.Prefix != "" {
+			usage := &RedemptionUsage{
+				UserId:       userId,
+				RedemptionId: redemption.Id,
+				Prefix:       redemption.Prefix,
+				RedeemedTime: redemption.RedeemedTime,
+			}
+			err = tx.Create(usage).Error
+			if err != nil {
+				return err
+			}
+		}
+
+		return nil
 	})
 	if err != nil {
 		common.SysError("redemption failed: " + err.Error())
@@ -169,7 +213,7 @@ func (redemption *Redemption) SelectUpdate() error {
 // Update Make sure your token's fields is completed, because this will update non-zero values
 func (redemption *Redemption) Update() error {
 	var err error
-	err = DB.Model(redemption).Select("name", "status", "quota", "redeemed_time", "expired_time").Updates(redemption).Error
+	err = DB.Model(redemption).Select("name", "status", "quota", "redeemed_time", "expired_time", "prefix", "one_per_user").Updates(redemption).Error
 	return err
 }
 

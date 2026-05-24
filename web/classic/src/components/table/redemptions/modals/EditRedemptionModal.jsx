@@ -70,6 +70,8 @@ const EditRedemptionModal = (props) => {
     amount: Number(quotaToDisplayAmount(100000).toFixed(6)),
     count: 1,
     expired_time: null,
+    prefix: '',
+    one_per_user: false,
   });
 
   const handleCancel = () => {
@@ -263,6 +265,33 @@ const EditRedemptionModal = (props) => {
                         }
                         showClear
                       />
+                    </Col>
+                    <Col span={24}>
+                      <Form.Input
+                        field='prefix'
+                        label={t('前缀')}
+                        placeholder={t('例如：VIP2024（可选）')}
+                        style={{ width: '100%' }}
+                        showClear
+                      />
+                      <div
+                        className='text-xs mt-1'
+                        style={{ color: 'var(--semi-color-text-2)' }}
+                      >
+                        {t('设置前缀后，兑换码格式为：前缀-随机码')}
+                      </div>
+                    </Col>
+                    <Col span={24}>
+                      <Form.Switch
+                        field='one_per_user'
+                        label={t('每用户限制')}
+                      />
+                      <div
+                        className='text-xs mt-1'
+                        style={{ color: 'var(--semi-color-text-2)' }}
+                      >
+                        {t('开启后，每个用户只能使用一次该前缀的任意兑换码')}
+                      </div>
                     </Col>
                     <Col span={24}>
                       <Form.DatePicker

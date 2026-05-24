@@ -77,13 +77,31 @@ func AddRedemption(c *gin.Context) {
 		common.ApiErrorI18n(c, i18n.MsgRedemptionCountMax)
 		return
 	}
+	// 验证前缀格式
+	if redemption.Prefix != "" {
+		prefixLen := utf8.RuneCountInString(redemption.Prefix)
+		if prefixLen < 2 || prefixLen > 20 {
+			c.JSON(http.StatusOK, gin.H{
+				"success": false,
+				"message": i18n.T(c, i18n.MsgRedemptionPrefixLength),
+			})
+			return
+		}
+	}
 	if valid, msg := validateExpiredTime(c, redemption.ExpiredTime); !valid {
 		c.JSON(http.StatusOK, gin.H{"success": false, "message": msg})
 		return
 	}
 	var keys []string
 	for i := 0; i < redemption.Count; i++ {
-		key := common.GetUUID()
+		uuid := common.GetUUID()
+		// 如果有前缀，生成格式为 PREFIX-UUID
+		var key string
+		if redemption.Prefix != "" {
+			key = redemption.Prefix + "-" + uuid
+		} else {
+			key = uuid
+		}
 		cleanRedemption := model.Redemption{
 			UserId:      c.GetInt("id"),
 			Name:        redemption.Name,
@@ -91,6 +109,8 @@ func AddRedemption(c *gin.Context) {
 			CreatedTime: common.GetTimestamp(),
 			Quota:       redemption.Quota,
 			ExpiredTime: redemption.ExpiredTime,
+			Prefix:      redemption.Prefix,
+			OnePerUser:  redemption.OnePerUser,
 		}
 		err = cleanRedemption.Insert()
 		if err != nil {
@@ -144,10 +164,23 @@ func UpdateRedemption(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{"success": false, "message": msg})
 			return
 		}
+		// 验证前缀格式
+		if redemption.Prefix != "" {
+			prefixLen := utf8.RuneCountInString(redemption.Prefix)
+			if prefixLen < 2 || prefixLen > 20 {
+				c.JSON(http.StatusOK, gin.H{
+					"success": false,
+					"message": i18n.T(c, i18n.MsgRedemptionPrefixLength),
+				})
+				return
+			}
+		}
 		// If you add more fields, please also update redemption.Update()
 		cleanRedemption.Name = redemption.Name
 		cleanRedemption.Quota = redemption.Quota
 		cleanRedemption.ExpiredTime = redemption.ExpiredTime
+		cleanRedemption.Prefix = redemption.Prefix
+		cleanRedemption.OnePerUser = redemption.OnePerUser
 	}
 	if statusOnly != "" {
 		cleanRedemption.Status = redemption.Status

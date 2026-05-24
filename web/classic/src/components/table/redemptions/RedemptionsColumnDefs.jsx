@@ -97,6 +97,24 @@ export const getRedemptionsColumns = ({
       dataIndex: 'name',
     },
     {
+      title: t('前缀'),
+      dataIndex: 'prefix',
+      render: (text) => {
+        return <div>{text || '-'}</div>;
+      },
+    },
+    {
+      title: t('每用户限制'),
+      dataIndex: 'one_per_user',
+      render: (text) => {
+        return (
+          <Tag color={text ? 'green' : 'grey'} shape='circle'>
+            {text ? t('是') : t('否')}
+          </Tag>
+        );
+      },
+    },
+    {
       title: t('状态'),
       dataIndex: 'status',
       key: 'status',
