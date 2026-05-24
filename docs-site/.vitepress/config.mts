@@ -8,7 +8,7 @@ export default defineConfig({
   cleanUrls: true,
 
   head: [
-    ['link', { rel: 'icon', href: '/logo.png' }],
+    ['link', { rel: 'icon', href: '/favicon.png' }],
     ['meta', { name: 'theme-color', content: '#6366f1' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:locale', content: 'zh_CN' }],
@@ -17,16 +17,26 @@ export default defineConfig({
   ],
 
   themeConfig: {
-    logo: '/logo.png',
+    logo: '/favicon.png',
     siteTitle: 'LLM-Link',
 
     nav: [
       { text: '快速开始', link: '/guide/1-register' },
+      { text: 'API 使用指南', link: '/api-guide/1-quickstart' },
       { text: '常见问题（FAQ）', link: '/faq/CC' },
       { text: 'LLM-Link 官网', link: 'https://www.llm-link.top' },
     ],
 
     sidebar: [
+      {
+        text: 'API 使用指南',
+        collapsed: false,
+        items: [
+          { text: '快速上手', link: '/api-guide/1-quickstart' },
+          { text: '图片生成', link: '/api-guide/2-image' },
+          { text: '视频生成', link: '/api-guide/3-video' },
+        ],
+      },
       {
         text: '快速开始',
         collapsed: false,

@@ -111,15 +111,19 @@ export default function SettingsMonitoring(props) {
   }
 
   useEffect(() => {
-    const currentInputs = {};
-    for (let key in props.options) {
-      if (Object.keys(inputs).includes(key)) {
-        currentInputs[key] = props.options[key];
+    // 用默认值打底，再用 props.options 中存在的字段覆盖。
+    // 否则后端 OptionMap 缺失某个 key（例如新加的 channel_alert_email 尚未写入 DB）时，
+    // inputsRow 不会包含该字段，compareObjects 会跳过它，导致首次填值保存时
+    // 误报 "你似乎并没有修改什么"。
+    const merged = { ...inputs };
+    for (const key in props.options) {
+      if (Object.prototype.hasOwnProperty.call(merged, key)) {
+        merged[key] = props.options[key];
       }
     }
-    setInputs(currentInputs);
-    setInputsRow(structuredClone(currentInputs));
-    refForm.current.setValues(currentInputs);
+    setInputs(merged);
+    setInputsRow(structuredClone(merged));
+    refForm.current.setValues(merged);
   }, [props.options]);
 
   return (

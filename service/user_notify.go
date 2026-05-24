@@ -16,9 +16,12 @@ import (
 
 func NotifyRootUser(t string, subject string, content string) {
 	user := model.GetRootUser().ToBaseUser()
+	common.SysLog(fmt.Sprintf("[NotifyRootUser] 准备通知 root 用户 (id=%d, email=%s), type=%s, subject=%s", user.Id, user.Email, t, subject))
 	err := NotifyUser(user.Id, user.Email, user.GetSetting(), dto.NewNotify(t, subject, content, nil))
 	if err != nil {
-		common.SysLog(fmt.Sprintf("failed to notify root user: %s", err.Error()))
+		common.SysLog(fmt.Sprintf("[NotifyRootUser] 通知 root 用户失败: %s", err.Error()))
+	} else {
+		common.SysLog(fmt.Sprintf("[NotifyRootUser] 通知 root 用户成功"))
 	}
 }
 
@@ -54,13 +57,16 @@ func NotifyUser(userId int, userEmail string, userSetting dto.UserSetting, data 
 		notifyType = dto.NotifyTypeEmail
 	}
 
+	common.SysLog(fmt.Sprintf("[NotifyUser] userId=%d, email=%s, notifyType=%s, dataType=%s, title=%s", userId, userEmail, notifyType, data.Type, data.Title))
+
 	// Check notification limit
 	canSend, err := CheckNotificationLimit(userId, data.Type)
 	if err != nil {
-		common.SysLog(fmt.Sprintf("failed to check notification limit: %s", err.Error()))
+		common.SysLog(fmt.Sprintf("[NotifyUser] 检查通知限制失败: %s", err.Error()))
 		return err
 	}
 	if !canSend {
+		common.SysLog(fmt.Sprintf("[NotifyUser] userId=%d 通知频率超限，跳过发送", userId))
 		return fmt.Errorf("notification limit exceeded for user %d with type %s", userId, notifyType)
 	}
 
@@ -72,9 +78,10 @@ func NotifyUser(userId int, userEmail string, userSetting dto.UserSetting, data 
 			emailToUse = userEmail
 		}
 		if emailToUse == "" {
-			common.SysLog(fmt.Sprintf("user %d has no email, skip sending email", userId))
+			common.SysLog(fmt.Sprintf("[NotifyUser] userId=%d 没有邮箱，跳过邮件通知", userId))
 			return nil
 		}
+		common.SysLog(fmt.Sprintf("[NotifyUser] 准备发送邮件到 %s", emailToUse))
 		return sendEmailNotify(emailToUse, data)
 	case dto.NotifyTypeWebhook:
 		webhookURLStr := userSetting.WebhookUrl
@@ -112,7 +119,14 @@ func sendEmailNotify(userEmail string, data dto.Notify) error {
 	for _, value := range data.Values {
 		content = strings.Replace(content, dto.ContentValueParam, fmt.Sprintf("%v", value), 1)
 	}
-	return common.SendEmail(data.Title, userEmail, content)
+	common.SysLog(fmt.Sprintf("[sendEmailNotify] 发送邮件: to=%s, subject=%s", userEmail, data.Title))
+	err := common.SendEmail(data.Title, userEmail, content)
+	if err != nil {
+		common.SysLog(fmt.Sprintf("[sendEmailNotify] 邮件发送失败: %s", err.Error()))
+		return err
+	}
+	common.SysLog(fmt.Sprintf("[sendEmailNotify] 邮件发送成功"))
+	return nil
 }
 
 func sendBarkNotify(barkURL string, data dto.Notify) error {

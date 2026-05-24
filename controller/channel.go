@@ -669,6 +669,7 @@ func DeleteChannel(c *gin.Context) {
 		return
 	}
 	model.InitChannelCache()
+	service.OnChannelDisabled(id)
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "",
@@ -713,12 +714,18 @@ func DisableTagChannels(c *gin.Context) {
 		})
 		return
 	}
+	affected, _ := model.GetChannelsByTag(channelTag.Tag, true, false)
 	err = model.DisableChannelByTag(channelTag.Tag)
 	if err != nil {
 		common.ApiError(c, err)
 		return
 	}
 	model.InitChannelCache()
+	for _, ch := range affected {
+		if ch != nil {
+			service.OnChannelDisabled(ch.Id)
+		}
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "",
@@ -736,12 +743,18 @@ func EnableTagChannels(c *gin.Context) {
 		})
 		return
 	}
+	affected, _ := model.GetChannelsByTag(channelTag.Tag, true, false)
 	err = model.EnableChannelByTag(channelTag.Tag)
 	if err != nil {
 		common.ApiError(c, err)
 		return
 	}
 	model.InitChannelCache()
+	for _, ch := range affected {
+		if ch != nil {
+			service.OnChannelEnabled(ch.Id)
+		}
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "",
@@ -822,6 +835,9 @@ func DeleteChannelBatch(c *gin.Context) {
 		return
 	}
 	model.InitChannelCache()
+	for _, id := range channelBatch.Ids {
+		service.OnChannelDisabled(id)
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "",
@@ -957,6 +973,15 @@ func UpdateChannel(c *gin.Context) {
 	}
 	model.InitChannelCache()
 	service.ResetProxyClientCache()
+	// status 变化时触发亲和性钩子，让绑定该渠道的用户立即切到其他渠道（禁用），
+	// 或让绑定到更低优先级渠道的用户回切到该渠道（启用）。
+	if originChannel != nil && originChannel.Status != channel.Status {
+		if channel.Status == common.ChannelStatusEnabled {
+			service.OnChannelEnabled(channel.Id)
+		} else {
+			service.OnChannelDisabled(channel.Id)
+		}
+	}
 	channel.Key = ""
 	clearChannelInfo(&channel.Channel)
 	c.JSON(http.StatusOK, gin.H{

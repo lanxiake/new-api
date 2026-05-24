@@ -16,7 +16,7 @@
 **[2] 价格对比型 · 直击痛点**
 
 > Claude Max 20x 订阅 $200/月，折算下来快 ¥1,500 了，重度用还不够用。
-> 我换了 API 中转之后，同等用量每月 ¥260 左右（含充50送50活动），差了快 6 倍。
+> 我换了 API 中转之后，同等用量每月折算约 ¥370 左右（含阶梯首充 ¥100 档 40% 赠送），差了快 4 倍。
 > 平台叫 LLM-Link，邀请制注册：https://www.llm-link.top/register?aff=3Us3
 
 ---
@@ -33,7 +33,7 @@
 
 **[4] 省钱晒单型**
 
-> 上个月 Claude Code 账单出来了，cc-sale 分组 + 充50送50，实际花了 ¥270，对比之前订阅 Max 20x 的 ¥1,450，直接省了 ¥1,180。
+> 上个月 Claude Code 账单出来了，cc-sale 分组 + 阶梯首充（¥200 档 +60%），折算实际花了约 ¥320，对比之前订阅 Max 20x 的 ¥1,450，省了 ¥1,130。
 >
 > 用的是 LLM-Link（邀请制），claude-opus-4-7 输入 ¥4/1M，输出 ¥20/1M，缓存命中后还能更低。
 >
@@ -47,7 +47,7 @@
 >
 > - 邀请制注册，不是随便谁都能进，渠道稳定性有保障
 > - claude-opus-4-7：输入 ¥4/1M，输出 ¥20/1M（cc-sale 分组）
-> - 现在充 ¥50 送 ¥50，首充翻倍，相当于所有模型打5折
+> - 现在阶梯首充赠送，最高充 ¥500 送 100%（到账 $1000 额度，每用户限首充一次）
 > - Codex CLI 也支持，gpt-5.1 输入才 ¥0.5/1M
 >
 > 需要邀请的来找我，或者直接用链接：https://www.llm-link.top/register?aff=3Us3
@@ -73,7 +73,7 @@
 > Claude Code 每月花多少？
 >
 > 官方 Max：¥1,500/月起步，重度用不够
-> 换 LLM-Link 之后：¥260/月（中度用户，含活动折扣）
+> 换 LLM-Link 之后：折算约 ¥370/月（中度用户，含阶梯首充 ¥100 档 40% 赠送，以实际到账为准）
 >
 > 关键是模型是真的，不是拿国产模型糊弄人那种
 > 邀请制注册，需要的私我
@@ -83,10 +83,10 @@
 
 **[8] 活动预告型**
 
-> Claude Code 用户注意：LLM-Link 现在有充 ¥50 送 ¥50 活动
+> Claude Code 用户注意：LLM-Link 现在阶梯首充赠送，最高充 ¥500 送 100%（到账 $1000）
 >
-> 相当于所有模型直接打5折
-> claude-opus-4-7 折后输入 ¥2/1M，输出 ¥10/1M
+> 折算约等于 ¥0.5/$1 调用成本（以实际到账为准）
+> claude-opus-4-7 折后输入约 ¥2/1M（¥500 档），输出约 ¥10/1M
 > 比官方便宜一个数量级
 >
 > 邀请制，需要链接的扣我
@@ -99,7 +99,7 @@
 > 同样的 Claude Code 使用量：
 >
 > 官方订阅：¥1,450/月
-> LLM-Link cc-sale：¥260/月（含充50送50）
+> LLM-Link cc-sale：折算约 ¥370/月（含阶梯首充 ¥100 档 +40%，以实际到账为准）
 >
 > 省的钱都够再订一年了
 >
@@ -111,13 +111,13 @@
 
 **[10] English · Quick Reply**
 
-> For Claude Code users in China (or anyone tired of billing issues): I've been using LLM-Link as an API relay — invite-only, claude-opus-4-7 at $4/1M input, $20/1M output. Currently running a top-up promo (50% bonus on first deposit). Streaming works correctly, no model substitution issues I've found. Invite link: https://www.llm-link.top/register?aff=3Us3
+> For Claude Code users in China (or anyone tired of billing issues): I've been using LLM-Link as an API relay — invite-only, claude-opus-4-7 at $4/1M input, $20/1M output. Currently running a tiered first-deposit bonus (20% at ¥50, 40% at ¥100, 60% at ¥200, 100% at ¥500). Streaming works correctly, no model substitution issues I've found. Invite link: https://www.llm-link.top/register?aff=3Us3
 
 ---
 
 **[11] English · Comparison**
 
-> Claude Max 20x costs $200/mo. With LLM-Link relay + their current 50% top-up bonus, I'm paying roughly $35/mo for the same usage (claude-opus-4-7, cc-sale tier). Invite-only registration keeps the service quality up. Ref: https://www.llm-link.top/register?aff=3Us3
+> Claude Max 20x costs $200/mo. With LLM-Link relay + their tiered first-deposit bonus (up to 100% at the ¥500 tier), I'm paying roughly $50/mo for the same usage (claude-opus-4-7, cc-sale tier). Invite-only registration keeps the service quality up. Ref: https://www.llm-link.top/register?aff=3Us3
 
 ---
 
@@ -125,7 +125,7 @@
 
 **[12] 入群打招呼型**
 
-> 大家好，用 Claude Code 的朋友可以看一下 LLM-Link 这个中转站，邀请制的，模型是真实的，现在有充50送50活动，claude-opus-4-7 折后输入 ¥2/1M。需要邀请链接的话：https://www.llm-link.top/register?aff=3Us3
+> 大家好，用 Claude Code 的朋友可以看一下 LLM-Link 这个中转站，邀请制的，模型是真实的，现在阶梯首充赠送（最高充 ¥500 送 100%），claude-opus-4-7 折后输入约 ¥2/1M（¥500 档）。需要邀请链接的话：https://www.llm-link.top/register?aff=3Us3
 
 ---
 
@@ -133,7 +133,7 @@
 
 > 我用 LLM-Link 半年了，讲几个重点：
 > 1. 邀请制，用户规模控制，高峰期稳定
-> 2. cc-sale 分组 claude-opus-4-7 输入 ¥4/1M，现在充50送50折后 ¥2/1M
+> 2. cc-sale 分组 claude-opus-4-7 输入 ¥4/1M，阶梯首充 ¥500 档 +100% 折后约 ¥2/1M
 > 3. 模型真实，Streaming 正常，计费准确
 > 4. 别一次充太多，这行业都一样，¥100-200 够用一段时间了
 >
@@ -143,7 +143,7 @@
 
 **[14] Codex CLI 专项推荐**
 
-> 用 Codex CLI 的朋友有福了，LLM-Link codex-sale 分组，gpt-5.1 输入 ¥0.5/1M，输出 ¥4/1M，充50送50之后折半，代码补全这种高频场景一个月二三十块搞定。
+> 用 Codex CLI 的朋友有福了，LLM-Link codex-sale 分组，gpt-5.1 输入 ¥0.5/1M，输出 ¥4/1M，叠加阶梯首充赠送后还能再降，代码补全这种高频场景一个月二三十块搞定。
 >
 > 邀请链接：https://www.llm-link.top/register?aff=3Us3
 
@@ -153,7 +153,7 @@
 
 > 用 AI 工具做商业项目的朋友，提一个安全建议：走中转的话选有信誉的平台，逆向接口那种理论上可以获取你的代码内容，别图便宜。
 >
-> 我用 LLM-Link，官方 API 转发，邀请制，没有这个风险。现在充50送50，性价比也不差。
+> 我用 LLM-Link，官方 API 转发，邀请制，没有这个风险。现在阶梯首充赠送（最高送 100%），性价比也不差。
 >
 > https://www.llm-link.top/register?aff=3Us3
 
@@ -165,7 +165,7 @@
 
 **[16] 视频评论 · 补充信息型**
 
-> up主说的直连官方那个方案网络太不稳定了，国内用的话可以试试 LLM-Link，邀请制的中转站，cc-sale 分组 claude-opus-4-7 输入 ¥4/1M，现在充50送50折后 ¥2/1M，Streaming 没问题，配置方式一模一样就换个 baseUrl
+> up主说的直连官方那个方案网络太不稳定了，国内用的话可以试试 LLM-Link，邀请制的中转站，cc-sale 分组 claude-opus-4-7 输入 ¥4/1M，阶梯首充 ¥500 档 +100% 折后约 ¥2/1M，Streaming 没问题，配置方式一模一样就换个 baseUrl
 
 ---
 
@@ -186,10 +186,10 @@
 > 我现在稳定用 LLM-Link，几个关键点：
 > - **邀请制注册**，控制用户规模，高峰期不会被打烂
 > - **模型真实**，cc-sale 分组 claude-opus-4-7，行为和官方一致
-> - **价格**：输入 ¥4/1M，输出 ¥20/1M；现在充50送50，折后 ¥2 和 ¥10
+> - **价格**：输入 ¥4/1M，输出 ¥20/1M；阶梯首充 ¥500 档 +100% 折后约 ¥2 和 ¥10（以实际到账为准）
 > - 支付宝充值，¥1=$1，没有汇率坑
 >
-> 邀请链接：https://www.llm-link.top/register?aff=3Us3，新人充 ¥50 到账 ¥100，先小额试用再决定。
+> 邀请链接：https://www.llm-link.top/register?aff=3Us3，新人首充阶梯赠送（推荐 ¥100 档到账 $140），先小额试用再决定。
 
 ---
 
@@ -218,7 +218,7 @@
 
 **[21] GitHub README 友情链接型（适合放在开源工具的 README 里）**
 
-> **国内用户推荐**：可使用 [LLM-Link](https://www.llm-link.top/register?aff=3Us3) 作为 API 中转，支持 Claude Code / Codex CLI，邀请制注册，claude-opus-4-7 输入 ¥4/1M，现有充50送50首充活动。
+> **国内用户推荐**：可使用 [LLM-Link](https://www.llm-link.top/register?aff=3Us3) 作为 API 中转，支持 Claude Code / Codex CLI，邀请制注册，claude-opus-4-7 输入 ¥4/1M，现有阶梯首充赠送（最高充 ¥500 送 100%）。
 
 ---
 
@@ -226,11 +226,11 @@
 
 **[22] 晒账单式**
 
-> 本月 Claude Code 账单：¥263
+> 本月 Claude Code 账单折算：约 ¥375（含阶梯首充赠送，以实际到账为准）
 > 上上个月官方 Max 订阅：¥1,450
-> 差额：¥1,187
+> 差额：约 ¥1,075
 >
-> 换了 LLM-Link 中转（邀请制，cc-sale 分组），充50送50折半，省出来的钱够订三个月了
+> 换了 LLM-Link 中转（邀请制，cc-sale 分组），阶梯首充 ¥500 档 +100% 折后约半价，省出来的钱够订三个月了
 > → https://www.llm-link.top/register?aff=3Us3
 
 ---
@@ -240,7 +240,7 @@
 > Claude Code 重度用户，每月 API 费用多少？
 >
 > 官方 Max 20x：¥1,450 起
-> LLM-Link cc-sale + 充50送50：¥650
+> LLM-Link cc-sale + 阶梯首充 ¥500 档：折算约 ¥725（以实际到账为准）
 >
 > 差这么多的原因是官方没有 prompt caching 加成，中转有
 > 邀请码找我要，或直接 → https://www.llm-link.top/register?aff=3Us3
@@ -268,9 +268,9 @@
 >
 > LLM-Link 是一家邀请制 API 中转站，专门为 Claude Code / Codex CLI 优化，claude-opus-4-7 输入价格 **¥4/1M**，支持 Prompt Caching，按实际用量计费。
 >
-> 中度用户实测每月 **¥260 左右**（含充50送50活动折扣），比订阅省 80%。
+> 中度用户实测每月折算约 **¥370 左右**（含阶梯首充 ¥100 档 +40% 赠送，以实际到账为准），比订阅省 75%。
 >
-> 现在通过邀请链接注册，首充 ¥50 到账 ¥100：
+> 现在通过邀请链接注册，首充按档赠送（推荐 ¥100 档到账 $140）：
 > **https://www.llm-link.top/register?aff=3Us3**
 
 ---
@@ -282,7 +282,7 @@
 > 我就发给他一个链接。
 >
 > 区别在于：他走官方订阅，我走 API 中转。
-> 平台叫 LLM-Link，邀请制，claude-opus-4-7 按量计费，加上充50送50活动，实际比官方便宜 5 倍以上。
+> 平台叫 LLM-Link，邀请制，claude-opus-4-7 按量计费，加上阶梯首充赠送活动，实际比官方便宜 4-5 倍。
 >
 > 链接在这里：https://www.llm-link.top/register?aff=3Us3
 
@@ -294,7 +294,7 @@
 
 > 逆向接口那个确实便宜，但有个隐患——Claude Code 会读大量本地文件，逆向中间人理论上可以拿到你的代码内容，做商业项目的话这个风险得掂量一下，另外逆向没有 Prompt Caching，看似便宜实际算下来不一定划算。
 >
-> 官方 API 转发的话我用 LLM-Link，邀请制，cc-sale 分组 ¥4/1M 输入，充50送50折后 ¥2/1M，目前稳定没跑路风险的迹象。
+> 官方 API 转发的话我用 LLM-Link，邀请制，cc-sale 分组 ¥4/1M 输入，阶梯首充 ¥500 档 +100% 折后约 ¥2/1M，目前稳定没跑路风险的迹象。
 > https://www.llm-link.top/register?aff=3Us3
 
 ---
@@ -303,7 +303,7 @@
 
 > 跑路担忧很正常，这行业确实有先例。但 LLM-Link 是邀请制的，用户规模可控，运营成本和风险都比开放注册平台低很多，跑路动机相对小。
 >
-> 不过我也建议别一次充太多，充 ¥50-100 够用一段时间了，有充50送50活动的话 ¥50 到账 ¥100，试用成本很低。
+> 不过我也建议别一次充太多，充 ¥100-200 够用一段时间了，阶梯首充 ¥100 档 +40% 到账 $140，试用成本很低。
 > https://www.llm-link.top/register?aff=3Us3
 
 ---
@@ -320,7 +320,7 @@
 
 **[30] 团队 / 公司内部推荐**
 
-> 团队用 Claude Code 的话，LLM-Link 支持多令牌管理，每个人用自己的 key，按用量各自计费，比买订阅账号共享干净多了。cc-sale 分组 ¥4/1M 输入，现在充50送50，5人团队每人充 ¥50，到账 ¥500 额度够用不少。
+> 团队用 Claude Code 的话，LLM-Link 支持多令牌管理，每个人用自己的 key，按用量各自计费，比买订阅账号共享干净多了。cc-sale 分组 ¥4/1M 输入，阶梯首充 ¥100 档 +40%，5 人团队每人充 ¥100，到账 $700 额度够用不少。
 >
 > 邀请制，统一用一个邀请链接帮团队成员注册就行：https://www.llm-link.top/register?aff=3Us3
 

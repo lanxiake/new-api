@@ -210,6 +210,33 @@ func ClearChannelAffinityCacheAll() int {
 	return len(keys)
 }
 
+// ClearChannelAffinityCacheByChannelId 清除所有绑定到指定 channelId 的亲和性缓存
+// 用于高优先级渠道恢复后，清除绑定到低优先级渠道的亲和性，让用户重新选择
+func ClearChannelAffinityCacheByChannelId(channelId int) int {
+	cache := getChannelAffinityCache()
+	keys, err := cache.Keys()
+	if err != nil {
+		common.SysError(fmt.Sprintf("channel affinity cache list keys failed: err=%v", err))
+		return 0
+	}
+	var toDelete []string
+	for _, key := range keys {
+		cachedChannelId, found, err := cache.Get(key)
+		if err != nil || !found {
+			continue
+		}
+		if cachedChannelId == channelId {
+			toDelete = append(toDelete, key)
+		}
+	}
+	if len(toDelete) > 0 {
+		if _, err := cache.DeleteMany(toDelete); err != nil {
+			common.SysError(fmt.Sprintf("channel affinity cache delete many failed: err=%v", err))
+		}
+	}
+	return len(toDelete)
+}
+
 func ClearChannelAffinityCacheByRuleName(ruleName string) (int, error) {
 	ruleName = strings.TrimSpace(ruleName)
 	if ruleName == "" {

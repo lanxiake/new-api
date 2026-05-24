@@ -987,16 +987,17 @@ func AutomaticallyTestChannels() {
 }
 
 // ProbeChannelLightweight 给 cooldown 模块复用的轻量探活函数
-// - channel 已被管理员手动禁用：返回 true（让 cooldown 直接清除，不再无效探测）
-// - testChannel 成功：返回 true
-// - 否则：返回 false + error
+//   - 手动禁用（ManuallyDisabled）：管理员意图明确，直接返回 true 让 cooldown 清除标记，不再无效探测
+//   - 自动禁用（AutoDisabled）：仍走真实探活，成功后会被上层 reenableAutoDisabledChannel 重新启用
+//   - 已启用 + testChannel 成功：返回 true
+//   - 其它情况：返回 false + error
 func ProbeChannelLightweight(channelId int) (bool, error) {
 	ch, err := model.GetChannelById(channelId, true)
 	if err != nil || ch == nil {
 		return false, fmt.Errorf("[ProbeChannelLightweight] 渠道 %d 未找到: %v", channelId, err)
 	}
-	if ch.Status != common.ChannelStatusEnabled {
-		// 已被禁用 / 自动禁用：让 cooldown 清除该标记，不再无效探测
+	if ch.Status == common.ChannelStatusManuallyDisabled {
+		// 手动禁用：尊重运维意图，直接让 cooldown 清除标记，不浪费上游配额
 		return true, nil
 	}
 	testModel := ""

@@ -342,20 +342,22 @@ func RequestOpenAI2ClaudeMessage(c *gin.Context, textRequest dto.GeneralOpenAIRe
 							},
 						}
 					}
+					toolResultContent := normalizeToolResultContent(message.Content)
 					lastMessage.Content = append(lastMessage.Content.([]dto.ClaudeMediaMessage), dto.ClaudeMediaMessage{
 						Type:      "tool_result",
 						ToolUseId: message.ToolCallId,
-						Content:   message.Content,
+						Content:   toolResultContent,
 					})
 					claudeMessages[len(claudeMessages)-1] = lastMessage
 					continue
 				} else {
+					toolResultContent := normalizeToolResultContent(message.Content)
 					claudeMessage.Role = "user"
 					claudeMessage.Content = []dto.ClaudeMediaMessage{
 						{
 							Type:      "tool_result",
 							ToolUseId: message.ToolCallId,
-							Content:   message.Content,
+							Content:   toolResultContent,
 						},
 					}
 				}
@@ -370,12 +372,15 @@ func RequestOpenAI2ClaudeMessage(c *gin.Context, textRequest dto.GeneralOpenAIRe
 				for _, mediaMessage := range message.ParseContent() {
 					switch mediaMessage.Type {
 					case "text":
-						if mediaMessage.Text != "" {
-							claudeMediaMessages = append(claudeMediaMessages, dto.ClaudeMediaMessage{
-								Type: "text",
-								Text: common.GetPointer[string](mediaMessage.Text),
-							})
+						// 保留空文本块但替换为占位符，避免 Claude API 报错 "text content block must be non-empty"
+						text := mediaMessage.Text
+						if text == "" {
+							text = "..."
 						}
+						claudeMediaMessages = append(claudeMediaMessages, dto.ClaudeMediaMessage{
+							Type: "text",
+							Text: common.GetPointer[string](text),
+						})
 					default:
 						source := mediaMessage.ToFileSource()
 						if source == nil {
@@ -417,6 +422,13 @@ func RequestOpenAI2ClaudeMessage(c *gin.Context, textRequest dto.GeneralOpenAIRe
 							Input: inputObj,
 						})
 					}
+				}
+				// Claude API rejects empty content arrays — ensure at least one block exists
+				if len(claudeMediaMessages) == 0 {
+					claudeMediaMessages = append(claudeMediaMessages, dto.ClaudeMediaMessage{
+						Type: "text",
+						Text: common.GetPointer[string]("..."),
+					})
 				}
 				claudeMessage.Content = claudeMediaMessages
 			}
@@ -957,6 +969,15 @@ func ClaudeHandler(c *gin.Context, resp *http.Response, info *relaycommon.RelayI
 		return nil, handleErr
 	}
 	return claudeInfo.Usage, nil
+}
+
+// normalizeToolResultContent ensures tool_result content is never an empty string,
+// which Claude API rejects with "text content blocks must be non-empty".
+func normalizeToolResultContent(content any) any {
+	if s, ok := content.(string); ok && s == "" {
+		return "..."
+	}
+	return content
 }
 
 func mapToolChoice(toolChoice any, parallelToolCalls *bool) *dto.ClaudeToolChoice {

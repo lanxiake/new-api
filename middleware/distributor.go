@@ -103,14 +103,19 @@ func Distribute() func(c *gin.Context) {
 					preferred, err := model.CacheGetChannel(preferredChannelID)
 					if err == nil && preferred != nil {
 						if preferred.Status != common.ChannelStatusEnabled {
+							// 渠道已禁用：清除该渠道的所有亲和性绑定，让用户下次请求时重新选择可用渠道
+							common.SysLog(fmt.Sprintf("[Distribute] 亲和命中渠道 %d 但已禁用，清除亲和性并返回错误", preferred.Id))
+							go service.ClearChannelAffinityCacheByChannelId(preferred.Id)
 							if service.ShouldSkipRetryAfterChannelAffinityFailure(c) {
 								abortWithOpenAiMessage(c, http.StatusForbidden, i18n.T(c, i18n.MsgDistributorAffinityChannelDisabled))
 								return
 							}
 						} else if service.IsInCooldown(preferred.Id) {
 							// 渠道处于冷却态：跳过亲和性绑定，回退到随机选择，并标记 bypass
+							// 同时清除该渠道的所有亲和性绑定，让用户下次请求时重新选择（如果高优先级渠道已恢复，会优先选到它）
 							common.SetContextKey(c, constant.ContextKeyAffinityBypass, true)
-							common.SysLog(fmt.Sprintf("[Distribute] 亲和命中渠道 %d 但已冷却，回退到随机选择", preferred.Id))
+							common.SysLog(fmt.Sprintf("[Distribute] 亲和命中渠道 %d 但已冷却，回退到随机选择并清除亲和性", preferred.Id))
+							go service.ClearChannelAffinityCacheByChannelId(preferred.Id)
 						} else if usingGroup == "auto" {
 							userGroup := common.GetContextKeyString(c, constant.ContextKeyUserGroup)
 							autoGroups := service.GetUserAutoGroup(userGroup)
