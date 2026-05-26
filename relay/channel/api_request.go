@@ -1,6 +1,7 @@
 package channel
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -295,6 +296,26 @@ func DoApiRequest(a Adaptor, c *gin.Context, info *common.RelayInfo, requestBody
 	if common2.DebugEnabled {
 		println("fullRequestURL:", fullRequestURL)
 	}
+
+	// [DOAPI-DIAG] 诊断：将 body 读出来打印（含 thinking/signature 才打印），再重置为新 reader
+	if requestBody != nil {
+		bodyBytes, readErr := io.ReadAll(requestBody)
+		if readErr == nil {
+			bodyStr := string(bodyBytes)
+			if strings.Contains(bodyStr, `"thinking"`) || strings.Contains(bodyStr, `"signature"`) {
+				sigCount := strings.Count(bodyStr, `"signature"`)
+				thinkCount := strings.Count(bodyStr, `"thinking"`)
+				preview := bodyStr
+				if len(preview) > 800 {
+					preview = preview[:800]
+				}
+				logger.LogInfo(c.Request.Context(), fmt.Sprintf("[DOAPI-DIAG] url=%s bytes=%d signatureCount=%d thinkingCount=%d", fullRequestURL, len(bodyBytes), sigCount, thinkCount))
+				logger.LogInfo(c.Request.Context(), fmt.Sprintf("[DOAPI-DIAG] body-preview=%s", preview))
+			}
+			requestBody = bytes.NewReader(bodyBytes)
+		}
+	}
+
 	req, err := http.NewRequest(c.Request.Method, fullRequestURL, requestBody)
 	if err != nil {
 		return nil, fmt.Errorf("new request failed: %w", err)

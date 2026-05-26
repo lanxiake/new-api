@@ -11,6 +11,7 @@ import (
 	"github.com/QuantumNous/new-api/common"
 	"github.com/QuantumNous/new-api/constant"
 	"github.com/QuantumNous/new-api/dto"
+	"github.com/QuantumNous/new-api/logger"
 	relaycommon "github.com/QuantumNous/new-api/relay/common"
 	"github.com/QuantumNous/new-api/relay/helper"
 	"github.com/QuantumNous/new-api/service"
@@ -31,10 +32,16 @@ func ClaudeHelper(c *gin.Context, info *relaycommon.RelayInfo) (newAPIError *typ
 		return types.NewErrorWithStatusCode(fmt.Errorf("invalid request type, expected *dto.ClaudeRequest, got %T", info.Request), types.ErrorCodeInvalidRequest, http.StatusBadRequest, types.ErrOptionWithSkipRetry())
 	}
 
+	// ① Log signature before DeepCopy
+	logThinkingSignature(c.Request.Context(), "①-parsed", claudeReq)
+
 	request, err := common.DeepCopy(claudeReq)
 	if err != nil {
 		return types.NewError(fmt.Errorf("failed to copy request to ClaudeRequest: %w", err), types.ErrorCodeInvalidRequest, types.ErrOptionWithSkipRetry())
 	}
+
+	// ② Log signature after DeepCopy
+	logThinkingSignature(c.Request.Context(), "②-deepcopy", request)
 
 	err = helper.ModelMappedHelper(c, info, request)
 	if err != nil {
@@ -146,6 +153,50 @@ func ClaudeHelper(c *gin.Context, info *relaycommon.RelayInfo) (newAPIError *typ
 	}
 
 	var requestBody io.Reader
+
+	// buildClaudeRequestBody 把构建上游请求 body 的流程封装为可复用闭包
+	// passThrough=true 时直接透传原始 body；false 时走 convert + marshal + 过滤
+	buildClaudeRequestBody := func(req *dto.ClaudeRequest, logPrefix string) (io.Reader, []byte, *types.NewAPIError) {
+		// 预清洗：移除空 text content block（客户端 bug 兜底，避免上游报 "text content blocks must be non-empty"）
+		// 幂等操作，对重试场景也安全
+		if removed := sanitizeEmptyTextBlocks(req); removed > 0 {
+			logger.LogInfo(c.Request.Context(), fmt.Sprintf("[SANITIZE] %sremoved=%d empty text blocks", logPrefix, removed))
+		}
+
+		convertedRequest, err := adaptor.ConvertClaudeRequest(c, info, req)
+		if err != nil {
+			return nil, nil, types.NewError(err, types.ErrorCodeConvertRequestFailed, types.ErrOptionWithSkipRetry())
+		}
+		relaycommon.AppendRequestConversionFromRequest(info, convertedRequest)
+		jsonData, err := common.Marshal(convertedRequest)
+		if err != nil {
+			return nil, nil, types.NewError(err, types.ErrorCodeConvertRequestFailed, types.ErrOptionWithSkipRetry())
+		}
+
+		logThinkingSignatureFromJSON(c.Request.Context(), logPrefix+"③-marshaled", jsonData)
+
+		jsonData, err = relaycommon.RemoveDisabledFields(jsonData, info.ChannelOtherSettings, info.ChannelSetting.PassThroughBodyEnabled)
+		if err != nil {
+			return nil, nil, types.NewError(err, types.ErrorCodeConvertRequestFailed, types.ErrOptionWithSkipRetry())
+		}
+
+		logThinkingSignatureFromJSON(c.Request.Context(), logPrefix+"④-disabled-fields", jsonData)
+
+		if len(info.ParamOverride) > 0 {
+			jsonData, err = relaycommon.ApplyParamOverrideWithRelayInfo(jsonData, info)
+			if err != nil {
+				return nil, nil, newAPIErrorFromParamOverride(err)
+			}
+		}
+
+		logThinkingSignatureFromJSON(c.Request.Context(), logPrefix+"⑤-final-req", jsonData)
+
+		if common.DebugEnabled {
+			println("requestBody: ", string(jsonData))
+		}
+		return bytes.NewBuffer(jsonData), jsonData, nil
+	}
+
 	if model_setting.GetGlobalSettings().PassThroughRequestEnabled || info.ChannelSetting.PassThroughBodyEnabled {
 		storage, err := common.GetBodyStorage(c)
 		if err != nil {
@@ -153,34 +204,11 @@ func ClaudeHelper(c *gin.Context, info *relaycommon.RelayInfo) (newAPIError *typ
 		}
 		requestBody = common.ReaderOnly(storage)
 	} else {
-		convertedRequest, err := adaptor.ConvertClaudeRequest(c, info, request)
-		if err != nil {
-			return types.NewError(err, types.ErrorCodeConvertRequestFailed, types.ErrOptionWithSkipRetry())
+		body, _, buildErr := buildClaudeRequestBody(request, "")
+		if buildErr != nil {
+			return buildErr
 		}
-		relaycommon.AppendRequestConversionFromRequest(info, convertedRequest)
-		jsonData, err := common.Marshal(convertedRequest)
-		if err != nil {
-			return types.NewError(err, types.ErrorCodeConvertRequestFailed, types.ErrOptionWithSkipRetry())
-		}
-
-		// remove disabled fields for Claude API
-		jsonData, err = relaycommon.RemoveDisabledFields(jsonData, info.ChannelOtherSettings, info.ChannelSetting.PassThroughBodyEnabled)
-		if err != nil {
-			return types.NewError(err, types.ErrorCodeConvertRequestFailed, types.ErrOptionWithSkipRetry())
-		}
-
-		// apply param override
-		if len(info.ParamOverride) > 0 {
-			jsonData, err = relaycommon.ApplyParamOverrideWithRelayInfo(jsonData, info)
-			if err != nil {
-				return newAPIErrorFromParamOverride(err)
-			}
-		}
-
-		if common.DebugEnabled {
-			println("requestBody: ", string(jsonData))
-		}
-		requestBody = bytes.NewBuffer(jsonData)
+		requestBody = body
 	}
 
 	statusCodeMappingStr := c.GetString("status_code_mapping")
@@ -195,11 +223,39 @@ func ClaudeHelper(c *gin.Context, info *relaycommon.RelayInfo) (newAPIError *typ
 		info.IsStream = info.IsStream || strings.HasPrefix(httpResp.Header.Get("Content-Type"), "text/event-stream")
 		if httpResp.StatusCode != http.StatusOK {
 			newAPIError = service.RelayErrorHandler(c.Request.Context(), httpResp, false)
+
+			// 容错重试：当上游 400 + 错误体匹配 thinking signature 无效 +
+			// 渠道开启 AutoStripInvalidThinking + 请求中确实包含 thinking block 时，
+			// 剥离 thinking 后重试一次（只重试一次，避免死循环）
+			if shouldRetryStripThinking(httpResp.StatusCode, newAPIError, info, request) {
+				retryResp, retryErr := retryWithoutThinking(c, info, adaptor, request, buildClaudeRequestBody)
+				if retryErr == nil && retryResp != nil {
+					retryHTTPResp := retryResp.(*http.Response)
+					if retryHTTPResp.StatusCode == http.StatusOK {
+						logger.LogInfo(c.Request.Context(), "[THINK-FALLBACK] retry-success")
+						c.Header("X-NewAPI-Thinking-Stripped", "true")
+						httpResp = retryHTTPResp
+						// 用 = 而非 ||= 重置 IsStream，避免首次失败响应误污染重试响应的流式判定
+						info.IsStream = strings.HasPrefix(httpResp.Header.Get("Content-Type"), "text/event-stream")
+						// 重试成功，继续走 DoResponse
+						goto retrySucceeded
+					}
+					// 重试也失败：仅记录日志便于排查，最终仍返回原始 400 错误（不掩盖问题）
+					retryErrFromHandler := service.RelayErrorHandler(c.Request.Context(), retryHTTPResp, false)
+					logger.LogInfo(c.Request.Context(), fmt.Sprintf("[THINK-FALLBACK] retry-failed status=%d err=%v", retryHTTPResp.StatusCode, retryErrFromHandler.Err))
+				} else if retryErr != nil {
+					logger.LogInfo(c.Request.Context(), fmt.Sprintf("[THINK-FALLBACK] retry-error: %v", retryErr))
+				}
+				// 重试失败 → 返回原始 400 错误，不掩盖问题
+			}
+
 			// reset status code 重置状态码
 			service.ResetStatusCode(newAPIError, statusCodeMappingStr)
 			return newAPIError
 		}
 	}
+
+retrySucceeded:
 
 	usage, newAPIError := adaptor.DoResponse(c, httpResp, info)
 	//log.Printf("usage: %v", usage)
