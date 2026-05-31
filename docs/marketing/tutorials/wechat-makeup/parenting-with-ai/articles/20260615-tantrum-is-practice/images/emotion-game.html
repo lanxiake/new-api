@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { width: 900px; background: #fdf8f2; font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; padding: 40px 60px; }
+.card-title { text-align: center; font-size: 15px; color: #8a6040; margin-bottom: 6px; letter-spacing: 1px; }
+.card-title strong { color: #d4783a; }
+.main-title { text-align: center; font-size: 20px; font-weight: 900; color: #2a1800; margin-bottom: 28px; }
+.prompt-card { background: white; border: 2px dashed #f0c080; border-radius: 20px; padding: 30px 34px; position: relative; }
+.prompt-card::before { content: "可直接复制粘贴给 AI"; position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: #d4783a; color: white; font-size: 12px; padding: 3px 16px; border-radius: 12px; white-space: nowrap; }
+.prompt-text { font-size: 14px; color: #3a2a10; line-height: 2; white-space: pre-line; }
+.prompt-text .highlight { background: #ffeee0; padding: 2px 6px; border-radius: 4px; color: #b05020; font-weight: bold; }
+.tips-row { display: flex; gap: 16px; margin-top: 22px; }
+.tip-item { flex: 1; background: white; border-radius: 14px; padding: 16px 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center; }
+.tip-icon { width: 36px; height: 36px; margin: 0 auto 10px; background: #fff0e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.tip-text { font-size: 13px; color: #5a4030; line-height: 1.6; }
+.tip-text strong { display: block; font-size: 14px; color: #2a1800; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<div class="card-title">本篇 <strong>AI 提示词</strong> 卡片</div>
+<div class="main-title">让 AI 设计你家专属的情绪命名游戏</div>
+<div class="prompt-card">
+  <div class="prompt-text">我想帮我<span class="highlight">4岁的女儿</span>学会用语言描述自己的感受，而不是只会哭或发脾气。
+她喜欢<span class="highlight">小动物，特别是兔子和小猫</span>。
+
+请帮我设计一个"情绪命名游戏"，要求：
+1. 把常见情绪（开心、生气、委屈、害怕、嫉妒）用她喜欢的动物来比喻
+2. 包含一个互动环节：我怎么引导她说出今天的"情绪动物"
+3. 游戏时间10分钟以内，不需要任何道具
+4. 给我具体的台词，包括我应该怎么开始这个游戏</div>
+</div>
+<div class="tips-row">
+  <div class="tip-item">
+    <div class="tip-icon">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 15l3-1 8-8-2-2-8 8-1 3z" stroke="#d4783a" stroke-width="1.5" stroke-linejoin="round"/><path d="M11 4l2 2" stroke="#d4783a" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <div class="tip-text"><strong>换成孩子的喜好</strong>恐龙、超级英雄、小猪佩奇都可以</div>
+  </div>
+  <div class="tip-item">
+    <div class="tip-icon">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="3" width="12" height="12" rx="2" stroke="#d4783a" stroke-width="1.5"/><path d="M6 9h6M9 6v6" stroke="#d4783a" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <div class="tip-text"><strong>每天睡前玩一次</strong>平静时练习，比崩溃时讲道理有效十倍</div>
+  </div>
+  <div class="tip-item">
+    <div class="tip-icon">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M5 9c0-2.2 1.8-4 4-4s4 1.8 4 4c0 2-1.5 3.7-3.5 4l-.5 2h-1l-.5-2C6.5 12.7 5 11 5 9z" stroke="#d4783a" stroke-width="1.5"/></svg>
+    </div>
+    <div class="tip-text"><strong>孩子爱上后</strong>让他给你出题：猜猜我今天是什么动物</div>
+  </div>
+</div>
+</body>
+</html>

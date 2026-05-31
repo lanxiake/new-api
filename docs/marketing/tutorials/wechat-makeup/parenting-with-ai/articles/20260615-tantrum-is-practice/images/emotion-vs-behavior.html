@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { width: 900px; background: #fdf8f2; font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; padding: 48px 60px; }
+.title { text-align: center; font-size: 22px; font-weight: 900; color: #2a1800; margin-bottom: 8px; }
+.title span { color: #d4783a; }
+.subtitle { text-align: center; font-size: 14px; color: #8a6040; margin-bottom: 36px; }
+.row { display: flex; gap: 20px; margin-bottom: 20px; }
+.box { flex: 1; background: white; border-radius: 16px; padding: 26px 22px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.box-label { font-size: 12px; font-weight: bold; letter-spacing: 2px; margin-bottom: 14px; padding: 4px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; }
+.box-label.bad { background: #ffeee8; color: #c0533a; }
+.box-label.good { background: #edfaf2; color: #2d8a52; }
+.box-title { font-size: 17px; font-weight: bold; margin-bottom: 12px; line-height: 1.4; }
+.box.bad-box .box-title { color: #c0533a; }
+.box.good-box .box-title { color: #2d8a52; }
+.box-body { font-size: 14px; color: #5a4030; line-height: 1.8; }
+.arrow { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 36px; }
+.info-row { display: flex; gap: 16px; }
+.info { flex: 1; background: white; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.info-icon { width: 36px; height: 36px; border-radius: 50%; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; }
+.info-icon.orange { background: #ffeee0; }
+.info-icon.blue { background: #e8f0fe; }
+.info-title { font-size: 14px; font-weight: bold; color: #2a1800; margin-bottom: 6px; }
+.info-body { font-size: 13px; color: #6a5040; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="title">发脾气，不是<span>问题行为</span><br>是发育信号</div>
+<div class="subtitle">理解背后发生了什么，才能真正帮到孩子</div>
+<div class="row">
+  <div class="box bad-box">
+    <div class="box-label bad">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><line x1="2" y1="2" x2="10" y2="10" stroke="#c0533a" stroke-width="2" stroke-linecap="round"/><line x1="10" y1="2" x2="2" y2="10" stroke="#c0533a" stroke-width="2" stroke-linecap="round"/></svg>
+      旧认知
+    </div>
+    <div class="box-title">哭闹=坏习惯<br>要尽快制止</div>
+    <div class="box-body">孩子一哭就想让他停——转移注意力、讲道理、威胁、妥协……只要停下来就好。</div>
+  </div>
+  <div class="arrow">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="#d4783a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <div class="box good-box">
+    <div class="box-label good">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#2d8a52" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      新认知
+    </div>
+    <div class="box-title">哭闹=求助信号<br>他不会处理情绪了</div>
+    <div class="box-body">孩子在说："我有一个很大的感受，但我没有工具处理它。"这不是失控，是呼救。</div>
+  </div>
+</div>
+<div class="info-row">
+  <div class="info">
+    <div class="info-icon orange">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6" stroke="#d4783a" stroke-width="1.5"/><path d="M9 6v4" stroke="#d4783a" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="13" r="0.8" fill="#d4783a"/></svg>
+    </div>
+    <div class="info-title">前额叶还没发育好</div>
+    <div class="info-body">3-6岁的孩子，负责情绪调控的大脑区域要到20多岁才完善——他真的没有"刹车"</div>
+  </div>
+  <div class="info">
+    <div class="info-icon blue">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M5 14V8l4-4 4 4v6" stroke="#4a80d4" stroke-width="1.5" stroke-linejoin="round"/><rect x="7" y="10" width="4" height="4" stroke="#4a80d4" stroke-width="1.5"/></svg>
+    </div>
+    <div class="info-title">每次经历都是练习</div>
+    <div class="info-body">发完脾气，有人陪他走完——他学到：情绪是可以经历、可以结束的，不是洪水猛兽</div>
+  </div>
+  <div class="info">
+    <div class="info-icon orange">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 14c0-4 2.5-6 5-6s5 2 5 6" stroke="#d4783a" stroke-width="1.5" stroke-linecap="round"/><path d="M7 8c0-2 1-4 2-4s2 2 2 4" stroke="#d4783a" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <div class="info-title">目标是会处理，不是不哭</div>
+    <div class="info-body">让他学会"说出感受"，远比让他"忍住不哭"更重要——忍住的情绪迟早换个地方出来</div>
+  </div>
+</div>
+</body>
+</html>

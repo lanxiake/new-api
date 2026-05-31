@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { width: 900px; background: #f5f8f5; font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; padding: 48px 60px; }
+.title { text-align: center; font-size: 22px; font-weight: 900; color: #1a3a20; margin-bottom: 8px; }
+.title span { color: #3d9b5c; }
+.subtitle { text-align: center; font-size: 14px; color: #6a8a70; margin-bottom: 36px; }
+.timeline { display: flex; flex-direction: column; gap: 0; position: relative; }
+.timeline::before { content: ''; position: absolute; left: 28px; top: 20px; bottom: 20px; width: 2px; background: #c8e0c8; }
+.step { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px; position: relative; }
+.step-num { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; z-index: 1; font-size: 18px; font-weight: bold; }
+.step-num.warn { background: #ffeee8; color: #c0533a; border: 2px solid #f0b090; }
+.step-num.ok { background: #edfaf2; color: #2d8a52; border: 2px solid #90d4a8; }
+.step-body { flex: 1; background: white; border-radius: 16px; padding: 20px 22px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-top: 6px; }
+.step-title { font-size: 16px; font-weight: bold; margin-bottom: 8px; }
+.step.warn-step .step-title { color: #c0533a; }
+.step.ok-step .step-title { color: #2d8a52; }
+.step-desc { font-size: 14px; color: #4a5a50; line-height: 1.8; }
+.step-example { margin-top: 10px; background: #f8f5f0; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #7a6050; font-style: italic; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="title">"乖"是怎么被<span>一步步训练</span>出来的</div>
+<div class="subtitle">每一次压下去，孩子都在学一件事</div>
+<div class="timeline">
+  <div class="step warn-step">
+    <div class="step-num warn">1</div>
+    <div class="step-body">
+      <div class="step-title">孩子尝试表达意愿</div>
+      <div class="step-desc">抢玩具、要自己选衣服、不想睡觉……这是他在练习"用意志影响世界"</div>
+      <div class="step-example">"我不要！我自己来！"</div>
+    </div>
+  </div>
+  <div class="step warn-step">
+    <div class="step-num warn">2</div>
+    <div class="step-body">
+      <div class="step-title">反复被否定、被纠正</div>
+      <div class="step-desc">"不行""你怎么这么不听话""再闹妈妈不理你了"——说"不"带来的是麻烦</div>
+      <div class="step-example">几百次之后，他学会了：顺从 = 安全</div>
+    </div>
+  </div>
+  <div class="step warn-step">
+    <div class="step-num warn">3</div>
+    <div class="step-body">
+      <div class="step-title">顺从获得正向反馈</div>
+      <div class="step-desc">听话→老师喜欢、大人夸、得到奖励。"乖"变成了他获得爱和认可的方式</div>
+      <div class="step-example">"你今天真乖，妈妈最爱你了"</div>
+    </div>
+  </div>
+  <div class="step ok-step">
+    <div class="step-num ok">!</div>
+    <div class="step-body">
+      <div class="step-title">但他同时失去了什么</div>
+      <div class="step-desc">辨别对错的直觉、保护自己的本能、面对不合理要求时说"不"的能力——这些没人告诉他是可以有的</div>
+      <div class="step-example">长大后的他，嘴里说着"好的好的"，脚在桌子下面悄悄用力踩着地板</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
