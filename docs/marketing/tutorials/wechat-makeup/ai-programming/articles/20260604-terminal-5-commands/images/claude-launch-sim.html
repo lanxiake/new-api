@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#1e1e1e;font-family:'Cascadia Code','Courier New',monospace;padding:0;}
+.titlebar{background:#2d2d2d;padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #444;}
+.dot{width:12px;height:12px;border-radius:50%;}
+.tab{background:#1e1e1e;color:#ccc;font-size:13px;padding:6px 16px;border-radius:6px 6px 0 0;margin-left:12px;}
+.body{padding:24px 28px;}
+.line{font-size:14px;line-height:1.9;white-space:pre;}
+.prompt{color:#4ec9b0;}
+.cmd{color:#dcdcaa;}
+.out{color:#9cdcfe;}
+.info{color:#6a9955;}
+.white{color:#d4d4d4;}
+.cyan{color:#4fc1ff;}
+.green{color:#4ec9b0;}
+.yellow{color:#dcdcaa;}
+.divider{border-top:1px solid #333;margin:16px 0;}
+.input-area{display:flex;align-items:center;gap:10px;background:#252526;border:1px solid #444;border-radius:8px;padding:12px 16px;margin-top:12px;}
+.input-prompt{color:#4ec9b0;font-size:14px;}
+.cursor{display:inline-block;width:9px;height:16px;background:#4ec9b0;animation:blink .9s infinite;vertical-align:middle;margin-left:2px;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.badge{display:inline-block;background:#264f78;color:#9cdcfe;font-size:11px;padding:2px 8px;border-radius:4px;margin-left:8px;}
+</style>
+</head>
+<body>
+<div class="titlebar">
+  <div class="dot" style="background:#ff5f57;"></div>
+  <div class="dot" style="background:#febc2e;"></div>
+  <div class="dot" style="background:#28c840;"></div>
+  <div class="tab">终端</div>
+</div>
+<div class="body">
+<div class="line"><span class="prompt">~/ai-practice</span> <span class="cmd">claude</span></div>
+<div class="line" style="margin-top:12px;color:#4fc1ff;font-size:15px;font-weight:bold;">╭─────────────────────────────────────────╮</div>
+<div class="line" style="color:#4fc1ff;font-size:15px;">│  ✻  Welcome to Claude Code  <span class="badge">claude-sonnet</span>  │</div>
+<div class="line" style="color:#4fc1ff;font-size:15px;">╰─────────────────────────────────────────╯</div>
+<div class="line" style="margin-top:8px;"><span class="info">/help 查看可用命令 · /exit 退出 · Ctrl+C 中断</span></div>
+<div class="divider"></div>
+<div class="line"><span class="white">你好！我是 Claude，你的 AI 编程助手。</span></div>
+<div class="line" style="margin-top:4px;"><span class="white">我可以帮你写代码、解释代码、修复报错，或者直接在你的项目里动手操作。</span></div>
+<div class="line" style="margin-top:4px;"><span class="white">现在的工作目录：</span><span class="cyan">~/ai-practice</span></div>
+<div class="line" style="margin-top:12px;"><span class="info">💡 提示：先告诉我你想做什么，我来帮你拆解步骤</span></div>
+<div class="divider"></div>
+<div class="line"><span class="prompt">Human:</span> <span class="white">请帮我写一个 Python 程序，问我名字然后打印欢迎语</span></div>
+<div class="line" style="margin-top:8px;"><span class="green">Claude:</span> <span class="white">好的！我来给你写这个小程序。</span></div>
+<div class="line"><span class="white">        正在创建 </span><span class="cyan">hello.py</span><span class="white"> ...</span></div>
+<div class="input-area">
+  <span class="input-prompt">&gt;</span>
+  <span class="white" style="font-size:14px;opacity:0.4;">在这里输入你想让 AI 做的事，按 Enter 发送</span>
+  <div class="cursor"></div>
+</div>
+</div>
+</body>
+</html>

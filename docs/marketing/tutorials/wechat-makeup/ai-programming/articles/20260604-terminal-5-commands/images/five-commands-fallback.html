@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:860px;background:#0a1628;font-family:'PingFang SC','Microsoft YaHei',monospace;padding:48px 56px;}
+.title{text-align:center;font-size:24px;font-weight:800;color:#fff;margin-bottom:6px;letter-spacing:2px;}
+.sub{text-align:center;font-size:14px;color:#4a7a9a;margin-bottom:40px;}
+.card{display:flex;align-items:center;background:rgba(255,255,255,0.04);border:1px solid rgba(0,212,255,0.25);border-radius:14px;padding:22px 28px;margin-bottom:16px;box-shadow:0 0 20px rgba(0,212,255,0.08);gap:24px;}
+.cmd{font-family:'Courier New',monospace;font-size:22px;font-weight:700;color:#39ff14;min-width:130px;letter-spacing:1px;}
+.info{flex:1;}
+.info-name{font-size:16px;font-weight:600;color:#fff;margin-bottom:4px;}
+.info-desc{font-size:13px;color:#4a8aaa;}
+.icon-wrap{width:48px;height:48px;border-radius:10px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);display:flex;align-items:center;justify-content:center;}
+.icon-svg{width:26px;height:26px;stroke:#00d4ff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.footer{text-align:center;margin-top:28px;font-size:13px;color:#2a4a6a;letter-spacing:1px;}
+</style>
+</head>
+<body>
+<div class="title">5 条命令，够用 90%</div>
+<div class="sub">覆盖 AI 编程日常操作全集</div>
+
+<div class="card">
+  <div class="cmd">pwd</div>
+  <div class="info">
+    <div class="info-name">查看当前所在位置</div>
+    <div class="info-desc">类比：手机地图的"我的位置"</div>
+  </div>
+  <div class="icon-wrap">
+    <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="10" r="3"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+  </div>
+</div>
+
+<div class="card">
+  <div class="cmd">ls / dir</div>
+  <div class="info">
+    <div class="info-name">查看文件夹里有什么</div>
+    <div class="info-desc">类比：打开文件夹看里面的东西</div>
+  </div>
+  <div class="icon-wrap">
+    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+  </div>
+</div>
+
+<div class="card">
+  <div class="cmd">cd 名称</div>
+  <div class="info">
+    <div class="info-name">进入某个文件夹</div>
+    <div class="info-desc">类比：双击文件夹进去；cd .. 返回上级</div>
+  </div>
+  <div class="icon-wrap">
+    <svg class="icon-svg" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+  </div>
+</div>
+
+<div class="card">
+  <div class="cmd">mkdir</div>
+  <div class="info">
+    <div class="info-name">新建一个文件夹</div>
+    <div class="info-desc">类比：右键 → 新建文件夹</div>
+  </div>
+  <div class="icon-wrap">
+    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+  </div>
+</div>
+
+<div class="card">
+  <div class="cmd">python</div>
+  <div class="info">
+    <div class="info-name">运行 Python 程序</div>
+    <div class="info-desc">类比：双击程序图标运行它</div>
+  </div>
+  <div class="icon-wrap">
+    <svg class="icon-svg" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+  </div>
+</div>
+
+<div class="footer">《人人都能用AI写程序》第05篇 · 记住这5条，其余用到时问 AI</div>
+</body>
+</html>

@@ -54,3 +54,6 @@ docs/marketing/tutorials/**/*.docx
 # 竞品抓取临时目录
 ref_*/
 _test/
+
+# kg-tutorials 本地配置（含密钥，不进仓库）
+docs/marketing/kg-tutorials/.kg-config.json

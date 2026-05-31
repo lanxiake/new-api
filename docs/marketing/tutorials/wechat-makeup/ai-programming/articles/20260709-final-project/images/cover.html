@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;height:500px;background:linear-gradient(135deg,#0a0f1e 0%,#0d1f3a 50%,#0a0f1e 100%);display:flex;align-items:center;justify-content:center;font-family:'PingFang SC','Microsoft YaHei',sans-serif;overflow:hidden;}
+.wrap{display:flex;align-items:center;gap:60px;padding:40px 60px;width:100%;}
+.left{flex:1;}
+.eyebrow{font-size:13px;color:#f59e0b;letter-spacing:2px;margin-bottom:12px;}
+.title{font-size:38px;font-weight:900;color:#fff;line-height:1.25;margin-bottom:16px;}
+.title em{color:#f59e0b;font-style:normal;}
+.sub{font-size:15px;color:#6a7a9a;line-height:1.6;}
+.right{flex:0 0 300px;}
+.upgrade{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;}
+.up-head{background:linear-gradient(135deg,#1e3a5f,#1a2a4a);padding:12px 16px;font-size:12px;color:#6a9acf;letter-spacing:1px;}
+.up-before{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.06);}
+.up-label{font-size:10px;color:#ef4444;margin-bottom:6px;letter-spacing:1px;}
+.up-text{font-size:12px;color:#9a6a6a;font-family:'Courier New',monospace;}
+.up-arrow{text-align:center;padding:8px;color:#3a4a6a;font-size:18px;}
+.up-after{padding:14px 16px;}
+.up-label2{font-size:10px;color:#34d399;margin-bottom:6px;letter-spacing:1px;}
+.up-text2{font-size:12px;color:#6aaaa0;font-family:'Courier New',monospace;}
+.up-result{margin-top:8px;background:rgba(52,211,153,.1);border-radius:6px;padding:6px 10px;font-size:11px;color:#34d399;font-family:'Courier New',monospace;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="left">
+    <div class="eyebrow">《人人都能用AI写程序》第14篇（终篇）</div>
+    <div class="title">项目实战<br>+<em>成本控制</em></div>
+    <div class="sub">把 AI 接进你的程序<br>自然语言记账，算清每一分钱</div>
+  </div>
+  <div class="right">
+    <div class="upgrade">
+      <div class="up-head">记账方式升级</div>
+      <div class="up-before">
+        <div class="up-label">手动填写（之前）</div>
+        <div class="up-text">金额: [  58  ]<br>类型: [支出 ▾]<br>备注: [午饭   ]</div>
+      </div>
+      <div class="up-arrow">↓ 接入 AI</div>
+      <div class="up-after">
+        <div class="up-label2">自然语言（现在）</div>
+        <div class="up-text2">"刚才吃饭花了五十八块"</div>
+        <div class="up-result">✓ 支出 · ¥58 · 吃饭 · 今天</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

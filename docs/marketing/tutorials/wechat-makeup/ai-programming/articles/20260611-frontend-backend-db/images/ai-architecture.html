@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#f0f4f8;font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:40px 48px;}
+.title{text-align:center;font-size:20px;font-weight:800;color:#1a2744;margin-bottom:6px;}
+.sub{text-align:center;font-size:13px;color:#8a96b0;margin-bottom:32px;}
+.chat-wrap{background:#fff;border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,0.08);overflow:hidden;}
+.chat-header{background:#1a2744;padding:14px 20px;display:flex;align-items:center;gap:10px;}
+.chat-title{color:#fff;font-size:14px;font-weight:600;}
+.chat-model{color:#4a8aaa;font-size:12px;margin-left:auto;}
+.chat-body{padding:24px;}
+.msg{margin-bottom:20px;}
+.msg-label{font-size:11px;font-weight:700;margin-bottom:8px;letter-spacing:.5px;}
+.msg-bubble{border-radius:12px;padding:14px 18px;font-size:13px;line-height:1.7;}
+.user-label{color:#64748b;}
+.user-bubble{background:#f1f5f9;color:#334155;}
+.ai-label{color:#0ea5e9;}
+.ai-bubble{background:linear-gradient(135deg,#eff6ff,#f0fdf4);border:1px solid #bfdbfe;color:#1e3a5f;}
+.ai-bubble h4{font-size:14px;color:#1a2744;margin-bottom:12px;font-weight:700;}
+.ai-bubble p{margin-bottom:8px;}
+.ai-bubble .arch{display:flex;align-items:center;gap:0;margin:16px 0;background:#fff;border-radius:10px;padding:12px;border:1px solid #e2e8f0;}
+.arch-box{flex:1;text-align:center;padding:10px;border-radius:8px;}
+.arch-arrow{color:#94a3b8;font-size:18px;flex-shrink:0;padding:0 4px;}
+.arch-icon{font-size:24px;margin-bottom:4px;}
+.arch-name{font-size:13px;font-weight:700;margin-bottom:2px;}
+.arch-tech{font-size:11px;opacity:.7;}
+.result-bar{background:#dcfce7;border-left:3px solid #16a34a;padding:10px 14px;border-radius:0 8px 8px 0;font-size:12px;color:#166534;margin-top:12px;}
+</style>
+</head>
+<body>
+<div class="title">让 AI 帮你设计架构方案</div>
+<div class="sub">一次对话，完整输出技术选型 + 架构说明</div>
+<div class="chat-wrap">
+  <div class="chat-header">
+    <div class="chat-title">Claude Code</div>
+    <div class="chat-model">claude-sonnet-4-5</div>
+  </div>
+  <div class="chat-body">
+    <div class="msg">
+      <div class="msg-label user-label">👤 你说</div>
+      <div class="msg-bubble user-bubble">我想做一个在线记账 App，用 Python + Vue + MySQL，帮我设计一下三层架构，说明每层的职责和技术选型</div>
+    </div>
+    <div class="msg">
+      <div class="msg-label ai-label">🤖 Claude 回复</div>
+      <div class="msg-bubble ai-bubble">
+        <h4>在线记账 App 三层架构设计</h4>
+        <div class="arch">
+          <div class="arch-box" style="background:#eff6ff;">
+            <div class="arch-icon">🖥️</div>
+            <div class="arch-name" style="color:#0ea5e9;">前端层</div>
+            <div class="arch-tech">Vue 3 + Axios</div>
+          </div>
+          <div class="arch-arrow">⇄</div>
+          <div class="arch-box" style="background:#faf5ff;">
+            <div class="arch-icon">⚙️</div>
+            <div class="arch-name" style="color:#8b5cf6;">后端层</div>
+            <div class="arch-tech">Python + Flask</div>
+          </div>
+          <div class="arch-arrow">⇄</div>
+          <div class="arch-box" style="background:#f0fdf4;">
+            <div class="arch-icon">🗄️</div>
+            <div class="arch-name" style="color:#16a34a;">数据层</div>
+            <div class="arch-tech">MySQL 8.0</div>
+          </div>
+        </div>
+        <p>• <strong>前端</strong>：展示账单列表、输入收支记录，通过 REST API 与后端通信</p>
+        <p>• <strong>后端</strong>：处理账单逻辑（分类、统计、权限校验），连接数据库读写</p>
+        <p>• <strong>数据库</strong>：存储用户表、账单表、分类表，持久化所有数据</p>
+        <div class="result-bar">接下来我可以直接帮你生成完整的项目骨架代码，需要吗？</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

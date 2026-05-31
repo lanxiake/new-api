@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#f4f6fa;font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:44px 52px;}
+.title{text-align:center;font-size:21px;font-weight:800;color:#1a2744;margin-bottom:6px;}
+.sub{text-align:center;font-size:13px;color:#8a96b0;margin-bottom:32px;}
+.options{display:flex;gap:16px;margin-bottom:20px;}
+.opt{flex:1;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.08);}
+.opt-head{padding:16px 18px 12px;text-align:center;}
+.opt-icon{font-size:30px;margin-bottom:8px;}
+.opt-name{font-size:16px;font-weight:800;margin-bottom:4px;}
+.opt-tag{font-size:11px;padding:3px 10px;border-radius:10px;font-weight:600;display:inline-block;}
+.opt-body{padding:14px 18px;}
+.opt-item{font-size:12px;color:#475569;line-height:1.8;display:flex;align-items:flex-start;gap:6px;}
+.opt-item::before{content:"•";flex-shrink:0;margin-top:1px;}
+.opt-score{margin-top:10px;font-size:12px;color:#94a3b8;text-align:center;padding-top:10px;border-top:1px solid #f1f5f9;}
+.recommend{margin-top:0;text-align:center;}
+.rec-badge{display:inline-block;background:#dbeafe;color:#2563eb;font-size:13px;font-weight:700;padding:6px 20px;border-radius:20px;}
+</style>
+</head>
+<body>
+<div class="title">三种免费部署方案对比</div>
+<div class="sub">对 Python Flask 应用，Railway 是最省心的选择</div>
+<div class="options">
+  <div class="opt">
+    <div class="opt-head" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);">
+      <div class="opt-icon">🚂</div>
+      <div class="opt-name" style="color:#fff;">Railway</div>
+      <div class="opt-tag" style="background:rgba(255,255,255,.2);color:#fff;">推荐 · 最省心</div>
+    </div>
+    <div class="opt-body">
+      <div class="opt-item">连接 GitHub 仓库，自动部署</div>
+      <div class="opt-item">Python/Flask 支持最好</div>
+      <div class="opt-item">每月 $5 免费额度，不休眠</div>
+      <div class="opt-item">可接 PostgreSQL 数据库</div>
+    </div>
+    <div class="opt-score">难度 ⭐⭐ · 推荐小白首选</div>
+  </div>
+  <div class="opt">
+    <div class="opt-head" style="background:linear-gradient(135deg,#0f766e,#0d9488);">
+      <div class="opt-icon">🎨</div>
+      <div class="opt-name" style="color:#fff;">Render</div>
+      <div class="opt-tag" style="background:rgba(255,255,255,.2);color:#fff;">备选 · 会休眠</div>
+    </div>
+    <div class="opt-body">
+      <div class="opt-item">免费套餐，750小时/月</div>
+      <div class="opt-item">15分钟无访问会休眠</div>
+      <div class="opt-item">唤醒需等30秒（影响体验）</div>
+      <div class="opt-item">支持 Python/Node/Go</div>
+    </div>
+    <div class="opt-score">难度 ⭐⭐ · 适合低频使用</div>
+  </div>
+  <div class="opt">
+    <div class="opt-head" style="background:linear-gradient(135deg,#1e293b,#334155);">
+      <div class="opt-icon">▲</div>
+      <div class="opt-name" style="color:#fff;">Vercel</div>
+      <div class="opt-tag" style="background:rgba(255,255,255,.15);color:#cbd5e1;">纯前端首选</div>
+    </div>
+    <div class="opt-body">
+      <div class="opt-item">纯前端/Serverless 最佳</div>
+      <div class="opt-item">完全免费，无限请求次数</div>
+      <div class="opt-item">后端功能受限（无持久化）</div>
+      <div class="opt-item">不适合 Flask 全栈部署</div>
+    </div>
+    <div class="opt-score">难度 ⭐ · 不适合本项目</div>
+  </div>
+</div>
+</body>
+</html>

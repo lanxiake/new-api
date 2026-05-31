@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#f4f6fa;font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:40px 52px;}
+.title{text-align:center;font-size:20px;font-weight:800;color:#1a2744;margin-bottom:6px;}
+.sub{text-align:center;font-size:13px;color:#8a96b0;margin-bottom:28px;}
+.table{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.08);}
+.thead{display:grid;grid-template-columns:2fr 1.5fr 1.5fr 2fr;background:#1e293b;padding:12px 20px;gap:10px;}
+.th{font-size:12px;font-weight:700;color:#94a3b8;letter-spacing:1px;}
+.row{display:grid;grid-template-columns:2fr 1.5fr 1.5fr 2fr;padding:12px 20px;gap:10px;border-bottom:1px solid #f1f5f9;align-items:center;}
+.row:last-child{border:none;}
+.row:nth-child(even){background:#fafbfc;}
+.model{font-size:13px;font-weight:700;color:#1e293b;}
+.model-sub{font-size:11px;color:#94a3b8;margin-top:2px;}
+.price{font-size:13px;font-weight:600;}
+.use-badge{font-size:11px;padding:3px 10px;border-radius:10px;font-weight:600;display:inline-block;}
+.scene{font-size:12px;color:#475569;line-height:1.5;}
+.tip{margin-top:16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;font-size:13px;color:#166534;text-align:center;}
+.tip strong{font-weight:800;}
+</style>
+</head>
+<body>
+<div class="title">AI 模型成本对比</div>
+<div class="sub">按任务选模型，同样效果省 10 倍</div>
+<div class="table">
+  <div class="thead">
+    <div class="th">模型</div>
+    <div class="th">输入价格 / 1M token</div>
+    <div class="th">推荐用途</div>
+    <div class="th">记账解析每月成本估算</div>
+  </div>
+  <div class="row">
+    <div>
+      <div class="model">GPT-4o-mini</div>
+      <div class="model-sub">OpenAI 轻量版</div>
+    </div>
+    <div class="price" style="color:#059669;">$0.15</div>
+    <div><span class="use-badge" style="background:#f0fdf4;color:#059669;">首选</span></div>
+    <div class="scene">每天 10 笔 ≈ <strong style="color:#059669;">¥0.07/月</strong>（几乎免费）</div>
+  </div>
+  <div class="row">
+    <div>
+      <div class="model">Gemini Flash</div>
+      <div class="model-sub">Google 轻量版</div>
+    </div>
+    <div class="price" style="color:#059669;">$0.075</div>
+    <div><span class="use-badge" style="background:#f0fdf4;color:#059669;">备选</span></div>
+    <div class="scene">同等任务更便宜，多语言表现好</div>
+  </div>
+  <div class="row">
+    <div>
+      <div class="model">GPT-4o</div>
+      <div class="model-sub">OpenAI 旗舰版</div>
+    </div>
+    <div class="price" style="color:#d97706;">$2.50</div>
+    <div><span class="use-badge" style="background:#fef3c7;color:#d97706;">复杂任务</span></div>
+    <div class="scene">代码生成、复杂推理，是 mini 的 16 倍价格</div>
+  </div>
+  <div class="row">
+    <div>
+      <div class="model">Claude Sonnet</div>
+      <div class="model-sub">Anthropic 主力版</div>
+    </div>
+    <div class="price" style="color:#d97706;">$3.00</div>
+    <div><span class="use-badge" style="background:#fef3c7;color:#d97706;">高质量写作</span></div>
+    <div class="scene">文档处理、长文分析、代码质量更高</div>
+  </div>
+</div>
+<div class="tip">🔑 通过 <strong>LLM-Link</strong> 统一调用以上所有模型，一个 Key，随时切换，成本可控</div>
+</body>
+</html>

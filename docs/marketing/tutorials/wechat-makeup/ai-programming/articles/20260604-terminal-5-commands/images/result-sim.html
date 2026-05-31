@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#1e1e1e;font-family:'Cascadia Code','Courier New',monospace;}
+.titlebar{background:#2d2d2d;padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #444;}
+.dot{width:12px;height:12px;border-radius:50%;}
+.tab{background:#1e1e1e;color:#ccc;font-size:13px;padding:6px 16px;border-radius:6px 6px 0 0;margin-left:12px;}
+.body{padding:24px 28px;}
+.line{font-size:14px;line-height:1.95;white-space:pre;}
+.prompt{color:#4ec9b0;}
+.cmd{color:#dcdcaa;}
+.out{color:#9cdcfe;}
+.info{color:#6a9955;}
+.white{color:#d4d4d4;}
+.cyan{color:#4fc1ff;}
+.green{color:#4ec9b0;}
+.yellow{color:#ce9178;}
+.result-box{background:#0d1117;border:1px solid #39ff14;border-radius:10px;padding:20px 24px;margin-top:16px;}
+.result-title{color:#39ff14;font-size:13px;margin-bottom:12px;letter-spacing:1px;}
+.result-line{font-size:15px;line-height:2;color:#d4d4d4;}
+.result-line .q{color:#4fc1ff;}
+.result-line .a{color:#ce9178;}
+.result-line .out{color:#39ff14;font-size:16px;font-weight:bold;}
+.tag{display:inline-block;background:#1a3a1a;border:1px solid #39ff14;color:#39ff14;font-size:11px;padding:2px 10px;border-radius:20px;margin-top:12px;}
+</style>
+</head>
+<body>
+<div class="titlebar">
+  <div class="dot" style="background:#ff5f57;"></div>
+  <div class="dot" style="background:#febc2e;"></div>
+  <div class="dot" style="background:#28c840;"></div>
+  <div class="tab">终端</div>
+</div>
+<div class="body">
+<div class="line"><span class="prompt">~/ai-practice</span> <span class="cmd">python hello.py</span></div>
+<div class="result-box">
+  <div class="result-title">▶ 程序运行中</div>
+  <div class="result-line"><span class="q">你叫什么名字？ </span><span class="a">小明</span></div>
+  <div class="result-line" style="margin-top:8px;">
+    <span class="out">小明，你好！今天是 2026-06-04，AI 编程你已经入门了，加油！</span>
+  </div>
+</div>
+<div style="margin-top:16px;">
+  <span class="tag">✓ 程序运行成功</span>
+  <span style="color:#6a9955;font-size:13px;margin-left:12px;">这是你用 5 条命令 + 一段提示词召唤出来的第一个程序</span>
+</div>
+<div class="line" style="margin-top:16px;"><span class="prompt">~/ai-practice</span> <span style="opacity:0.4;color:#888;">█</span></div>
+</div>
+</body>
+</html>

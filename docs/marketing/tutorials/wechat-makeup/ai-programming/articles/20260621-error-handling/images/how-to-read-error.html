@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#0a1628;font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:44px 52px;}
+.title{text-align:center;font-size:21px;font-weight:800;color:#fff;margin-bottom:6px;}
+.sub{text-align:center;font-size:13px;color:#4a7a9a;margin-bottom:32px;}
+.error-sample{background:#0d1117;border:1px solid rgba(239,68,68,.3);border-radius:12px;padding:20px 24px;margin-bottom:28px;font-family:'Courier New',monospace;font-size:13px;}
+.err-gray{color:#4a6a8a;line-height:2;}
+.err-file{color:#60a5fa;}
+.err-num{color:#fbbf24;}
+.err-main{color:#f87171;font-weight:700;}
+.annotations{display:flex;flex-direction:column;gap:12px;}
+.ann{display:flex;align-items:flex-start;gap:14px;}
+.ann-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;margin-top:2px;}
+.ann-body{}
+.ann-title{font-size:14px;font-weight:700;margin-bottom:4px;}
+.ann-desc{font-size:12px;color:#6a8aaa;line-height:1.6;}
+.ann-code{font-family:'Courier New',monospace;font-size:12px;background:rgba(0,0,0,.3);padding:2px 8px;border-radius:4px;display:inline;}
+.tip{margin-top:20px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:10px;padding:12px 18px;font-size:13px;color:#fde68a;text-align:center;}
+</style>
+</head>
+<body>
+<div class="title">怎么读报错信息</div>
+<div class="sub">不需要全看懂——只找这三个位置就够了</div>
+<div class="error-sample">
+<div class="err-gray">Traceback (most recent call last):</div>
+<div class="err-gray">&nbsp;&nbsp;<span class="err-file">File "accounting.py"</span>, line <span class="err-num">23</span>, in load_data</div>
+<div class="err-gray">&nbsp;&nbsp;&nbsp;&nbsp;return json.load(f)</div>
+<div class="err-gray">&nbsp;&nbsp;<span class="err-file">File "/usr/lib/python3.11/json/__init__.py"</span>, line 293, in load</div>
+<div class="err-gray">&nbsp;&nbsp;&nbsp;&nbsp;return loads(fp.read(), ...)</div>
+<div class="err-main">json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</div>
+</div>
+<div class="annotations">
+  <div class="ann">
+    <div class="ann-num" style="background:rgba(239,68,68,.2);color:#f87171;border:1px solid rgba(239,68,68,.4);">1</div>
+    <div class="ann-body">
+      <div class="ann-title" style="color:#f87171;">最后一行 → 错误类型 + 原因（最重要）</div>
+      <div class="ann-desc"><span class="ann-code">JSONDecodeError</span> 是错误类型，<span class="ann-code">Expecting value: line 1 column 1</span> 是原因——说明文件第1行是空的，没有内容可以解析</div>
+    </div>
+  </div>
+  <div class="ann">
+    <div class="ann-num" style="background:rgba(59,130,246,.2);color:#60a5fa;border:1px solid rgba(59,130,246,.4);">2</div>
+    <div class="ann-body">
+      <div class="ann-title" style="color:#60a5fa;">最后一个 File → 你的代码出问题的位置</div>
+      <div class="ann-desc"><span class="ann-code">File "accounting.py", line 23</span> — 是你的程序文件，第23行，函数 load_data 里面出了问题</div>
+    </div>
+  </div>
+  <div class="ann">
+    <div class="ann-num" style="background:rgba(148,163,184,.15);color:#94a3b8;border:1px solid rgba(148,163,184,.2);">3</div>
+    <div class="ann-body">
+      <div class="ann-title" style="color:#94a3b8;">中间那堆 → 调用路径（一般不用看）</div>
+      <div class="ann-desc">显示程序是怎么一步步走到报错那行的。大多数情况下不需要管这部分，看最后两项就够了</div>
+    </div>
+  </div>
+</div>
+<div class="tip">把报错最后一行 + 你做了什么操作，一起发给 AI — 这是修报错最高效的方式</div>
+</body>
+</html>

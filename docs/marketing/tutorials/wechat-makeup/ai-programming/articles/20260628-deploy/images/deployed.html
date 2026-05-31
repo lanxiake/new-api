@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#f8fafc;font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:20px;}
+.browser{background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.1);overflow:hidden;}
+.bar{background:#e8ecf0;padding:10px 16px;display:flex;align-items:center;gap:10px;}
+.dots{display:flex;gap:6px;}
+.dot{width:11px;height:11px;border-radius:50%;}
+.url{flex:1;background:#fff;border-radius:6px;padding:5px 12px;font-size:12px;color:#3b82f6;border:1px solid #dbeafe;}
+.content{padding:0;}
+.railway{background:#0d1117;}
+.r-header{background:#1a1a2e;padding:12px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2a4a;}
+.r-logo{width:22px;height:22px;background:linear-gradient(135deg,#7c3aed,#a78bfa);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:800;}
+.r-nav{font-size:13px;color:#8a8ab0;display:flex;gap:20px;}
+.r-nav span{color:#fff;}
+.r-body{padding:18px 20px;}
+.r-project{background:#1a1a2e;border-radius:10px;padding:14px 18px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+.r-proj-name{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px;}
+.r-proj-url{font-size:12px;color:#7c3aed;font-family:'Courier New',monospace;}
+.r-status{background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.3);color:#34d399;font-size:12px;padding:4px 12px;border-radius:20px;font-weight:600;}
+.r-deploy{background:#1a1a2e;border-radius:10px;padding:14px 18px;}
+.r-d-title{font-size:13px;color:#8a8ab0;margin-bottom:10px;}
+.r-d-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #2a2a3a;}
+.r-d-item:last-child{border:none;}
+.r-d-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.r-d-msg{font-size:12px;color:#6a8aaa;}
+.r-d-time{font-size:11px;color:#4a5a7a;margin-left:auto;}
+</style>
+</head>
+<body>
+<div class="browser">
+  <div class="bar">
+    <div class="dots">
+      <div class="dot" style="background:#ff5f57;"></div>
+      <div class="dot" style="background:#febc2e;"></div>
+      <div class="dot" style="background:#28c840;"></div>
+    </div>
+    <div class="url">railway.app/project/accounting-tool</div>
+  </div>
+  <div class="content railway">
+    <div class="r-header">
+      <div class="r-logo">R</div>
+      <div class="r-nav"><span>accounting-tool</span> <span style="color:#4a5a7a;">/</span> Deployments</div>
+    </div>
+    <div class="r-body">
+      <div class="r-project">
+        <div>
+          <div class="r-proj-name">accounting-tool</div>
+          <div class="r-proj-url">accounting-tool-production.up.railway.app</div>
+        </div>
+        <div class="r-status">Active</div>
+      </div>
+      <div class="r-deploy">
+        <div class="r-d-title">Deployments</div>
+        <div class="r-d-item">
+          <div class="r-d-dot" style="background:#34d399;"></div>
+          <div class="r-d-msg">Deploy from GitHub (main) · Build succeeded · 2m 14s</div>
+          <div class="r-d-time">刚刚</div>
+        </div>
+        <div class="r-d-item">
+          <div class="r-d-dot" style="background:#4a5a7a;"></div>
+          <div class="r-d-msg">Initial deploy · Build succeeded</div>
+          <div class="r-d-time">5分钟前</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

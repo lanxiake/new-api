@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#0f1a2e;font-family:'Courier New','PingFang SC','Microsoft YaHei',monospace;padding:0;}
+.window{border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.titlebar{background:#1e2a3a;padding:12px 16px;display:flex;align-items:center;gap:8px;}
+.btn{width:12px;height:12px;border-radius:50%;}
+.win-title{flex:1;text-align:center;font-size:12px;color:#4a6a8a;font-family:'PingFang SC',sans-serif;}
+.terminal{background:#0d1117;padding:20px 24px;min-height:320px;}
+.prompt{color:#34d399;font-size:13px;margin-bottom:4px;}
+.cmd{color:#e2e8f0;font-size:13px;}
+.output{color:#8aabcc;font-size:13px;line-height:1.8;margin-bottom:12px;}
+.menu-title{color:#fbbf24;font-weight:bold;}
+.menu-item{color:#a78bfa;}
+.input-line{color:#34d399;}
+.success{color:#34d399;}
+.data{color:#60a5fa;}
+.separator{color:#2a4a6a;margin:8px 0;}
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <div class="btn" style="background:#ff5f57;"></div>
+    <div class="btn" style="background:#febc2e;"></div>
+    <div class="btn" style="background:#28c840;"></div>
+    <div class="win-title">记账小工具 — accounting.py</div>
+  </div>
+  <div class="terminal">
+    <div class="prompt">$ python accounting.py</div>
+    <div class="output"><br>
+<span class="menu-title">====== 个人记账小工具 ======</span><br>
+<span class="menu-item">1. 记一笔账</span><br>
+<span class="menu-item">2. 查看所有账单</span><br>
+<span class="menu-item">3. 查看当前余额</span><br>
+<span class="menu-item">4. 退出程序</span><br>
+<span class="separator">—————————————</span><br>
+<span class="input-line">请选择操作 (1-4): 1</span><br><br>
+请输入类型（收入/支出）: 收入<br>
+请输入金额（元）: 5000<br>
+请输入备注（可选，直接回车跳过）: 工资<br>
+<span class="success">✓ 已记录：收入 5000.0 元  备注：工资</span><br><br>
+<span class="input-line">请选择操作 (1-4): 3</span><br><br>
+<span class="data">当前余额：+5000.00 元</span><br>
+<span class="data">  收入合计：5000.00 元</span><br>
+<span class="data">  支出合计：0.00 元</span><br><br>
+<span class="input-line">请选择操作 (1-4): 4</span><br>
+<span class="success">数据已保存到 data.json，再见！</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

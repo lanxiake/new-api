@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#f4f6fa;font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:40px 52px;}
+.title{text-align:center;font-size:20px;font-weight:800;color:#1a2744;margin-bottom:6px;}
+.sub{text-align:center;font-size:13px;color:#8a96b0;margin-bottom:28px;}
+.chapters{display:flex;gap:10px;}
+.chapter{flex:1;background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.ch-head{padding:10px 12px;border-radius:8px;text-align:center;margin-bottom:10px;}
+.ch-num{font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:2px;}
+.ch-title{font-size:13px;font-weight:800;color:#fff;}
+.ch-items{display:flex;flex-direction:column;gap:4px;}
+.ch-item{font-size:11px;color:#64748b;padding:3px 0;border-bottom:1px solid #f1f5f9;display:flex;align-items:flex-start;gap:4px;line-height:1.4;}
+.ch-item::before{content:"✓";color:#94a3b8;flex-shrink:0;margin-top:1px;}
+.ch-item:last-child{border:none;}
+.summary{margin-top:16px;background:#1e293b;border-radius:10px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;}
+.sum-text{font-size:13px;color:#94a3b8;}
+.sum-text strong{color:#f59e0b;font-size:15px;}
+.sum-badge{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-size:12px;font-weight:700;padding:6px 16px;border-radius:20px;}
+</style>
+</head>
+<body>
+<div class="title">14篇完整能力栈</div>
+<div class="sub">从零到副业级项目，你学到了什么</div>
+<div class="chapters">
+  <div class="chapter">
+    <div class="ch-head" style="background:linear-gradient(135deg,#3b82f6,#2563eb);">
+      <div class="ch-num" style="color:rgba(255,255,255,.7);">第01-05篇</div>
+      <div class="ch-title">基础层</div>
+    </div>
+    <div class="ch-items">
+      <div class="ch-item">AI辅助编程正确姿势</div>
+      <div class="ch-item">Python变量与函数</div>
+      <div class="ch-item">文件读写操作</div>
+      <div class="ch-item">读懂和修改代码</div>
+    </div>
+  </div>
+  <div class="chapter">
+    <div class="ch-head" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);">
+      <div class="ch-num" style="color:rgba(255,255,255,.7);">第06-09篇</div>
+      <div class="ch-title">工程层</div>
+    </div>
+    <div class="ch-items">
+      <div class="ch-item">命令行工具开发</div>
+      <div class="ch-item">数据持久化</div>
+      <div class="ch-item">错误处理与调试</div>
+      <div class="ch-item">真实项目工作流</div>
+    </div>
+  </div>
+  <div class="chapter">
+    <div class="ch-head" style="background:linear-gradient(135deg,#059669,#047857);">
+      <div class="ch-num" style="color:rgba(255,255,255,.7);">第10-12篇</div>
+      <div class="ch-title">上线层</div>
+    </div>
+    <div class="ch-items">
+      <div class="ch-item">Flask Web框架</div>
+      <div class="ch-item">部署到Railway</div>
+      <div class="ch-item">SQLite数据库</div>
+      <div class="ch-item">云端持久化存储</div>
+    </div>
+  </div>
+  <div class="chapter">
+    <div class="ch-head" style="background:linear-gradient(135deg,#f59e0b,#d97706);">
+      <div class="ch-num" style="color:rgba(255,255,255,.7);">第13-14篇</div>
+      <div class="ch-title">扩展层</div>
+    </div>
+    <div class="ch-items">
+      <div class="ch-item">调用第三方API</div>
+      <div class="ch-item">接入AI能力</div>
+      <div class="ch-item">成本控制策略</div>
+      <div class="ch-item">副业级项目能力</div>
+    </div>
+  </div>
+</div>
+<div class="summary">
+  <div class="sum-text">14篇 · <strong>约7小时</strong> · 完整工程师工作流</div>
+  <div class="sum-badge">你能做真实的东西了</div>
+</div>
+</body>
+</html>

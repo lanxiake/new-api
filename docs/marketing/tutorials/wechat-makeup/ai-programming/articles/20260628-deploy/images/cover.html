@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;height:500px;background:linear-gradient(135deg,#0a1628 0%,#1a1a4a 50%,#0a1628 100%);display:flex;align-items:center;justify-content:center;font-family:'PingFang SC','Microsoft YaHei',sans-serif;overflow:hidden;}
+.wrap{display:flex;align-items:center;gap:60px;padding:40px 60px;width:100%;}
+.left{flex:1;}
+.eyebrow{font-size:13px;color:#818cf8;letter-spacing:2px;margin-bottom:12px;}
+.title{font-size:42px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:16px;}
+.title em{color:#818cf8;font-style:normal;}
+.sub{font-size:16px;color:#7a7aaa;line-height:1.6;}
+.right{flex:0 0 300px;}
+.journey{display:flex;flex-direction:column;gap:0;}
+.jstep{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;}
+.jstep-icon{font-size:20px;flex-shrink:0;}
+.jstep-text{font-size:13px;}
+.jstep-title{font-weight:700;}
+.jstep-desc{font-size:11px;opacity:.7;margin-top:2px;}
+.jarrow{text-align:center;color:#2a2a5a;font-size:16px;padding:4px 0;}
+.link-badge{margin-top:14px;background:rgba(129,140,248,.15);border:1px solid rgba(129,140,248,.3);border-radius:8px;padding:8px 14px;font-size:12px;color:#a5b4fc;text-align:center;font-family:'Courier New',monospace;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="left">
+    <div class="eyebrow">《人人都能用AI写程序》第11篇</div>
+    <div class="title">发布<em>上线</em><br>拿到链接</div>
+    <div class="sub">从你的电脑搬到云端<br>全世界都能访问</div>
+  </div>
+  <div class="right">
+    <div class="journey">
+      <div class="jstep" style="background:rgba(96,165,250,.1);">
+        <div class="jstep-icon">💻</div>
+        <div class="jstep-text">
+          <div class="jstep-title" style="color:#93c5fd;">本地开发</div>
+          <div class="jstep-desc" style="color:#6a8aaa;">localhost:5000（只有你能访问）</div>
+        </div>
+      </div>
+      <div class="jarrow">↓ git push</div>
+      <div class="jstep" style="background:rgba(129,140,248,.1);">
+        <div class="jstep-icon">☁️</div>
+        <div class="jstep-text">
+          <div class="jstep-title" style="color:#a5b4fc;">Railway 云端</div>
+          <div class="jstep-desc" style="color:#6a6aaa;">自动检测→自动部署→2分钟上线</div>
+        </div>
+      </div>
+      <div class="jarrow">↓ 自动分配域名</div>
+      <div class="jstep" style="background:rgba(52,211,153,.1);">
+        <div class="jstep-icon">🌍</div>
+        <div class="jstep-text">
+          <div class="jstep-title" style="color:#86efac;">全球可访问</div>
+          <div class="jstep-desc" style="color:#4a8a6a;">24小时在线，任何设备可用</div>
+        </div>
+      </div>
+    </div>
+    <div class="link-badge">your-app.up.railway.app</div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#f4f6fa;font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:44px 52px;}
+.title{text-align:center;font-size:21px;font-weight:800;color:#1a2744;margin-bottom:6px;}
+.sub{text-align:center;font-size:13px;color:#8a96b0;margin-bottom:36px;}
+.compare{display:flex;gap:0;align-items:stretch;}
+.side{flex:1;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);}
+.side-head{padding:18px 20px;text-align:center;}
+.side-body{background:#fff;padding:18px 20px;min-height:200px;}
+.side-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:10px;font-size:13px;color:#444;line-height:1.5;}
+.side-item::before{content:"•";color:inherit;opacity:.4;}
+.vs{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 20px;gap:4px;}
+.vs-text{font-size:15px;font-weight:800;color:#94a3b8;}
+.vs-arrow{font-size:24px;color:#60a5fa;}
+.tech-row{margin-top:24px;display:flex;gap:12px;}
+.tech-box{flex:1;background:#fff;border-radius:12px;padding:14px 16px;border:1px solid #e2e8f0;text-align:center;}
+.tech-icon{font-size:24px;margin-bottom:6px;}
+.tech-name{font-size:14px;font-weight:700;margin-bottom:4px;}
+.tech-role{font-size:12px;color:#64748b;}
+.plus{display:flex;align-items:center;justify-content:center;font-size:20px;color:#cbd5e1;flex-shrink:0;padding:0 4px;}
+</style>
+</head>
+<body>
+<div class="title">从命令行到网页：两层结构</div>
+<div class="sub">后端逻辑基本不变，只需加一层前端界面</div>
+<div class="compare">
+  <div class="side">
+    <div class="side-head" style="background:linear-gradient(135deg,#475569,#64748b);">
+      <div style="font-size:28px;margin-bottom:6px;">⬛</div>
+      <div style="color:#fff;font-size:15px;font-weight:700;">命令行版</div>
+      <div style="color:rgba(255,255,255,.6);font-size:12px;margin-top:2px;">用户和程序：打字对话</div>
+    </div>
+    <div class="side-body">
+      <div class="side-item">黑色终端窗口，文字菜单</div>
+      <div class="side-item">输入数字选择功能</div>
+      <div class="side-item">只能电脑用，手机不行</div>
+      <div class="side-item">发给别人不知道怎么启动</div>
+    </div>
+  </div>
+  <div class="vs">
+    <div class="vs-arrow">→</div>
+    <div class="vs-text">升级</div>
+    <div style="font-size:11px;color:#94a3b8;margin-top:4px;">Flask<br>+HTML</div>
+  </div>
+  <div class="side">
+    <div class="side-head" style="background:linear-gradient(135deg,#0ea5e9,#22c55e);">
+      <div style="font-size:28px;margin-bottom:6px;">🌐</div>
+      <div style="color:#fff;font-size:15px;font-weight:700;">网页版</div>
+      <div style="color:rgba(255,255,255,.8);font-size:12px;margin-top:2px;">用户和程序：点击操作</div>
+    </div>
+    <div class="side-body">
+      <div class="side-item">浏览器打开，卡片式界面</div>
+      <div class="side-item">点按钮填表单，直观易用</div>
+      <div class="side-item">手机和电脑都能访问</div>
+      <div class="side-item">发 IP 地址给别人即可访问</div>
+    </div>
+  </div>
+</div>
+<div class="tech-row">
+  <div class="tech-box">
+    <div class="tech-icon">📄</div>
+    <div class="tech-name" style="color:#0ea5e9;">HTML + CSS</div>
+    <div class="tech-role">界面结构与样式<br>（前端，浏览器里运行）</div>
+  </div>
+  <div class="plus">+</div>
+  <div class="tech-box">
+    <div class="tech-icon">⚡</div>
+    <div class="tech-name" style="color:#f59e0b;">JavaScript</div>
+    <div class="tech-role">发请求、更新界面<br>（前端，浏览器里运行）</div>
+  </div>
+  <div class="plus">+</div>
+  <div class="tech-box">
+    <div class="tech-icon">🐍</div>
+    <div class="tech-name" style="color:#22c55e;">Python + Flask</div>
+    <div class="tech-role">处理数据、读写文件<br>（后端，你电脑里运行）</div>
+  </div>
+</div>
+</body>
+</html>

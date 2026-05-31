@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;height:500px;background:linear-gradient(135deg,#0a1f2e 0%,#0d2b1a 50%,#0a1f2e 100%);display:flex;align-items:center;justify-content:center;font-family:'PingFang SC','Microsoft YaHei',sans-serif;overflow:hidden;}
+.wrap{display:flex;align-items:center;gap:60px;padding:40px 60px;width:100%;}
+.left{flex:1;}
+.eyebrow{font-size:13px;color:#34d399;letter-spacing:2px;margin-bottom:12px;}
+.title{font-size:42px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:16px;}
+.title em{color:#34d399;font-style:normal;}
+.sub{font-size:16px;color:#6a9a7a;line-height:1.6;}
+.right{flex:0 0 280px;}
+.comparison{display:flex;flex-direction:column;gap:14px;}
+.item{border-radius:10px;padding:14px 16px;}
+.item-label{font-size:11px;font-weight:700;margin-bottom:8px;letter-spacing:1px;}
+.item-name{font-size:15px;font-weight:800;margin-bottom:4px;}
+.item-desc{font-size:11px;opacity:.7;line-height:1.5;}
+.arrow{text-align:center;color:#2a4a3a;font-size:18px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="left">
+    <div class="eyebrow">《人人都能用AI写程序》第12篇</div>
+    <div class="title">让程序<em>记住</em><br>数据</div>
+    <div class="sub">从 JSON 文件到数据库<br>数据持久化，重启不丢失</div>
+  </div>
+  <div class="right">
+    <div class="comparison">
+      <div class="item" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);">
+        <div class="item-label" style="color:#f87171;">之前的方案</div>
+        <div class="item-name" style="color:#fca5a5;">📄 JSON 文件</div>
+        <div class="item-desc" style="color:#9a5a5a;">重新部署 → 数据清空<br>没有并发保护 · 查询很慢</div>
+      </div>
+      <div class="arrow">↓ 升级</div>
+      <div class="item" style="background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);">
+        <div class="item-label" style="color:#34d399;">现在的方案</div>
+        <div class="item-name" style="color:#6ee7b7;">🗃️ SQLite 数据库</div>
+        <div class="item-desc" style="color:#4a7a6a;">持久化存储 · 重启不丢<br>SQL 查询 · 并发安全</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

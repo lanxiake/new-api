@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#f4f6fa; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family:'PingFang SC','Microsoft YaHei',sans-serif; }
+.card {
+  background:#fff;
+  border-radius:20px;
+  box-shadow:0 8px 40px rgba(0,0,0,0.12);
+  padding:48px 56px;
+  width:860px;
+}
+.title {
+  text-align:center;
+  font-size:28px;
+  font-weight:700;
+  color:#1a2744;
+  margin-bottom:8px;
+  letter-spacing:2px;
+}
+.subtitle {
+  text-align:center;
+  font-size:15px;
+  color:#8a96b0;
+  margin-bottom:36px;
+}
+table { width:100%; border-collapse:separate; border-spacing:0 8px; }
+thead th {
+  background:#1a2744;
+  color:#fff;
+  padding:14px 20px;
+  font-size:15px;
+  font-weight:600;
+  text-align:left;
+  letter-spacing:1px;
+}
+thead th:first-child { border-radius:10px 0 0 10px; }
+thead th:last-child { border-radius:0 10px 10px 0; }
+tbody tr:nth-child(odd) td { background:#f0f4ff; }
+tbody tr:nth-child(even) td { background:#e8f0fe; }
+tbody td {
+  padding:16px 20px;
+  font-size:15px;
+  color:#2c3a5e;
+  vertical-align:middle;
+}
+tbody td:first-child {
+  font-family:'Courier New',monospace;
+  font-size:16px;
+  font-weight:700;
+  color:#0066cc;
+  border-radius:8px 0 0 8px;
+  background:#e0ecff;
+  letter-spacing:0.5px;
+}
+tbody tr:nth-child(odd) td:first-child { background:#d6e4ff; }
+tbody td:last-child { border-radius:0 8px 8px 0; color:#4a5a7a; }
+.footer {
+  text-align:center;
+  margin-top:28px;
+  font-size:13px;
+  color:#b0b8cc;
+  letter-spacing:1px;
+}
+.tag {
+  display:inline-block;
+  background:#1a2744;
+  color:#00d4ff;
+  font-size:12px;
+  padding:3px 10px;
+  border-radius:20px;
+  margin-bottom:20px;
+  letter-spacing:1px;
+}
+.header-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div style="text-align:center;margin-bottom:12px;">
+    <span class="tag">《人人都能用AI写程序》第05篇</span>
+  </div>
+  <div class="title">5条命令速查卡</div>
+  <div class="subtitle">覆盖90%日常操作 · 可截图保存</div>
+  <table>
+    <thead>
+      <tr>
+        <th>命令</th>
+        <th>作用</th>
+        <th>生活类比</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>pwd</td>
+        <td>查看当前所在位置</td>
+        <td>手机地图"我的位置"</td>
+      </tr>
+      <tr>
+        <td>ls &nbsp;/&nbsp; dir</td>
+        <td>查看文件夹里有什么</td>
+        <td>打开文件夹看里面的东西</td>
+      </tr>
+      <tr>
+        <td>cd 文件夹名</td>
+        <td>进入某个文件夹</td>
+        <td>双击文件夹进去</td>
+      </tr>
+      <tr>
+        <td>cd ..</td>
+        <td>返回上一级</td>
+        <td>点左上角"返回"箭头</td>
+      </tr>
+      <tr>
+        <td>mkdir 名称</td>
+        <td>新建一个文件夹</td>
+        <td>右键 → 新建文件夹</td>
+      </tr>
+      <tr>
+        <td>python 文件.py</td>
+        <td>运行 Python 程序</td>
+        <td>双击程序图标运行</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="footer">记住这5条，其他用到时问 AI 就行 · 《人人都能用AI写程序》</div>
+</div>
+</body>
+</html>

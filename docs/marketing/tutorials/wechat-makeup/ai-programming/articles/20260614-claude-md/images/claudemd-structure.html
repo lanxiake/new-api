@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#0a1628;font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:48px 56px;}
+.title{text-align:center;font-size:22px;font-weight:800;color:#fff;margin-bottom:6px;}
+.sub{text-align:center;font-size:14px;color:#4a7a9a;margin-bottom:36px;}
+.sections{display:flex;flex-direction:column;gap:14px;}
+.section{border-radius:12px;overflow:hidden;display:flex;}
+.section-label{width:120px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 12px;text-align:center;gap:6px;}
+.section-num{font-size:24px;font-weight:900;}
+.section-name{font-size:13px;font-weight:700;letter-spacing:.5px;}
+.section-body{flex:1;padding:16px 20px;background:rgba(255,255,255,.04);}
+.section-q{font-size:13px;font-weight:700;margin-bottom:8px;}
+.section-items{display:flex;flex-direction:column;gap:5px;}
+.item{font-size:13px;color:#8aabcc;display:flex;gap:8px;}
+.item::before{content:"→";color:#4a8aaa;flex-shrink:0;}
+.code-eg{font-family:'Courier New',monospace;font-size:12px;background:rgba(0,0,0,.3);color:#9cdcfe;padding:2px 8px;border-radius:4px;display:inline;}
+.bottom{margin-top:24px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.2);border-radius:12px;padding:16px 24px;text-align:center;color:#c4b5fd;font-size:14px;}
+.bottom strong{color:#a78bfa;}
+</style>
+</head>
+<body>
+<div class="title">CLAUDE.md 写什么？</div>
+<div class="sub">只需回答三个问题，保持 300 字以内</div>
+<div class="sections">
+  <div class="section">
+    <div class="section-label" style="background:rgba(59,130,246,.15);">
+      <div class="section-num" style="color:#60a5fa;">①</div>
+      <div class="section-name" style="color:#60a5fa;">项目是什么</div>
+    </div>
+    <div class="section-body">
+      <div class="section-q" style="color:#93c5fd;">这是什么项目？（让 AI 不用每次问）</div>
+      <div class="section-items">
+        <div class="item">项目名称 + 一句话功能描述</div>
+        <div class="item">核心功能列表（3-5条）</div>
+        <div class="item">目标用户（可选）</div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-label" style="background:rgba(52,211,153,.15);">
+      <div class="section-num" style="color:#34d399;">②</div>
+      <div class="section-name" style="color:#34d399;">用什么技术</div>
+    </div>
+    <div class="section-body">
+      <div class="section-q" style="color:#6ee7b7;">技术栈声明（避免 AI 自作主张换技术）</div>
+      <div class="section-items">
+        <div class="item">后端：<span class="code-eg">Python + Flask</span></div>
+        <div class="item">前端：<span class="code-eg">Vue 3 + Vite</span></div>
+        <div class="item">数据库：<span class="code-eg">MySQL 8.0</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-label" style="background:rgba(251,191,36,.15);">
+      <div class="section-num" style="color:#fbbf24;">③</div>
+      <div class="section-name" style="color:#fbbf24;">有什么规矩</div>
+    </div>
+    <div class="section-body">
+      <div class="section-q" style="color:#fde68a;">具体行为规范（最重要！写可执行的，不写废话）</div>
+      <div class="section-items">
+        <div class="item">代码注释用中文</div>
+        <div class="item">每次修改前先说明方案，等确认再动手</div>
+        <div class="item">不得删除已有功能模块</div>
+        <div class="item">遇到报错先分析原因，不要乱改</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bottom">❌ 不要写：<strong>"请认真工作"</strong> &nbsp;|&nbsp; ✅ 要写：<strong>"每次修改前先告诉我你打算怎么改"</strong></div>
+</body>
+</html>

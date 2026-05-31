@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 900px;
+  background: #f8f5f0;
+  font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  padding: 48px 60px;
+}
+
+.title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 900;
+  color: #2d1a0e;
+  margin-bottom: 8px;
+}
+
+.title span { color: #e8734a; }
+
+.subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #9a7a60;
+  margin-bottom: 40px;
+}
+
+.row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.box {
+  flex: 1;
+  background: white;
+  border-radius: 16px;
+  padding: 28px 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.box-label {
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.box-label.myth { background: #ffeee8; color: #c0533a; }
+.box-label.truth { background: #edfaf2; color: #2d8a52; }
+
+.box-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+
+.box.myth-box .box-title { color: #c0533a; }
+.box.truth-box .box-title { color: #2d8a52; }
+
+.box-body {
+  font-size: 14px;
+  color: #5a4030;
+  line-height: 1.8;
+}
+
+.arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: #e8734a;
+  font-weight: bold;
+  flex-shrink: 0;
+  width: 40px;
+}
+
+.sources {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.source-item {
+  flex: 1;
+  background: white;
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.source-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.source-icon.red { background: #ffeee8; }
+.source-icon.blue { background: #e8f0fe; }
+.source-icon.green { background: #edfaf2; }
+
+.source-text {
+  font-size: 13px;
+  color: #5a4030;
+  line-height: 1.6;
+}
+
+.source-text strong {
+  display: block;
+  font-size: 14px;
+  color: #2d1a0e;
+  margin-bottom: 4px;
+}
+</style>
+</head>
+<body>
+
+<div class="title">你以为你在对孩子生气<br>其实你在<span>保护自己</span></div>
+<div class="subtitle">理解愤怒的真正来源，才能真正改变</div>
+
+<div class="row">
+  <div class="box myth-box">
+    <div class="box-label myth">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><line x1="2" y1="2" x2="10" y2="10" stroke="#c0533a" stroke-width="2" stroke-linecap="round"/><line x1="10" y1="2" x2="2" y2="10" stroke="#c0533a" stroke-width="2" stroke-linecap="round"/></svg>
+      旧认知
+    </div>
+    <div class="box-title">"孩子不听话，<br>所以我发火了"</div>
+    <div class="box-body">我们习惯把情绪的账，算到孩子的行为上——是他磨蹭、是他哭闹、是他不听话，才让我失控的。</div>
+  </div>
+  <div class="arrow">→</div>
+  <div class="box truth-box">
+    <div class="box-label truth">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#2d8a52" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      新认知
+    </div>
+    <div class="box-title">"孩子只是<br>最后一根稻草"</div>
+    <div class="box-body">真正让你崩溃的，是还没消化的疲惫、还没排解的压力、还没处理好的控制感丧失。孩子的行为只是触发了这一切。</div>
+  </div>
+</div>
+
+<div class="sources">
+  <div class="source-item">
+    <div class="source-icon red">
+      <!-- 闪电/压力图标 -->
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M10 2L4 10h5l-1 6 7-8h-5l1-6z" stroke="#c0533a" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="source-text">
+      <strong>疲惫与压力</strong>
+      连续几天没睡够、工作堆积、身体超载——这些才是真正的"火药"
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-icon blue">
+      <!-- 循环/回声图标 -->
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M3 9a6 6 0 0 1 6-6" stroke="#4a80d4" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M15 9a6 6 0 0 1-6 6" stroke="#4a80d4" stroke-width="1.5" stroke-linecap="round"/>
+        <polyline points="9,3 12,3 12,6" stroke="#4a80d4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <polyline points="9,15 6,15 6,12" stroke="#4a80d4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="source-text">
+      <strong>童年的回声</strong>
+      你小时候被大声训斥过的那些时刻，在你吼孩子时，悄悄重演
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-icon green">
+      <!-- 目标/掌控图标 -->
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <circle cx="9" cy="9" r="6" stroke="#2d8a52" stroke-width="1.5"/>
+        <circle cx="9" cy="9" r="3" stroke="#2d8a52" stroke-width="1.5"/>
+        <circle cx="9" cy="9" r="1" fill="#2d8a52"/>
+      </svg>
+    </div>
+    <div class="source-text">
+      <strong>失控感</strong>
+      "一切都乱了"的感觉让人恐慌——吼孩子，是试图夺回掌控
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

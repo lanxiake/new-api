@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#f4f6fa;font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:48px 56px;}
+.title{text-align:center;font-size:22px;font-weight:800;color:#1a2744;margin-bottom:6px;}
+.sub{text-align:center;font-size:14px;color:#8a96b0;margin-bottom:36px;}
+.compare{display:flex;gap:24px;align-items:flex-start;}
+.side{flex:1;}
+.side-title{font-size:15px;font-weight:700;padding:10px 16px;border-radius:10px 10px 0 0;text-align:center;}
+.bubble-wrap{background:#fff;border-radius:0 0 12px 12px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+.bubble{border-radius:12px;padding:14px 16px;margin-bottom:12px;font-size:13px;line-height:1.6;}
+.bubble .label{font-size:11px;font-weight:700;margin-bottom:6px;opacity:.7;letter-spacing:.5px;}
+.vs{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 8px;padding-top:50px;gap:8px;color:#94a3b8;font-size:20px;font-weight:700;}
+.result{margin-top:24px;background:#1a2744;border-radius:12px;padding:16px 24px;display:flex;align-items:center;gap:16px;}
+.result-icon{font-size:28px;}
+.result-text{color:#fff;font-size:14px;line-height:1.6;}
+.result-text strong{color:#00d4ff;}
+</style>
+</head>
+<body>
+<div class="title">AI 为什么会"失忆"？</div>
+<div class="sub">每次新建对话都是一张白纸——除非你提前给它备忘录</div>
+<div class="compare">
+  <div class="side">
+    <div class="side-title" style="background:#fee2e2;color:#dc2626;">❌ 没有 CLAUDE.md</div>
+    <div class="bubble-wrap">
+      <div class="bubble" style="background:#f0fdf4;">
+        <div class="label" style="color:#16a34a;">你说（第1天）</div>
+        用 Python，代码注释用中文，每次改动前先告诉我方案
+      </div>
+      <div class="bubble" style="background:#eff6ff;">
+        <div class="label" style="color:#2563eb;">AI 回复（第1天）</div>
+        好的，我记住了！
+      </div>
+      <div class="bubble" style="background:#f0fdf4;">
+        <div class="label" style="color:#16a34a;">你说（第2天）</div>
+        继续帮我做项目
+      </div>
+      <div class="bubble" style="background:#fff7ed;border:1px solid #fed7aa;">
+        <div class="label" style="color:#ea580c;">AI 回复（第2天）</div>
+        😵 什么项目？用什么技术？有什么要求？
+      </div>
+    </div>
+  </div>
+  <div class="vs">VS</div>
+  <div class="side">
+    <div class="side-title" style="background:#dcfce7;color:#16a34a;">✅ 有 CLAUDE.md</div>
+    <div class="bubble-wrap">
+      <div class="bubble" style="background:#f0fdf4;">
+        <div class="label" style="color:#16a34a;">你说（第1天）</div>
+        用 Python，代码注释用中文，每次改动前先告诉我方案
+      </div>
+      <div class="bubble" style="background:#f0fdf4;border:1px solid #bbf7d0;">
+        <div class="label" style="color:#16a34a;">你做</div>
+        把规则写进 CLAUDE.md，放在项目根目录
+      </div>
+      <div class="bubble" style="background:#f0fdf4;">
+        <div class="label" style="color:#16a34a;">你说（第2天）</div>
+        继续帮我做项目
+      </div>
+      <div class="bubble" style="background:#eff6ff;border:1px solid #bfdbfe;">
+        <div class="label" style="color:#2563eb;">AI 回复（第2天）</div>
+        ✅ 已读取项目说明，Python后端 + Vue前端，继续上次的进度！
+      </div>
+    </div>
+  </div>
+</div>
+<div class="result">
+  <div class="result-icon">💡</div>
+  <div class="result-text">CLAUDE.md = 贴在 AI 工位上的<strong>新人须知</strong>，每次启动自动读取，永远不会"忘"</div>
+</div>
+</body>
+</html>

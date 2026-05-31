@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#f0f4f8;font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:24px;}
+.browser{background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.12);overflow:hidden;}
+.browser-bar{background:#e8ecf0;padding:10px 16px;display:flex;align-items:center;gap:10px;}
+.dots{display:flex;gap:6px;}
+.dot{width:11px;height:11px;border-radius:50%;}
+.url-bar{flex:1;background:#fff;border-radius:6px;padding:5px 14px;font-size:12px;color:#64748b;border:1px solid #e2e8f0;}
+.app{padding:20px 24px;background:#f8fafc;}
+.stats{display:flex;gap:12px;margin-bottom:18px;}
+.stat{flex:1;background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.stat-label{font-size:11px;color:#94a3b8;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;}
+.stat-value{font-size:22px;font-weight:800;}
+.form-card{background:#fff;border-radius:10px;padding:16px 18px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.form-title{font-size:13px;font-weight:700;color:#1e293b;margin-bottom:12px;}
+.form-row{display:flex;gap:10px;margin-bottom:10px;}
+.form-input{flex:1;border:1px solid #e2e8f0;border-radius:6px;padding:8px 12px;font-size:13px;color:#475569;background:#f8fafc;}
+.form-btn{background:#3b82f6;color:#fff;border:none;border-radius:6px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;}
+.records{background:#fff;border-radius:10px;padding:16px 18px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.rec-title{font-size:13px;font-weight:700;color:#1e293b;margin-bottom:12px;}
+.record{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f5f9;}
+.rec-left{display:flex;align-items:center;gap:10px;}
+.rec-tag{padding:3px 8px;border-radius:10px;font-size:11px;font-weight:600;}
+.rec-note{font-size:13px;color:#475569;}
+.rec-date{font-size:11px;color:#94a3b8;margin-top:2px;}
+.rec-amount{font-size:15px;font-weight:700;}
+</style>
+</head>
+<body>
+<div class="browser">
+  <div class="browser-bar">
+    <div class="dots">
+      <div class="dot" style="background:#ff5f57;"></div>
+      <div class="dot" style="background:#febc2e;"></div>
+      <div class="dot" style="background:#28c840;"></div>
+    </div>
+    <div class="url-bar">http://localhost:5000</div>
+  </div>
+  <div class="app">
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">收入合计</div>
+        <div class="stat-value" style="color:#16a34a;">+8,500</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">支出合计</div>
+        <div class="stat-value" style="color:#dc2626;">-1,280</div>
+      </div>
+      <div class="stat" style="flex:1.2;">
+        <div class="stat-label">当前余额</div>
+        <div class="stat-value" style="color:#2563eb;">+7,220 元</div>
+      </div>
+    </div>
+    <div class="form-card">
+      <div class="form-title">记一笔账</div>
+      <div class="form-row">
+        <div class="form-input" style="flex:0 0 90px;text-align:center;">支出 ▼</div>
+        <div class="form-input">金额（元）</div>
+        <div class="form-input">备注（可选）</div>
+        <div class="form-btn">记账</div>
+      </div>
+    </div>
+    <div class="records">
+      <div class="rec-title">最近账单</div>
+      <div class="record">
+        <div class="rec-left">
+          <div class="rec-tag" style="background:#dcfce7;color:#16a34a;">收入</div>
+          <div>
+            <div class="rec-note">工资</div>
+            <div class="rec-date">2026-05-31 09:00</div>
+          </div>
+        </div>
+        <div class="rec-amount" style="color:#16a34a;">+5,000</div>
+      </div>
+      <div class="record">
+        <div class="rec-left">
+          <div class="rec-tag" style="background:#fee2e2;color:#dc2626;">支出</div>
+          <div>
+            <div class="rec-note">午餐</div>
+            <div class="rec-date">2026-05-31 12:30</div>
+          </div>
+        </div>
+        <div class="rec-amount" style="color:#dc2626;">-38</div>
+      </div>
+      <div class="record" style="border:none;">
+        <div class="rec-left">
+          <div class="rec-tag" style="background:#dcfce7;color:#16a34a;">收入</div>
+          <div>
+            <div class="rec-note">兼职</div>
+            <div class="rec-date">2026-05-30 18:00</div>
+          </div>
+        </div>
+        <div class="rec-amount" style="color:#16a34a;">+3,500</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

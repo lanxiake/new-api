@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;height:500px;background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 50%,#0f172a 100%);display:flex;align-items:center;justify-content:center;font-family:'PingFang SC','Microsoft YaHei',sans-serif;overflow:hidden;}
+.wrap{display:flex;align-items:center;gap:60px;padding:40px 60px;width:100%;}
+.left{flex:1;}
+.eyebrow{font-size:13px;color:#818cf8;letter-spacing:2px;margin-bottom:12px;}
+.title{font-size:42px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:16px;}
+.title em{color:#818cf8;font-style:normal;}
+.sub{font-size:16px;color:#6a6aaa;line-height:1.6;}
+.right{flex:0 0 300px;}
+.analogy{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;}
+.ana-title{font-size:12px;color:#6a7aaa;margin-bottom:14px;letter-spacing:1px;}
+.ana-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.ana-row:last-child{margin:0;}
+.ana-icon{font-size:20px;flex-shrink:0;width:30px;text-align:center;}
+.ana-pair{flex:1;}
+.ana-real{font-size:11px;color:#8a8aaa;}
+.ana-analogy{font-size:13px;font-weight:700;color:#a5b4fc;}
+.arrow-col{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:0 4px;}
+.arrow{font-size:16px;color:#3a3a6a;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="left">
+    <div class="eyebrow">《人人都能用AI写程序》第13篇</div>
+    <div class="title">调用<em>别人</em><br>的能力</div>
+    <div class="sub">API 是程序世界的外卖服务<br>不用自己"做菜"，直接点单</div>
+  </div>
+  <div class="right">
+    <div class="analogy">
+      <div class="ana-title">API = 餐厅服务员</div>
+      <div class="ana-row">
+        <div class="ana-icon">🧑‍💻</div>
+        <div class="ana-pair">
+          <div class="ana-real">你的程序</div>
+          <div class="ana-analogy">→ 食客</div>
+        </div>
+      </div>
+      <div class="ana-row">
+        <div class="ana-icon">📋</div>
+        <div class="ana-pair">
+          <div class="ana-real">API 接口</div>
+          <div class="ana-analogy">→ 服务员</div>
+        </div>
+      </div>
+      <div class="ana-row">
+        <div class="ana-icon">🍳</div>
+        <div class="ana-pair">
+          <div class="ana-real">第三方服务</div>
+          <div class="ana-analogy">→ 厨房</div>
+        </div>
+      </div>
+      <div class="ana-row">
+        <div class="ana-icon">🍽️</div>
+        <div class="ana-pair">
+          <div class="ana-real">返回的数据</div>
+          <div class="ana-analogy">→ 上桌的菜</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

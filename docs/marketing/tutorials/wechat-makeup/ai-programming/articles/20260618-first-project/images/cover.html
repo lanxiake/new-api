@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;height:500px;background:linear-gradient(135deg,#0a1628 0%,#1a2a4a 50%,#0a1628 100%);display:flex;align-items:center;justify-content:center;font-family:'PingFang SC','Microsoft YaHei',sans-serif;position:relative;overflow:hidden;}
+.wrap{display:flex;align-items:center;gap:60px;padding:40px 60px;width:100%;}
+.left{flex:1;}
+.eyebrow{font-size:13px;color:#4a8aaa;letter-spacing:2px;margin-bottom:12px;}
+.title{font-size:44px;font-weight:900;color:#fff;line-height:1.15;margin-bottom:16px;}
+.title em{color:#34d399;font-style:normal;}
+.sub{font-size:16px;color:#8a9abf;line-height:1.6;}
+.right{flex:0 0 300px;}
+.card{background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.25);border-radius:16px;padding:22px 24px;}
+.card-title{font-size:13px;font-weight:700;color:#34d399;margin-bottom:14px;letter-spacing:1px;}
+.card-item{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:13px;color:#86efac;}
+.card-num{width:22px;height:22px;border-radius:50%;background:rgba(52,211,153,0.2);border:1px solid rgba(52,211,153,0.4);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;color:#34d399;}
+.time-badge{display:inline-block;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.3);color:#fbbf24;padding:5px 14px;border-radius:20px;font-size:12px;margin-top:14px;letter-spacing:1px;}
+.series{position:absolute;bottom:20px;right:28px;color:#2a3a5a;font-size:12px;}
+.deco{position:absolute;top:30px;right:280px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(52,211,153,0.08) 0%,transparent 70%);pointer-events:none;}
+</style>
+</head>
+<body>
+<div class="deco"></div>
+<div class="wrap">
+  <div class="left">
+    <div class="eyebrow">《人人都能用AI写程序》第08篇</div>
+    <div class="title">第一个<br><em>真实项目</em></div>
+    <div class="sub">从需求到能运行<br>30分钟做出记账小工具</div>
+  </div>
+  <div class="right">
+    <div class="card">
+      <div class="card-title">📋 本篇完成路径</div>
+      <div class="card-item"><div class="card-num">1</div>写清楚需求（做·有·存·用）</div>
+      <div class="card-item"><div class="card-num">2</div>AI 实现，你运行测试</div>
+      <div class="card-item"><div class="card-num">3</div>发现问题，精准描述修复</div>
+      <div class="card-item"><div class="card-num">4</div>拿到可用的真实程序</div>
+      <div class="time-badge">预计完成时间：30分钟</div>
+    </div>
+  </div>
+</div>
+<div class="series">实战篇 第1章</div>
+</body>
+</html>

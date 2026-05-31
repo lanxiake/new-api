@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;height:500px;background:linear-gradient(135deg,#1a0a2e 0%,#2d1b4e 50%,#1a0a2e 100%);display:flex;align-items:center;justify-content:center;font-family:'PingFang SC','Microsoft YaHei',sans-serif;position:relative;overflow:hidden;}
+.wrap{display:flex;align-items:center;gap:60px;padding:40px 60px;width:100%;}
+.left{flex:1;}
+.eyebrow{font-size:13px;color:#8b5cf6;letter-spacing:2px;margin-bottom:12px;}
+.title{font-size:42px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:16px;}
+.title em{color:#f87171;font-style:normal;}
+.sub{font-size:16px;color:#a0889e;line-height:1.6;}
+.right{flex:0 0 310px;}
+.error-card{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:14px;padding:18px 20px;font-family:'Courier New',monospace;}
+.err-title{font-size:12px;color:#f87171;font-weight:700;margin-bottom:10px;font-family:'PingFang SC',sans-serif;}
+.err-line{font-size:12px;color:#fca5a5;line-height:1.8;}
+.err-key{color:#f87171;font-weight:700;}
+.resolve{margin-top:12px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);border-radius:8px;padding:8px 12px;font-family:'PingFang SC',sans-serif;font-size:12px;color:#86efac;}
+.series{position:absolute;bottom:20px;right:28px;color:#3a2a5a;font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="left">
+    <div class="eyebrow">《人人都能用AI写程序》第09篇</div>
+    <div class="title">报错不是<br><em>失败信号</em></div>
+    <div class="sub">读懂红字，喂给 AI<br>90% 的报错都能修好</div>
+  </div>
+  <div class="right">
+    <div class="error-card">
+      <div class="err-title">📛 典型报错长这样</div>
+      <div class="err-line"><span class="err-key">Traceback</span> (most recent call last):</div>
+      <div class="err-line">&nbsp;&nbsp;File <span class="err-key">"accounting.py"</span>, line <span class="err-key">23</span></div>
+      <div class="err-line">&nbsp;&nbsp;&nbsp;&nbsp;return json.load(f)</div>
+      <div class="err-line"><span class="err-key">JSONDecodeError</span>: Expecting value</div>
+      <div class="resolve">只需看最后一行 + 行号，其他不用管</div>
+    </div>
+  </div>
+</div>
+<div class="series">实战篇 第2章</div>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#f4f6fa;font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:48px 52px;}
+.title{text-align:center;font-size:22px;font-weight:800;color:#1a2744;margin-bottom:6px;}
+.sub{text-align:center;font-size:14px;color:#8a96b0;margin-bottom:40px;}
+.flow{display:flex;align-items:stretch;gap:0;}
+.layer{flex:1;border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,0.1);}
+.layer-head{padding:20px 20px 16px;text-align:center;}
+.layer-icon{font-size:32px;margin-bottom:8px;}
+.layer-name{font-size:18px;font-weight:800;margin-bottom:4px;}
+.layer-tag{font-size:12px;opacity:.8;letter-spacing:1px;}
+.layer-body{background:#fff;padding:18px 20px;}
+.layer-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:10px;font-size:13px;color:#444;line-height:1.5;}
+.layer-item::before{content:"•";color:inherit;opacity:.5;flex-shrink:0;margin-top:1px;}
+.analogy{background:#f8faff;border-left:3px solid;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#555;margin-top:12px;line-height:1.6;}
+.arrow-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 14px;gap:6px;}
+.arrow-line{width:2px;height:40px;background:linear-gradient(to bottom,#94a3b8,#64748b);}
+.arrow-head{color:#64748b;font-size:18px;}
+.arrow-label{font-size:11px;color:#94a3b8;writing-mode:vertical-rl;letter-spacing:1px;}
+.bottom{margin-top:28px;background:#1a2744;border-radius:12px;padding:16px 24px;text-align:center;color:#fff;font-size:15px;font-weight:600;}
+.bottom span{color:#00d4ff;}
+</style>
+</head>
+<body>
+<div class="title">三层架构·寄快递类比</div>
+<div class="sub">一次点击背后，是前端 → 后端 → 数据库的三层接力</div>
+<div class="flow">
+  <div class="layer">
+    <div class="layer-head" style="background:linear-gradient(135deg,#0ea5e9,#06b6d4);">
+      <div class="layer-icon">🖥️</div>
+      <div class="layer-name" style="color:#fff;">前端</div>
+      <div class="layer-tag" style="color:rgba(255,255,255,.8);">Vue · HTML · CSS</div>
+    </div>
+    <div class="layer-body">
+      <div class="layer-item">用户看到的所有界面</div>
+      <div class="layer-item">按钮、表单、图片、动画</div>
+      <div class="layer-item">收集用户输入，展示结果</div>
+      <div class="layer-item">不存数据，不做判断</div>
+      <div class="analogy" style="border-color:#0ea5e9;">
+        🏪 类比：购物网站的网页<br>展示商品、让你填地址，但不知道仓库有多少货
+      </div>
+    </div>
+  </div>
+  <div class="arrow-wrap">
+    <div class="arrow-label">请求</div>
+    <div class="arrow-line"></div>
+    <div class="arrow-head">⇄</div>
+    <div class="arrow-line"></div>
+    <div class="arrow-label">响应</div>
+  </div>
+  <div class="layer">
+    <div class="layer-head" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">
+      <div class="layer-icon">⚙️</div>
+      <div class="layer-name" style="color:#fff;">后端</div>
+      <div class="layer-tag" style="color:rgba(255,255,255,.8);">Python · Flask · Node</div>
+    </div>
+    <div class="layer-body">
+      <div class="layer-item">处理所有业务逻辑</div>
+      <div class="layer-item">验证账号、计算金额、权限判断</div>
+      <div class="layer-item">连接数据库读写数据</div>
+      <div class="layer-item">调用第三方服务（支付/短信）</div>
+      <div class="analogy" style="border-color:#6366f1;">
+        🏢 类比：快递调度中心<br>决定从哪发货、走哪条路线、通知哪个快递员
+      </div>
+    </div>
+  </div>
+  <div class="arrow-wrap">
+    <div class="arrow-label">查询</div>
+    <div class="arrow-line"></div>
+    <div class="arrow-head">⇄</div>
+    <div class="arrow-line"></div>
+    <div class="arrow-label">数据</div>
+  </div>
+  <div class="layer">
+    <div class="layer-head" style="background:linear-gradient(135deg,#10b981,#059669);">
+      <div class="layer-icon">🗄️</div>
+      <div class="layer-name" style="color:#fff;">数据库</div>
+      <div class="layer-tag" style="color:rgba(255,255,255,.8);">MySQL · PostgreSQL</div>
+    </div>
+    <div class="layer-body">
+      <div class="layer-item">永久保存所有数据</div>
+      <div class="layer-item">用户信息、交易记录、设置</div>
+      <div class="layer-item">程序关闭数据不消失</div>
+      <div class="layer-item">支持查询、统计、过滤</div>
+      <div class="analogy" style="border-color:#10b981;">
+        📒 类比：仓库台账本<br>每笔单子、每个地址、每个包裹状态全记在上面
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bottom">前端发请求 → <span>后端处理</span> → 数据库存取 → 后端返回 → <span>前端展示</span></div>
+</body>
+</html>

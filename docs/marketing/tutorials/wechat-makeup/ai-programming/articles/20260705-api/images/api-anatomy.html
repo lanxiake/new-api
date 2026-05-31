@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#f4f6fa;font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:40px 52px;}
+.title{text-align:center;font-size:20px;font-weight:800;color:#1a2744;margin-bottom:6px;}
+.sub{text-align:center;font-size:13px;color:#8a96b0;margin-bottom:30px;}
+.url-bar{background:#fff;border-radius:10px;padding:16px 20px;box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:16px;}
+.url-label{font-size:11px;color:#94a3b8;margin-bottom:8px;letter-spacing:1px;}
+.url-text{font-family:'Courier New',monospace;font-size:13px;color:#1e293b;background:#f8fafc;padding:8px 12px;border-radius:6px;word-break:break-all;}
+.parts{display:flex;gap:12px;margin-bottom:16px;}
+.part{flex:1;background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.part-num{width:22px;height:22px;border-radius:50%;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;color:#fff;margin-bottom:8px;}
+.part-name{font-size:13px;font-weight:700;color:#1e293b;margin-bottom:4px;}
+.part-val{font-family:'Courier New',monospace;font-size:11px;color:#475569;background:#f8fafc;padding:4px 8px;border-radius:4px;margin-bottom:6px;}
+.part-desc{font-size:11px;color:#94a3b8;line-height:1.5;}
+.response{background:#fff;border-radius:10px;padding:16px 20px;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.resp-label{font-size:11px;color:#94a3b8;margin-bottom:8px;letter-spacing:1px;}
+.resp-code{font-family:'Courier New',monospace;font-size:12px;background:#0f172a;color:#e2e8f0;padding:12px 16px;border-radius:8px;line-height:1.7;}
+.resp-code .key{color:#93c5fd;}
+.resp-code .val{color:#86efac;}
+</style>
+</head>
+<body>
+<div class="title">API 调用解剖</div>
+<div class="sub">一个 API 请求由三部分组成</div>
+<div class="url-bar">
+  <div class="url-label">完整请求 URL</div>
+  <div class="url-text">https://v6.exchangeapi.com/v6/<span style="color:#f59e0b;">YOUR_API_KEY</span>/pair/<span style="color:#818cf8;">USD</span>/<span style="color:#34d399;">CNY</span></div>
+</div>
+<div class="parts">
+  <div class="part">
+    <div class="part-num" style="background:#3b82f6;">1</div>
+    <div class="part-name">Base URL（去哪）</div>
+    <div class="part-val">v6.exchangeapi.com</div>
+    <div class="part-desc">API 服务的地址，就像餐厅的门牌号</div>
+  </div>
+  <div class="part">
+    <div class="part-num" style="background:#f59e0b;">2</div>
+    <div class="part-name">API Key（你是谁）</div>
+    <div class="part-val">YOUR_API_KEY</div>
+    <div class="part-desc">注册后获得的密钥，让服务方认识你、计费</div>
+  </div>
+  <div class="part">
+    <div class="part-num" style="background:#8b5cf6;">3</div>
+    <div class="part-name">参数（要什么）</div>
+    <div class="part-val">/pair/USD/CNY</div>
+    <div class="part-desc">你的"点单"：把美元换算成人民币</div>
+  </div>
+</div>
+<div class="response">
+  <div class="resp-label">API 返回的 JSON 数据</div>
+  <div class="resp-code">
+    {<br>
+    &nbsp;&nbsp;<span class="key">"result"</span>: <span class="val">"success"</span>,<br>
+    &nbsp;&nbsp;<span class="key">"base_code"</span>: <span class="val">"USD"</span>,<br>
+    &nbsp;&nbsp;<span class="key">"target_code"</span>: <span class="val">"CNY"</span>,<br>
+    &nbsp;&nbsp;<span class="key">"conversion_rate"</span>: <span class="val">7.2341</span><br>
+    }
+  </div>
+</div>
+</body>
+</html>

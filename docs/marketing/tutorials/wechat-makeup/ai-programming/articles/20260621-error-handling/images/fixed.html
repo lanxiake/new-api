@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#0d1117;font-family:'Courier New','PingFang SC',monospace;padding:0;}
+.window{border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6);}
+.titlebar{background:#1e2a3a;padding:12px 16px;display:flex;align-items:center;gap:8px;}
+.btn{width:12px;height:12px;border-radius:50%;}
+.win-title{flex:1;text-align:center;font-size:12px;color:#4a6a8a;font-family:'PingFang SC',sans-serif;}
+.term{background:#0d1117;padding:20px 24px;}
+.line{font-size:13px;line-height:1.9;}
+.prompt{color:#34d399;}
+.cmd{color:#e2e8f0;}
+.gray{color:#4a6a8a;}
+.red{color:#f87171;}
+.green{color:#34d399;}
+.yellow{color:#fbbf24;}
+.blue{color:#60a5fa;}
+.purple{color:#c084fc;}
+.section{margin-top:16px;padding-top:12px;border-top:1px solid #1e2a3a;}
+.section-label{font-size:11px;color:#4a6a8a;margin-bottom:8px;font-family:'PingFang SC',sans-serif;letter-spacing:1px;}
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <div class="btn" style="background:#ff5f57;"></div>
+    <div class="btn" style="background:#febc2e;"></div>
+    <div class="btn" style="background:#28c840;"></div>
+    <div class="win-title">报错修复 — 修复前 vs 修复后</div>
+  </div>
+  <div class="term">
+    <div class="section-label">【修复前】data.json 不存在时崩溃</div>
+    <div class="line"><span class="prompt">$ </span><span class="cmd">python accounting.py</span></div>
+    <div class="line"><span class="gray">Traceback (most recent call last):</span></div>
+    <div class="line"><span class="gray">&nbsp;&nbsp;File "accounting.py", line 23</span></div>
+    <div class="line"><span class="red">FileNotFoundError: [Errno 2] No such file or directory: 'data.json'</span></div>
+
+    <div class="section">
+      <div class="section-label">【修复后】自动创建空文件，正常启动</div>
+      <div class="line"><span class="prompt">$ </span><span class="cmd">python accounting.py</span></div>
+      <div class="line"><span class="yellow">提示：数据文件不存在，已自动创建空记录文件</span></div>
+      <div class="line"><br></div>
+      <div class="line"><span class="purple">====== 个人记账小工具 ======</span></div>
+      <div class="line"><span class="blue">1. 记一笔账</span></div>
+      <div class="line"><span class="blue">2. 查看所有账单</span></div>
+      <div class="line"><span class="blue">3. 查看当前余额</span></div>
+      <div class="line"><span class="blue">4. 退出程序</span></div>
+      <div class="line"><span class="green">——————————————</span></div>
+      <div class="line"><span class="green">请选择操作 (1-4): _</span></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

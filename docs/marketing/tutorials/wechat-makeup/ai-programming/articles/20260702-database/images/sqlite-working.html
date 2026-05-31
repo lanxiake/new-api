@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#0d1117;font-family:'Courier New','PingFang SC',monospace;padding:20px;}
+.browser{background:#1a1a2e;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.4);}
+.bar{background:#111827;padding:10px 16px;display:flex;align-items:center;gap:10px;}
+.dots{display:flex;gap:6px;}
+.dot{width:11px;height:11px;border-radius:50%;}
+.url{flex:1;background:#1f2937;border-radius:6px;padding:5px 12px;font-size:12px;color:#60a5fa;font-family:'Courier New',monospace;}
+.content{padding:16px 20px;}
+.section-title{font-size:11px;color:#4a5a7a;margin-bottom:10px;letter-spacing:1px;font-family:'PingFang SC',sans-serif;}
+.record-card{background:#111827;border-radius:8px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;border-left:3px solid;}
+.rec-date{font-size:11px;color:#6a7a9a;flex:0 0 80px;}
+.rec-note{font-size:13px;color:#e2e8f0;flex:1;font-family:'PingFang SC',sans-serif;}
+.rec-type{font-size:11px;padding:2px 8px;border-radius:4px;font-family:'PingFang SC',sans-serif;}
+.rec-amount{font-size:15px;font-weight:700;flex:0 0 80px;text-align:right;}
+.stats{display:flex;gap:12px;margin-top:14px;}
+.stat{flex:1;background:#111827;border-radius:8px;padding:10px 14px;text-align:center;}
+.stat-label{font-size:11px;color:#4a5a7a;margin-bottom:4px;font-family:'PingFang SC',sans-serif;}
+.stat-val{font-size:18px;font-weight:800;}
+.db-badge{margin-top:12px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);border-radius:6px;padding:7px 14px;font-size:11px;color:#34d399;text-align:center;font-family:'PingFang SC',sans-serif;}
+</style>
+</head>
+<body>
+<div class="browser">
+  <div class="bar">
+    <div class="dots">
+      <div class="dot" style="background:#ff5f57;"></div>
+      <div class="dot" style="background:#febc2e;"></div>
+      <div class="dot" style="background:#28c840;"></div>
+    </div>
+    <div class="url">localhost:5000 · 已连接 SQLite 数据库</div>
+  </div>
+  <div class="content">
+    <div class="section-title">最近记录 · 共 4 条（重启后数据仍在）</div>
+    <div class="record-card" style="border-color:#34d399;">
+      <span class="rec-date">2025-01-05</span>
+      <span class="rec-note">月度工资</span>
+      <span class="rec-type" style="background:rgba(52,211,153,.15);color:#34d399;">收入</span>
+      <span class="rec-amount" style="color:#34d399;">+8,500</span>
+    </div>
+    <div class="record-card" style="border-color:#f87171;">
+      <span class="rec-date">2025-01-04</span>
+      <span class="rec-note">超市采购</span>
+      <span class="rec-type" style="background:rgba(248,113,113,.15);color:#f87171;">支出</span>
+      <span class="rec-amount" style="color:#f87171;">-320</span>
+    </div>
+    <div class="record-card" style="border-color:#f87171;">
+      <span class="rec-date">2025-01-03</span>
+      <span class="rec-note">午饭+咖啡</span>
+      <span class="rec-type" style="background:rgba(248,113,113,.15);color:#f87171;">支出</span>
+      <span class="rec-amount" style="color:#f87171;">-68</span>
+    </div>
+    <div class="record-card" style="border-color:#34d399;">
+      <span class="rec-date">2025-01-02</span>
+      <span class="rec-note">兼职收入</span>
+      <span class="rec-type" style="background:rgba(52,211,153,.15);color:#34d399;">收入</span>
+      <span class="rec-amount" style="color:#34d399;">+1,200</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">本月收入</div><div class="stat-val" style="color:#34d399;">9,700</div></div>
+      <div class="stat"><div class="stat-label">本月支出</div><div class="stat-val" style="color:#f87171;">388</div></div>
+      <div class="stat"><div class="stat-label">结余</div><div class="stat-val" style="color:#60a5fa;">9,312</div></div>
+    </div>
+    <div class="db-badge">✅ 数据存储在 SQLite · 重启 / 重新部署后数据不丢失</div>
+  </div>
+</div>
+</body>
+</html>

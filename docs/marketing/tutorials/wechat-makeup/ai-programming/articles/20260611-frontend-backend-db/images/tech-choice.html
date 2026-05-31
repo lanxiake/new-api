@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#0a1628;font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:48px 56px;}
+.title{text-align:center;font-size:22px;font-weight:800;color:#fff;margin-bottom:6px;}
+.sub{text-align:center;font-size:14px;color:#4a7a9a;margin-bottom:36px;}
+.cards{display:flex;gap:20px;}
+.card{flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:16px;overflow:hidden;}
+.card-head{padding:20px 20px 16px;text-align:center;}
+.card-icon{font-size:36px;margin-bottom:10px;}
+.card-name{font-size:17px;font-weight:800;margin-bottom:4px;}
+.card-en{font-size:11px;opacity:.6;letter-spacing:2px;font-family:monospace;}
+.card-body{padding:16px 20px;}
+.why{font-size:13px;color:#aac4d4;line-height:1.7;margin-bottom:12px;}
+.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.5px;}
+.footer{margin-top:28px;text-align:center;font-size:13px;color:#2a5a7a;padding:16px;background:rgba(255,255,255,0.03);border-radius:10px;}
+.footer span{color:#00d4ff;}
+</style>
+</head>
+<body>
+<div class="title">为什么选这个技术栈？</div>
+<div class="sub">不是最好的，是对零基础 + AI 最友好的</div>
+<div class="cards">
+  <div class="card">
+    <div class="card-head" style="background:rgba(59,130,246,0.15);">
+      <div class="card-icon">🐍</div>
+      <div class="card-name" style="color:#60a5fa;">Python</div>
+      <div class="card-en" style="color:#60a5fa;">后端语言</div>
+    </div>
+    <div class="card-body">
+      <div class="why">AI 训练数据里 Python 代码最多，生成质量最高，报错信息最容易看懂。零基础跑通率最高。</div>
+      <span class="badge" style="background:rgba(59,130,246,0.2);color:#60a5fa;">AI 生成质量 No.1</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head" style="background:rgba(52,211,153,0.15);">
+      <div class="card-icon">💚</div>
+      <div class="card-name" style="color:#34d399;">Vue 3</div>
+      <div class="card-en" style="color:#34d399;">前端框架</div>
+    </div>
+    <div class="card-body">
+      <div class="why">国内用得最多，中文文档丰富，移动端有 uniapp 加成。AI 生成的 Vue 代码 bug 少。</div>
+      <span class="badge" style="background:rgba(52,211,153,0.2);color:#34d399;">国内生态最强</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head" style="background:rgba(251,191,36,0.15);">
+      <div class="card-icon">🗄️</div>
+      <div class="card-name" style="color:#fbbf24;">MySQL</div>
+      <div class="card-en" style="color:#fbbf24;">数据库</div>
+    </div>
+    <div class="card-body">
+      <div class="why">免费、通用，几乎所有主机和云服务都支持。安装资料最多，学会后触类旁通其他数据库。</div>
+      <span class="badge" style="background:rgba(251,191,36,0.2);color:#fbbf24;">兼容性最广</span>
+    </div>
+  </div>
+</div>
+<div class="footer">掌握方法论之后，换其他技术会非常轻松——<span>方法才是核心，工具只是载体</span></div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#f5f7fa;font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:48px;}
+.title{text-align:center;font-size:26px;font-weight:800;color:#1a2744;margin-bottom:8px;}
+.sub{text-align:center;font-size:14px;color:#8a96b0;margin-bottom:40px;}
+.compare{display:flex;gap:0;border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.12);}
+.col{flex:1;padding:36px 32px;}
+.col.gui{background:#fff;}
+.col.term{background:#0d1117;}
+.divider{width:4px;background:linear-gradient(to bottom,#2563eb,#00d4ff);}
+.col-title{font-size:18px;font-weight:700;margin-bottom:24px;}
+.col.gui .col-title{color:#1a2744;}
+.col.term .col-title{color:#00d4ff;}
+.item{display:flex;align-items:flex-start;gap:12px;margin-bottom:20px;}
+.icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.gui .icon{background:#e8f0fe;}
+.term-icon{background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);}
+.item-text .name{font-size:15px;font-weight:600;margin-bottom:4px;}
+.gui .item-text .name{color:#1a2744;}
+.term .item-text .name{color:#fff;font-family:monospace;}
+.item-text .desc{font-size:13px;color:#8a96b0;}
+.term .item-text .desc{color:#4a7a9a;}
+.bottom{margin-top:32px;text-align:center;background:#e8f4ff;border-radius:12px;padding:20px;}
+.bottom-text{font-size:17px;font-weight:700;color:#1a2744;}
+.bottom-text span{color:#2563eb;}
+</style>
+</head>
+<body>
+<div class="title">两种和电脑沟通的方式</div>
+<div class="sub">终端只是换了一种方式——用打字代替点击</div>
+<div class="compare">
+  <div class="col gui">
+    <div class="col-title">图形界面（点击）</div>
+    <div class="item">
+      <div class="icon">🖱️</div>
+      <div class="item-text">
+        <div class="name">看图标，点按钮</div>
+        <div class="desc">直观，但只能做菜单里有的操作</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="icon">📁</div>
+      <div class="item-text">
+        <div class="name">双击文件夹</div>
+        <div class="desc">在文件夹里浏览、拖拽</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="icon">🖥️</div>
+      <div class="item-text">
+        <div class="name">右键新建</div>
+        <div class="desc">每步都需要鼠标操作</div>
+      </div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="col term">
+    <div class="col-title">终端（打字）</div>
+    <div class="item">
+      <div class="icon term-icon" style="color:#39ff14;font-family:monospace;font-size:14px;font-weight:700;">$_</div>
+      <div class="item-text">
+        <div class="name">打字，回车</div>
+        <div class="desc" style="color:#4a8a6a;">灵活，能做任何你能描述的事</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="icon term-icon" style="color:#00d4ff;font-family:monospace;font-size:13px;">cd</div>
+      <div class="item-text">
+        <div class="name">cd 文件夹名</div>
+        <div class="desc" style="color:#4a8a6a;">= 双击文件夹</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="icon term-icon" style="color:#00d4ff;font-family:monospace;font-size:10px;">mkdir</div>
+      <div class="item-text">
+        <div class="name">mkdir 名称</div>
+        <div class="desc" style="color:#4a8a6a;">= 右键新建文件夹</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bottom">
+  <div class="bottom-text">终端 = 用<span>打字</span>和电脑聊天，跟发微信没本质区别</div>
+</div>
+</body>
+</html>

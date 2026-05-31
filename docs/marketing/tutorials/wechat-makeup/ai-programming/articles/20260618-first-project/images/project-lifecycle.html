@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:900px;background:#0a1628;font-family:'PingFang SC','Microsoft YaHei',sans-serif;padding:44px 52px;}
+.title{text-align:center;font-size:21px;font-weight:800;color:#fff;margin-bottom:6px;}
+.sub{text-align:center;font-size:13px;color:#4a7a9a;margin-bottom:36px;}
+.flow{display:flex;flex-direction:column;gap:0;}
+.row{display:flex;align-items:stretch;gap:0;}
+.phase{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 18px;margin:4px;}
+.phase-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.phase-icon{font-size:22px;}
+.phase-name{font-size:14px;font-weight:700;}
+.phase-role{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600;}
+.phase-desc{font-size:12px;color:#6a8aaa;line-height:1.7;}
+.arrow-row{display:flex;justify-content:center;align-items:center;height:28px;gap:8px;}
+.arrow{color:#2a5a7a;font-size:20px;font-weight:900;}
+.arrow-label{font-size:11px;color:#2a5a7a;}
+.principle{margin-top:24px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:14px;}
+.p-icon{font-size:24px;flex-shrink:0;}
+.p-text{font-size:13px;color:#fde68a;line-height:1.6;}
+.p-text strong{color:#fbbf24;}
+</style>
+</head>
+<body>
+<div class="title">一个项目的完整生命周期</div>
+<div class="sub">软件开发不是"说一句话等 AI 写完"——它是一个来回的协作循环</div>
+<div class="flow">
+  <div class="row">
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-icon">💡</div>
+        <div>
+          <div class="phase-name" style="color:#60a5fa;">① 想法与需求</div>
+          <div class="phase-role" style="background:rgba(59,130,246,.15);color:#60a5fa;">你来做</div>
+        </div>
+      </div>
+      <div class="phase-desc">用"做·有·存·用"框架把模糊想法拆成 AI 能执行的具体需求描述</div>
+    </div>
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-icon">🤖</div>
+        <div>
+          <div class="phase-name" style="color:#a78bfa;">② AI 实现</div>
+          <div class="phase-role" style="background:rgba(167,139,250,.15);color:#a78bfa;">AI 来做</div>
+        </div>
+      </div>
+      <div class="phase-desc">AI 根据需求生成完整代码，包括文件结构、数据存取、错误处理</div>
+    </div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow">↕</div>
+    <div class="arrow-label">循环迭代，直到满意</div>
+    <div class="arrow">↕</div>
+  </div>
+  <div class="row">
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-icon">🧪</div>
+        <div>
+          <div class="phase-name" style="color:#34d399;">③ 你来测试</div>
+          <div class="phase-role" style="background:rgba(52,211,153,.15);color:#34d399;">你来做</div>
+        </div>
+      </div>
+      <div class="phase-desc">运行程序，试每个功能。发现问题不是失败——发现问题才是测试的意义</div>
+    </div>
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-icon">🔧</div>
+        <div>
+          <div class="phase-name" style="color:#fb923c;">④ AI 修复</div>
+          <div class="phase-role" style="background:rgba(251,146,60,.15);color:#fb923c;">AI 来做</div>
+        </div>
+      </div>
+      <div class="phase-desc">把问题精准描述给 AI："在什么情况下，出现了什么，期望是什么"</div>
+    </div>
+  </div>
+</div>
+<div class="principle">
+  <div class="p-icon">🎯</div>
+  <div class="p-text">你的角色是<strong>产品经理 + 测试员</strong>，不是程序员。AI 写代码，你负责判断对不对、描述哪里不对。这个分工对了，效率高 10 倍。</div>
+</div>
+</body>
+</html>

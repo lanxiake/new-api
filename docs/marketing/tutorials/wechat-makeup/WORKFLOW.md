@@ -1,7 +1,7 @@
 # 端到端工作流 SOP（照这个就能复现整套创作）
 
 > 从「一句话主题」到「公众号草稿」的完整流程。每步给出实际命令，新环境照做即可。
-> 配合 `SETUP.md`（环境）和 `skills/*/SKILL.md`（各技能细节）使用。
+> 配合 `SETUP.md`（环境）和 `wechat-makeup/*/SKILL.md`（各技能细节）使用。
 
 ---
 
@@ -11,7 +11,7 @@
 主题 → ①研究 → ②大纲(8段式) → ③写作 → ④配图(分层) → ⑤生成publish.md → ⑥发布草稿 → 人工审核推送
 ```
 
-各阶段细节见 `skills/article-writing-pipeline/SKILL.md`。本文件聚焦**可操作命令**。
+各阶段细节见 `wechat-makeup/article-writing-pipeline/SKILL.md`。本文件聚焦**可操作命令**。
 
 ---
 
@@ -20,7 +20,7 @@
 参考同主题高浏览量爆款，学其标题/叙事/配图思想（不照搬）。抓竞品文：
 
 ```bash
-python skills/cloakbrowser-scraper/scripts/scrape.py "<公众号文章URL>" --out-dir ref_x
+python wechat-makeup/cloakbrowser-scraper/scripts/scrape.py "<公众号文章URL>" --out-dir ref_x
 # 正文在 ref_x/body.txt，图片URL在 ref_x/meta.json
 ```
 
@@ -29,7 +29,7 @@ python skills/cloakbrowser-scraper/scripts/scrape.py "<公众号文章URL>" --ou
 ## ② + ③ 大纲与写作
 
 - 遵循大纲 `../00-series-outline.md` 的篇目规划和 8 段式骨架。
-- 写作铁律、术语类比库、叙事进阶规则、内容深度标准，全在 `skills/article-writing-pipeline/SKILL.md`。
+- 写作铁律、术语类比库、叙事进阶规则、内容深度标准，全在 `wechat-makeup/article-writing-pipeline/SKILL.md`。
 - 产出 `articles/<日期-slug>/final.md`（带 `<!-- IMAGE:xx -->` 占位标记）。
 
 **核心要点速记**：
@@ -74,21 +74,21 @@ for att in range(5):
 
 gpt 反复出乱码、或文字必须分毫不差时，用 HTML 模板精确绘制再截图：
 ```bash
-# 模板在 skills/cloakbrowser-scraper/templates/ :
+# 模板在 wechat-makeup/cloakbrowser-scraper/templates/ :
 #   dark-infographic.html(黑底高级) infographic.html(白底手绘) terminal.html(终端) ai-chat.html(对话) firework.html(动效)
-python skills/cloakbrowser-scraper/scripts/screenshot.py <改好的html> images/xx.png .wrap 2800 800 760
+python wechat-makeup/cloakbrowser-scraper/scripts/screenshot.py <改好的html> images/xx.png .wrap 2800 800 760
 ```
 
 ### 4c. 动态对比/演示 → GIF（gpt 做不了的）
 
 ```bash
-python skills/cloakbrowser-scraper/scripts/html_to_gif.py <动画html> images/xx.gif 30 280 720 400
+python wechat-makeup/cloakbrowser-scraper/scripts/html_to_gif.py <动画html> images/xx.gif 30 280 720 400
 ```
 
 ### 4d. 真实运行成果 → 截真页面（绝不AI编）
 
 ```bash
-python skills/cloakbrowser-scraper/scripts/screenshot.py <本地html或URL> images/xx.png
+python wechat-makeup/cloakbrowser-scraper/scripts/screenshot.py <本地html或URL> images/xx.png
 ```
 
 ---
@@ -126,7 +126,7 @@ open('publish.md','w',encoding='utf-8').write(fm+body.strip()+'\n')
 ```bash
 cd articles/<日期-slug>
 WECHAT_APP_ID=xx WECHAT_APP_SECRET=xx \
-  python <path>/skills/wechat-publisher/scripts/publish.py publish.md
+  python <path>/wechat-makeup/wechat-publisher/scripts/publish.py publish.md
 # 输出 [OK] 草稿已保存! media_id=... 即成功
 # 登录 mp.weixin.qq.com → 内容管理 → 草稿箱 人工审核后再推送(脚本只存草稿,不群发)
 ```

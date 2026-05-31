@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 900px;
+  height: 500px;
+  background: linear-gradient(135deg, #fff5ec 0%, #ffe4cc 60%, #ffd4b0 100%);
+  font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 装饰圆 */
+.deco-circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.15;
+}
+.c1 { width: 320px; height: 320px; background: #e8734a; top: -80px; right: -60px; }
+.c2 { width: 180px; height: 180px; background: #f0a070; bottom: -40px; left: 60px; }
+.c3 { width: 80px; height: 80px; background: #e8734a; top: 60px; left: 280px; }
+
+.left {
+  flex: 1;
+  padding: 50px 40px 50px 60px;
+}
+
+.series-tag {
+  display: inline-block;
+  background: #e8734a;
+  color: white;
+  font-size: 13px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
+.main-title {
+  font-size: 32px;
+  font-weight: 900;
+  color: #2d1a0e;
+  line-height: 1.35;
+  margin-bottom: 22px;
+}
+
+.main-title span {
+  color: #e8734a;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: #7a5540;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.points {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.point {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #4a3020;
+}
+
+.point-dot {
+  width: 8px;
+  height: 8px;
+  background: #e8734a;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.right {
+  width: 280px;
+  padding: 40px 40px 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: 0 8px 32px rgba(232,115,74,0.18);
+  text-align: center;
+  width: 100%;
+}
+
+.card-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 14px;
+}
+
+.card-question {
+  font-size: 14px;
+  color: #7a5540;
+  line-height: 1.7;
+}
+
+.card-number {
+  margin-top: 16px;
+  font-size: 13px;
+  color: #e8734a;
+  font-weight: bold;
+}
+
+.account {
+  position: absolute;
+  bottom: 24px;
+  right: 40px;
+  font-size: 12px;
+  color: #b08060;
+  z-index: 2;
+}
+</style>
+</head>
+<body>
+<div class="deco-circle c1"></div>
+<div class="deco-circle c2"></div>
+<div class="deco-circle c3"></div>
+
+<div class="left">
+  <div class="series-tag">教育是一场对自己的救赎 · 第01篇</div>
+  <div class="main-title">你吼孩子的那一刻<br>你在<span>保护谁</span>？</div>
+  <div class="subtitle">愤怒背后，藏着你从没<br>被认真对待过的那部分</div>
+  <div class="points">
+    <div class="point"><div class="point-dot"></div><span>发火的真正来源，不是孩子</span></div>
+    <div class="point"><div class="point-dot"></div><span>30秒暂停，比道歉管用十倍</span></div>
+    <div class="point"><div class="point-dot"></div><span>AI对比两个自己，选择哪条路</span></div>
+  </div>
+</div>
+
+<div class="right">
+  <div class="card">
+    <div class="card-icon">
+      <!-- 镜子SVG图标 -->
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="28" cy="24" rx="12" ry="14" stroke="#e8734a" stroke-width="2.5"/>
+        <path d="M20 42h16M28 38v6" stroke="#e8734a" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M20 16c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#f0b080" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 2"/>
+      </svg>
+    </div>
+    <div class="card-question">发完火之后<br>受伤的那个<br>好像不只是孩子</div>
+    <div class="card-number">陪你一起长大</div>
+  </div>
+</div>
+
+<div class="account">陪你一起长大</div>
+</body>
+</html>
