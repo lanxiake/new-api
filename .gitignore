@@ -41,3 +41,12 @@ new-api-old
 # docs/marketing/accounts.md
 docs/marketing/scripts/browser-profiles/
 .git-rewrite/
+.baoyu-skills/
+
+# 文章发布过程性临时文件(不入库)
+wechat_profile/
+wechat_publish_api.py
+article_body.txt
+docs/marketing/tutorials/**/demo/
+docs/marketing/tutorials/**/publish.md
+docs/marketing/tutorials/**/*.docx
