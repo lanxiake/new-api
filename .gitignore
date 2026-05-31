@@ -50,3 +50,7 @@ article_body.txt
 docs/marketing/tutorials/**/demo/
 docs/marketing/tutorials/**/publish.md
 docs/marketing/tutorials/**/*.docx
+
+# 竞品抓取临时目录
+ref_*/
+_test/
