@@ -31,6 +31,55 @@ func TestClaudeSettingsWriteHeadersMergesConfiguredValuesIntoSingleHeader(t *tes
 	}
 }
 
+func TestClaudeSettingsWriteHeadersInjects1MContextBetaWhenClientOmitsIt(t *testing.T) {
+	settings := &ClaudeSettings{
+		HeadersSettings: map[string]map[string][]string{
+			"claude-opus-4-8": {
+				"anthropic-beta": {
+					"context-1m-2025-08-07",
+				},
+			},
+		},
+	}
+
+	// client request WITHOUT the 1m beta header (the failing manual case)
+	headers := http.Header{}
+
+	settings.WriteHeaders("claude-opus-4-8", &headers)
+
+	got := headers.Get("anthropic-beta")
+	if got != "context-1m-2025-08-07" {
+		t.Fatalf("expected 1m beta injected, got %q", got)
+	}
+}
+
+func TestClaudeSettingsWriteHeadersMerges1MContextWithClientBetaWithoutDuplicating(t *testing.T) {
+	settings := &ClaudeSettings{
+		HeadersSettings: map[string]map[string][]string{
+			"claude-opus-4-8": {
+				"anthropic-beta": {
+					"context-1m-2025-08-07",
+				},
+			},
+		},
+	}
+
+	// client already sends a full claude-code beta set including the 1m flag
+	headers := http.Header{}
+	headers.Set("anthropic-beta", "claude-code-20250219,context-1m-2025-08-07")
+
+	settings.WriteHeaders("claude-opus-4-8", &headers)
+
+	got := headers.Values("anthropic-beta")
+	if len(got) != 1 {
+		t.Fatalf("expected a single merged header value, got %v", got)
+	}
+	expected := "claude-code-20250219,context-1m-2025-08-07"
+	if got[0] != expected {
+		t.Fatalf("expected no duplicate 1m flag, got %q", got[0])
+	}
+}
+
 func TestClaudeSettingsWriteHeadersDeduplicatesAcrossCommaSeparatedAndRepeatedValues(t *testing.T) {
 	settings := &ClaudeSettings{
 		HeadersSettings: map[string]map[string][]string{
