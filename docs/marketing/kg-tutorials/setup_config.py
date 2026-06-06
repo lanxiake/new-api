@@ -12,7 +12,7 @@ import os
 import sys
 
 
-CONFIG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".kg-config.json")
+CONFIG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".kg-config.json")
 CONFIG_FILE = os.path.normpath(CONFIG_FILE)
 
 
@@ -75,9 +75,12 @@ def main():
     print(f"  API Key    : {cfg['llm_link_api_key'][:10]}..." if cfg['llm_link_api_key'] else "  API Key    : 未填写")
     print(f"  模型        : {cfg['llm_link_model']}")
     print("\n后续生图命令可省略环境变量，直接运行：")
-    print("  python kg-image-generator/scripts/generate_kg_image.py --batch ...")
+    print("  python sub-skills/kg-image-generator/scripts/generate_kg_image.py --batch ...")
     print("后续发布命令：")
-    print("  python kg-publisher/scripts/publish_wechat.py <wechat.md>")
+    print("  python sub-skills/kg-publisher/scripts/publish_wechat.py <wechat.md>")
+    print("\n建议下一步：")
+    print("  1. python doctor.py        # 验证配置可用性（含 API key 探测）")
+    print("  2. 阅读 START-HERE.md     # 一站式 AI 操作入口")
 
 
 if __name__ == "__main__":

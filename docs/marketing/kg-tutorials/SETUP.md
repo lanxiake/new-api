@@ -86,11 +86,15 @@ kg-tutorials/
 ├── WORKFLOW.md              ← 端到端 SOP
 ├── setup_config.py          ← 初始化配置向导 ⭐
 ├── .kg-config.json          ← 生成的配置文件（不进 git）
-├── kg-outline-planner/      ← 技能1：大纲规划
-├── kg-image-generator/      ← 技能2：生图引擎
-├── kg-publisher/            ← 技能3：多平台发布
-├── 参考图片/                 ← 视觉标杆（港珠澳大桥）
-└── typhoon/                 ← 《台风图鉴》✅ 已完成
+│
+├── sub-skills/              ← 可复用子技能（工具代码）
+│   ├── kg-outline-planner/  ← 技能1：大纲规划
+│   ├── kg-image-generator/  ← 技能2：生图引擎
+│   └── kg-publisher/        ← 技能3：多平台发布
+│
+└── data/                    ← 系列内容数据（大纲/图片/文案）
+    ├── 参考图片/              ← 视觉标杆（港珠澳大桥）
+    └── typhoon/              ← 《台风图鉴》✅ 已完成
 ```
 
 ---

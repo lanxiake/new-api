@@ -17,23 +17,23 @@
 
 ## 目录约定
 
-每个主体建立一个工作目录：`series/YYYYMMDD-主体-slug/`
+每个主体在 `data/` 下创建独立文件夹：`data/<主题拼音>/`
 
 ```
-series/20260531-volcano/
-├── brief.md          # 系列简介：主体分类、张数、风格、反直觉金句清单
-├── outline.md        # 分镜大纲：每张图的标题/副标题/标注/总结/科普说明
-├── prompts.md        # 每张图的英文生图 Prompt（按 ## #01-cover 分节）
-├── images/
-│   ├── raw/          # AI 生成的原始底图（无文字）
-│   ├── 01-cover.png  # 排版完成的最终图
-│   ├── 02-xxx.png
-│   └── ...
-└── publish/
-    ├── wechat.md     # 公众号发布用 markdown（含 frontmatter）
-    ├── xhs.md        # 小红书文案 + 话题标签
-    └── caption.md    # 各平台文案汇总
+data/
+└── volcano/                    ← 示例主题目录
+    ├── 00-series-outline.md    ← ⭐ 系列大纲（接手必读）
+    ├── brief.md                ← 系列简介：主体分类、反直觉金句清单、科学参考
+    ├── outline.md              ← 分镜大纲：每张图的标题/副标题/标注/总结/科普说明
+    ├── prompts.md              ← 每张图的英文生图 Prompt（按 ## #01-cover 分节）
+    ├── images/
+    │   └── raw/                ← AI 生成的成图（标题/标注/页脚已渲染在图内）
+    └── publish/
+        ├── wechat.md           ← 公众号发布用 markdown（含 frontmatter）
+        └── caption.md          ← 各平台文案汇总
 ```
+
+> 参考已完成的 `data/typhoon/` 目录结构，照着建即可。
 
 ---
 
@@ -51,12 +51,12 @@ series/20260531-volcano/
 - [主体] 与人类/环境的关系（最新研究结论）
 ```
 
-调用 `skills/kg-outline-planner/SKILL.md` 规范。
+调用 `sub-skills/kg-outline-planner/SKILL.md` 规范。
 
 **产出命令**（AI 执行，无需脚本）：
 1. 判断主体类型 → 选择分镜模块组合（4-7张）
 2. 为每张图写反直觉金句（必须有搜索依据，不凭记忆编造）
-3. 产出 `brief.md`（含「科学参考」段落）+ `outline.md`
+3. 产出 `data/<主题>/brief.md`（含「科学参考」段落）+ `data/<主题>/outline.md` + `data/<主题>/00-series-outline.md`
 
 **人工确认后再进行生图**（避免方向错误浪费配额）。
 
@@ -75,16 +75,19 @@ series/20260531-volcano/
 - [主体] 典型场景的参照（卫星图、剖面图、显微图等）
 ```
 
-调用 `skills/kg-image-generator/SKILL.md` 中的 Prompt 模板规范。
+调用 `sub-skills/kg-image-generator/SKILL.md` 中的 Prompt 模板规范。
 
-**产出文件**：`series/<slug>/prompts.md`，格式示例：
+**产出文件**：`data/<主题>/prompts.md`，格式示例：
 
 ```markdown
 ## #01-cover（封面/总览图）
-- 模块：M-OV
-- 尺寸：1024x1365
+- 模块：M00
+- 尺寸：1024x1365（3:4）
 - 完整Prompt：
-  Photorealistic 3D scientific illustration...（英文，100-200词）
+  [Image 1/N] 核心总览图 — 台风
+
+  SCENE:
+  ...
 ```
 
 ---
@@ -95,21 +98,22 @@ series/20260531-volcano/
 cd kg-tutorials
 
 # 单张测试（先确认封面风格）
-LLM_LINK_API_KEY="sk-..." \
-python skills/kg-image-generator/scripts/generate_kg_image.py \
-  --prompt-file series/<slug>/prompts.md \
+python sub-skills/kg-image-generator/scripts/generate_kg_image.py \
+  --prompt-file data/<主题>/prompts.md \
   --section 01-cover \
-  --output series/<slug>/images/raw/01-cover.png
+  --output data/<主题>/images/raw/01-cover.png
 
 # 封面通过后，批量生成所有图
-LLM_LINK_API_KEY="sk-..." \
-python skills/kg-image-generator/scripts/generate_kg_image.py \
-  --prompt-file series/<slug>/prompts.md \
+python sub-skills/kg-image-generator/scripts/generate_kg_image.py \
+  --prompt-file data/<主题>/prompts.md \
   --batch \
-  --output-dir series/<slug>/images/raw/
+  --output-dir data/<主题>/images/raw/
 ```
 
-生成后逐张检查（详见 `skills/kg-image-generator/SKILL.md` § 质检规范）。
+> 脚本自动读取 `.kg-config.json`，无需手动 export 环境变量。
+> 需要临时覆盖 key：`LLM_LINK_API_KEY="sk-..." python sub-skills/kg-image-generator/scripts/...`
+
+生成后逐张检查（详见 `sub-skills/kg-image-generator/SKILL.md` § 质检规范）。
 
 ---
 
@@ -127,8 +131,10 @@ python skills/kg-image-generator/scripts/generate_kg_image.py \
 ```
 
 根据 `outline.md` 中各张图的科普说明，撰写：
-- `publish/wechat.md` — 公众号长文（含 frontmatter）
-- `publish/caption.md` — 各平台文案汇总（公众号摘要/小红书/视频号口播）
+- `data/<主题>/publish/wechat.md` — 公众号长文（含 frontmatter）
+- `data/<主题>/publish/caption.md` — 各平台文案汇总（公众号摘要/小红书/视频号口播）
+
+详细规范见 `sub-skills/kg-publisher/SKILL.md`。
 
 ---
 
@@ -139,17 +145,18 @@ python skills/kg-image-generator/scripts/generate_kg_image.py \
 ```bash
 cd kg-tutorials
 
-WECHAT_APP_ID="wx..." WECHAT_APP_SECRET="..." \
-  python skills/kg-publisher/scripts/publish_wechat.py \
-  series/<slug>/publish/wechat.md
+python sub-skills/kg-publisher/scripts/publish_wechat.py \
+  "data/<主题>/publish/wechat.md 的绝对路径"
 
 # 成功：[OK] 草稿已保存! media_id=...
 # 登录 mp.weixin.qq.com → 内容管理 → 草稿箱 人工审核后推送
 ```
 
+> 脚本自动读取 `.kg-config.json` 中的 WECHAT_APP_ID / WECHAT_APP_SECRET。
+
 ### 小红书（手动发布）
 
-文案在 `series/<slug>/publish/xhs.md`，图片从 `images/` 目录上传。
+文案在 `data/<主题>/publish/caption.md`，图片从 `data/<主题>/images/raw/` 目录上传。
 
 ---
 
@@ -157,16 +164,19 @@ WECHAT_APP_ID="wx..." WECHAT_APP_SECRET="..." \
 
 | 现象 | 原因 / 解法 |
 |------|-----------|
-| 生图 504 超时 | chat completions 接口偶发，内置4次重试，通常第2-3次成功 |
-| 生图包含乱码文字 | Prompt 末尾加 "No text, no labels"，仍出现则重试 |
-| Cloudflare 403/1010 | 脚本已内置浏览器 UA，若仍出现检查 API Base URL |
-| 图片不是竖版 | size 参数必须用 `1024x1365`（3:4），不用正方形 |
-| 封面顶部留白不足 | Prompt 中封面图必须含 "leave top 22% as clear sky for title" |
+| 生图 504 超时 | images/generations 接口偶发，内置4次重试，通常第2-3次成功 |
+| 生图包含乱码文字 | 控制字数（主标题≤8字、标注≤6字），重试 |
+| 文字渲染成英文/拼音 | Prompt 用英文引号包裹中文，加 `render exact Chinese characters` |
+| 出现气泡框标注 | 加 `no speech bubbles, no callout boxes`，强调 thin line + white dot anchor |
+| 图片不是竖版 | size 参数必须用 `1024x1365`（3:4） |
+| 封面顶部留白不足 | Prompt 中封面图必须含 `leave top 22% as clear sky for title` |
 | 公众号 40164 invalid ip | 以报错中的 IP 加白名单，等3-5分钟 |
 | 批量生图中途失败 | 脚本已跳过已存在文件，直接重跑即可继续 |
+| `.kg-config.json` 不存在 | 未运行 `python setup_config.py`，先初始化 |
 
 ---
 
 ## 已有样板
 
-`参考图片/` 目录下 6 张港珠澳大桥系列图是本套流程的视觉标杆，`series/` 下的完整成品是产出流程的活样板。新制作主体时，照着任一成品的 `brief.md + outline.md + prompts.md` 结构复制即可。
+`data/参考图片/` 目录下 6 张港珠澳大桥系列图是本套流程的视觉标杆。
+`data/typhoon/` 是完整产出流程的活样板，新制作主体时，照着其 `brief.md + outline.md + prompts.md` 结构复制即可。
