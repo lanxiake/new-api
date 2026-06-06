@@ -1,0 +1,74 @@
+{
+  "operations": [
+    {
+      "mode": "set_header",
+      "path": "User-Agent",
+      "value": "claude-cli/2.1.132 (external, cli)"
+    },
+    {
+      "mode": "set_header",
+      "path": "Accept",
+      "value": "application/json"
+    },
+    {
+      "mode": "set_header",
+      "path": "anthropic-beta",
+      "value": "claude-code-20250219,interleaved-thinking-2025-05-14,redact-thinking-2026-02-12,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,context-1m-2025-08-07"
+    },
+    {
+      "mode": "set_header",
+      "path": "anthropic-dangerous-direct-browser-access",
+      "value": "true"
+    },
+    {
+      "mode": "set_header",
+      "path": "anthropic-version",
+      "value": "2023-06-01"
+    },
+    {
+      "mode": "set_header",
+      "path": "X-App",
+      "value": "cli"
+    },
+    {
+      "mode": "set_header",
+      "path": "X-Stainless-Arch",
+      "value": "x64"
+    },
+    {
+      "mode": "set_header",
+      "path": "X-Stainless-Lang",
+      "value": "js"
+    },
+    {
+      "mode": "set_header",
+      "path": "X-Stainless-Os",
+      "value": "Windows"
+    },
+    {
+      "mode": "set_header",
+      "path": "X-Stainless-Package-Version",
+      "value": "0.81.0"
+    },
+    {
+      "mode": "set_header",
+      "path": "X-Stainless-Retry-Count",
+      "value": "0"
+    },
+    {
+      "mode": "set_header",
+      "path": "X-Stainless-Runtime",
+      "value": "node"
+    },
+    {
+      "mode": "set_header",
+      "path": "X-Stainless-Runtime-Version",
+      "value": "v24.3.0"
+    },
+    {
+      "mode": "set_header",
+      "path": "X-Stainless-Timeout",
+      "value": "600"
+    }
+  ]
+}
